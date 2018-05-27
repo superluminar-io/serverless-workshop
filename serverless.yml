@@ -1,0 +1,53 @@
+
+service: aws-python3 # NOTE: update this with your service name
+
+provider:
+  name: aws
+  runtime: python3.6
+  iamRoleStatements:
+  - Effect: "Allow"
+    Action:
+    - "dynamodb:PutItem"
+    - "dynamodb:GetItem"
+    Resource:
+      Fn::GetAtt:
+      - DynamoDBTable
+      - Arn
+
+  environment:
+    DYNAMO_DB_TABLE: 
+      Ref: DynamoDBTable
+
+functions:
+  create-url:
+    handler: handler.create_url  
+    events:
+    - http:
+        path: / 
+        method: post
+  get-url:
+    handler: handler.get_url 
+    events:
+    - http:
+        path: /{short_url} 
+        method: get
+        request:
+          parameters:
+            paths:
+              short_url: true
+
+resources:
+  Resources:
+    DynamoDBTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: url-shortener 
+        KeySchema:
+          - AttributeName: "short_url"
+            KeyType: "HASH"
+        ProvisionedThroughput:
+          ReadCapacityUnits: "1"
+          WriteCapacityUnits: "1"
+        AttributeDefinitions:
+          - AttributeName: "short_url"
+            AttributeType: "S"
