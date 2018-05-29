@@ -1,3 +1,7 @@
+## Referenzen:
+
+ - https://github.com/bracki/url-shortener/blob/master/create-url/main.go
+
 ## What to explain
 
 Was beim Erstellen des Projektes alles aufgefallen ist, was erklaerenswer waere:
@@ -8,4 +12,7 @@ Was beim Erstellen des Projektes alles aufgefallen ist, was erklaerenswer waere:
  - oh nein, es packetiert ja viel zu viel!
  - mein lokales python ist aber ein anderes
  - regionen
- 
+ - serverless local invoke
+ ```
+ serverless invoke local -f create-url 
+ ```
