@@ -35,6 +35,9 @@ functions:
           parameters:
             paths:
               short_url: true
+custom:
+  pythonRequirements:
+    dockerizePip: true
 
 resources:
   Resources:
@@ -51,3 +54,6 @@ resources:
         AttributeDefinitions:
           - AttributeName: "short_url"
             AttributeType: "S"
+
+plugins:
+  - serverless-python-requirements
