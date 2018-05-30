@@ -14,10 +14,6 @@ provider:
       - DynamoDBTable
       - Arn
 
-  environment:
-    DYNAMO_DB_TABLE: 
-      Ref: DynamoDBTable
-
 functions:
   create-url:
     handler: handler.create_url  

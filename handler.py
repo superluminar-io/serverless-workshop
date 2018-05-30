@@ -24,7 +24,7 @@ def create_url(event, context):
 
     dynamodb = boto3.client('dynamodb')
     dynamodb.put_item(
-        TableName=os.environ["DYNAMO_DB_TABLE"],
+        TableName="url-shortener",
         Item={
             "short_url": {"S": shortened_url},
             "url":       {"S": url_to_shorten},
