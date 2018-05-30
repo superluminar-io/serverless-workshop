@@ -66,5 +66,3 @@ def unfurl(event, context):
             TableName="url-preview",
             Item=item_to_write
         )
-
-    ## zusaetzlich: schreibe html nach s3 - oder counter einbauen und url shortener

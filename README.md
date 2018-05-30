@@ -4,6 +4,8 @@
 
 ## What to explain
 
+### create-url / get-url
+
 Was beim Erstellen des Projektes alles aufgefallen ist, was erklaerenswer waere:
 
  - IAM Role / Role Assume - wie geht zugriff auf dynamodb?
@@ -13,6 +15,7 @@ Was beim Erstellen des Projektes alles aufgefallen ist, was erklaerenswer waere:
  - mein lokales python ist aber ein anderes
  - regionen
  - serverless local invoke
+ - create-url: putItem ist idempotent.
  ```
  serverless invoke local -f create-url 
  ```
@@ -45,3 +48,8 @@ An error occurred (ProvisionedThroughputExceededException) when calling the GetI
  - wo speicher ich das result des previews? in dynamodb oder in s3?
  - dynamodb.putItem ist idempotent damit auch die create-url
  - handler jetzt mal aufsplitten?
+
+## zusaetzliche uebungen
+
+ - schreibe html nach s3
+ - oder counter einbauen und url shortener
