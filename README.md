@@ -41,3 +41,7 @@ An error occurred (ProvisionedThroughputExceededException) when calling the GetI
 
  - DynamoDB Streams (Bonus: oder sie erstmal einfach drauf loslassen bauen mit synchronem call, dann zeigen, dass das ggf. hart gekoppelt nicht so gut skaliert.)
  - GetAtt erklaeren
+ - wie komme ich an die event struktur? `serverless logs` zeigen
+ - wo speicher ich das result des previews? in dynamodb oder in s3?
+ - dynamodb.putItem ist idempotent damit auch die create-url
+ - handler jetzt mal aufsplitten?

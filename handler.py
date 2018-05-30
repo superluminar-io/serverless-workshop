@@ -45,9 +45,11 @@ def create_url(event, context):
     }
 
 def unfurl(event, context):
-    print(event)
+    from webpreview import web_preview
 
-    ## for i in events
-    ## tue dinge mit irgendeiner seite put item auf neue tabelle
+    for dynamodb_event in event["Records"]:
+        url = dynamodb_event["dynamodb"]["NewImage"]["url"]["S"]
+        title, description, image = web_preview(url, timeout=1000)
+        print(title, description, image)
 
     ## zusaetzlich: schreibe html nach s3 - oder counter einbauen und url shortener
