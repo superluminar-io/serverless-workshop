@@ -14,6 +14,11 @@ provider:
       - DynamoDBTable
       - Arn
 
+package:
+  exclude:
+  - node_modules/**
+  - venv/**
+
 functions:
   create-url:
     handler: handler.create_url  
