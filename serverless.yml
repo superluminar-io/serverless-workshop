@@ -36,6 +36,16 @@ functions:
           parameters:
             paths:
               short_url: true
+  unfurl:
+    handler: handler.unfurl
+    events:
+    - stream:
+        type: dynamodb
+        arn:
+          Fn::GetAtt:
+          - DynamoDBTable
+          - StreamArn
+
 custom:
   pythonRequirements:
     dockerizePip: true
@@ -45,6 +55,8 @@ resources:
     DynamoDBTable:
       Type: AWS::DynamoDB::Table
       Properties:
+        StreamSpecification:
+          StreamViewType: NEW_IMAGE
         TableName: url-shortener 
         KeySchema:
           - AttributeName: "short_url"

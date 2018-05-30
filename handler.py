@@ -43,3 +43,11 @@ def create_url(event, context):
     return {
         "statusCode": 201
     }
+
+def unfurl(event, context):
+    print(event)
+
+    ## for i in events
+    ## tue dinge mit irgendeiner seite put item auf neue tabelle
+
+    ## zusaetzlich: schreibe html nach s3 - oder counter einbauen und url shortener
