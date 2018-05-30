@@ -2,18 +2,29 @@ import json
 from fnvhash import fnv1a_64
 import boto3
 
+dynamodb = boto3.client('dynamodb')
+
 def get_url(event, context):
-    body = {
-        "message": "Go Serverless v1.0! Your function executed successfully!",
-        "input": event
+    short_url = event["pathParameters"]["short_url"]
+    result = dynamodb.get_item(
+        TableName="url-shortener",
+        Key={
+            "short_url": {"S": short_url}
+        }
+    )
+
+    if not "Item" in result:
+            return {"statusCode": 404}
+
+    long_url = result["Item"]["url"]["S"]
+
+    return {
+        "statusCode": 301,
+        "headers": {
+            "location": long_url
+        }
     }
 
-    response = {
-        "statusCode": 200,
-        "body": json.dumps(body)
-    }
-
-    return response
 
 def create_url(event, context):
 
@@ -21,7 +32,6 @@ def create_url(event, context):
     url_to_shorten = post_parameters['url']
     shortened_url = "{:x}".format(fnv1a_64(bytes(url_to_shorten, 'utf-8')))
 
-    dynamodb = boto3.client('dynamodb')
     dynamodb.put_item(
         TableName="url-shortener",
         Item={
