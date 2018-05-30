@@ -68,5 +68,20 @@ resources:
           - AttributeName: "short_url"
             AttributeType: "S"
 
+    UrlPreviewTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: url-preview
+        KeySchema:
+        - AttributeName: "url"
+          KeyType: "HASH"
+        ProvisionedThroughput:
+          ReadCapacityUnits: "1"
+          WriteCapacityUnits: "1"
+        AttributeDefinitions:
+        - AttributeName: "url"
+          AttributeType: "S"
+
+
 plugins:
   - serverless-python-requirements

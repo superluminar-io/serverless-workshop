@@ -50,6 +50,21 @@ def unfurl(event, context):
     for dynamodb_event in event["Records"]:
         url = dynamodb_event["dynamodb"]["NewImage"]["url"]["S"]
         title, description, image = web_preview(url, timeout=1000)
-        print(title, description, image)
+
+        item_to_write = {
+            "url": {"S": url}
+        }
+
+        if title:
+            item_to_write["title"] = {"S": title}
+        if description:
+            item_to_write["description"] = {"S": description}
+        if image:
+            item_to_write["image"] = {"S": image}
+
+        dynamodb.put_item(
+            TableName="url-preview",
+            Item=item_to_write
+        )
 
     ## zusaetzlich: schreibe html nach s3 - oder counter einbauen und url shortener
