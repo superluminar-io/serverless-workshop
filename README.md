@@ -1,6 +1,6 @@
-## Referenzen:
+## Didaktik:
 
- - https://github.com/bracki/url-shortener/blob/master/create-url/main.go
+ - Wusstet ihr schon X? Wenn ja: Dann Person/Pair vorstellen lassen, was sie schon herausgefunden haben.
 
 ## What to explain
 
@@ -21,11 +21,7 @@ Was beim Erstellen des Projektes alles aufgefallen ist, was erklaerenswer waere:
  ```
  - Cloud9 IDE Integration zeigen.
 
-### Didaktik:
-
- - Wusstet ihr schon X? Wenn ja: Dann Person/Pair vorstellen lassen, was sie schon herausgefunden haben.
-
-### Scalability Course
+#### Scalability Course
 
  - Start apache bench with -c 50
  - Look at Lambda invocations, see invocations errors
@@ -49,7 +45,11 @@ An error occurred (ProvisionedThroughputExceededException) when calling the GetI
  - dynamodb.putItem ist idempotent damit auch die create-url
  - handler jetzt mal aufsplitten?
 
-## zusaetzliche uebungen
+## Ideen fuer zusaetzliche uebungen, falls Pairs frueher fertig sind.
 
  - schreibe html nach s3
  - oder counter einbauen und url shortener
+ 
+## Referenzen:
+
+- https://github.com/bracki/url-shortener/blob/master/create-url/main.go
