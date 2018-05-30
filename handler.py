@@ -1,7 +1,6 @@
 import json
 from fnvhash import fnv1a_64
 import boto3
-import os
 
 def get_url(event, context):
     body = {
