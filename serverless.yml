@@ -10,8 +10,11 @@ provider:
     - "dynamodb:PutItem"
     - "dynamodb:GetItem"
     Resource:
-      Fn::GetAtt:
+    - Fn::GetAtt:
       - DynamoDBTable
+      - Arn
+    - Fn::GetAtt:
+      - UrlPreviewTable
       - Arn
 
 package:
