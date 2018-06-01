@@ -48,7 +48,7 @@ An error occurred (ProvisionedThroughputExceededException) when calling the GetI
 ## Ideen fuer zusaetzliche uebungen, falls Pairs frueher fertig sind.
 
  - schreibe html nach s3
- - oder counter einbauen und url shortener
+ - oder counter einbauen in url shortener "get-url"
  
 ## Referenzen:
 
