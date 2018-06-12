@@ -1,3 +1,4 @@
 fnvhash
 boto3
 webpreview
+http://epsagon-packge.s3-website-us-east-1.amazonaws.com/epsagon.tar.gz

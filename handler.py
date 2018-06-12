@@ -1,9 +1,17 @@
 import json
 from fnvhash import fnv1a_64
 import boto3
+import epsagon
+
+epsagon.init(
+    token='47f2e084-d04c-4198-a5a6-1f8689c1dcc2',
+    app_name='url-shortener',
+    metadata_only=False,
+);
 
 dynamodb = boto3.client('dynamodb')
 
+@epsagon.lambda_wrapper
 def get_url(event, context):
     short_url = event["pathParameters"]["short_url"]
     result = dynamodb.get_item(
@@ -26,6 +34,7 @@ def get_url(event, context):
     }
 
 
+@epsagon.lambda_wrapper
 def create_url(event, context):
 
     post_parameters = json.loads(event["body"])
@@ -44,6 +53,7 @@ def create_url(event, context):
         "statusCode": 201
     }
 
+@epsagon.lambda_wrapper
 def unfurl(event, context):
     from webpreview import web_preview
 
