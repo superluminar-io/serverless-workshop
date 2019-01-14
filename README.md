@@ -49,7 +49,26 @@ An error occurred (ProvisionedThroughputExceededException) when calling the GetI
 
  - schreibe html nach s3
  - oder counter einbauen in url shortener "get-url"
+
+## Pipeline
+
+ - CodeCommit -> klicken und remote hinzufuegen in git
+ - CodePipeline: Klicken und Inline CodeBuild machen
+ - CodeBuild: NodeJS runtime mit privileged (fuer dockerizePip). Die Rolle braucht dann noch AdministratorAccess
+```
+version: 0.2
+  build:
+    commands:
+      - npm i
+      - node_modules/.bin/serverless deploy --region $AWS_DEFAULT_REGION
+
+```
  
+### Hinweise:
+
+ -  Docker-in-Docker ueberfluessig, man kann jetzt auch dockerizePip rauswerfen
+ - CodeBuild braucht viele Rechte jetzt. Hier das neue IAM Geloet ausprobieren?
+
 ## Referenzen:
 
 - https://github.com/bracki/url-shortener/blob/master/create-url/main.go
