@@ -41,7 +41,10 @@ def create_url(event, context):
     )
 
     return {
-        "statusCode": 201
+        "statusCode": 201,
+        "body": json.dumps({
+            "shortened_url": shortened_url
+        })
     }
 
 def unfurl(event, context):
