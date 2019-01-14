@@ -52,7 +52,10 @@ def unfurl(event, context):
 
     for dynamodb_event in event["Records"]:
         url = dynamodb_event["dynamodb"]["NewImage"]["url"]["S"]
-        title, description, image = web_preview(url, timeout=1000)
+        try:
+            title, description, image = web_preview(url, timeout=1000)
+        except:
+            continue
 
         item_to_write = {
             "url": {"S": url}
