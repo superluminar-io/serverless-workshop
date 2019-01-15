@@ -111,7 +111,7 @@ resources:
           Ref: __deployment__
         RestApiId:
           Ref: ApiGatewayRestApi
-        StageName: tracingenabled
+        StageName: dev
         MethodSettings:
         - HttpMethod: "*"
           ResourcePath: "/*"
