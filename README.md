@@ -12,7 +12,8 @@ Was beim Erstellen des Projektes alles aufgefallen ist, was erklaerenswer waere:
  - Lambda / ZIP (ggf. mal haendisch erstellen?)
  - CloudFormation, welches erstellt wird
  - oh nein, es packetiert ja viel zu viel!
- - mein lokales python ist aber ein anderes
+ - mein lokales python ist aber ein anderes -> https://www.npmjs.com/package/serverless-python-requirements und dockerizePip
+ - serverless plugins
  - regionen
  - serverless local invoke
  - create-url: putItem ist idempotent.
@@ -26,15 +27,15 @@ Was beim Erstellen des Projektes alles aufgefallen ist, was erklaerenswer waere:
  - Start apache bench with -c 50
  - Look at Lambda invocations, see invocations errors
  - have a look in the logs, see timeouts after default time outs 
- - why timeouts? -> change timeout in serverlsss.yml get-url -> increase it to
+ - why timeouts? -> change timeout in serverless.yml get-url -> increase it to
    60 so that we can see what times out
  - the timeout is actually a protection again "amok" functions
 ```
 An error occurred (ProvisionedThroughputExceededException) when calling the GetItem operation (reached max retries: 9): The level of configured provisioned throughput for the table was exceeded. Consider increasing your provisioning level with the UpdateTable API.: ProvisionedThroughputExceededException
 ```
  - Ok, what's provisioned thoughput?
- - Show Autoscaling
- - Let it scale until no errors
+ - Show Autoscaling/On Demand
+ - Enable on-demand
 
 ### Scraper bauen
 
@@ -73,12 +74,19 @@ version: 0.2
 
 ## Tracing
 
-1. X-Ray Plugin aktivieren
+1. X-Ray Plugin aktivieren: https://www.npmjs.com/package/serverless-plugin-tracing
 2. API GW Tracing aktivieren ueber Hack
 
 ### Links:
 
 - https://theburningmonk.com/2017/09/capture-and-forward-correlation-ids-through-different-lambda-event-sources/
+
+## Alerting
+
+Wir verwenden https://github.com/ACloudGuru/serverless-plugin-aws-alerts
+
+ - Default alerts -> einmal triggern mit throttling funktion und apache bench
+ - Custom Alert
 
 
 ## Referenzen:
