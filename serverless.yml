@@ -4,6 +4,7 @@ service: aws-python3 # NOTE: update this with your service name
 provider:
   name: aws
   runtime: python3.6
+  tracing: true
   iamRoleStatements:
   - Effect: "Allow"
     Action:
@@ -16,6 +17,11 @@ provider:
     - Fn::GetAtt:
       - UrlPreviewTable
       - Arn
+  - Effect: "Allow" # xray permissions (required)
+    Action:
+    - "xray:PutTraceSegments"
+    - "xray:PutTelemetryRecords"
+    Resource: "*"
 
 package:
   exclude:
@@ -84,3 +90,4 @@ resources:
 
 plugins:
   - serverless-python-requirements
+  - serverless-plugin-tracing

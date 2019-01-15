@@ -1,3 +1,4 @@
 fnvhash
 boto3
 webpreview
+aws-xray-sdk
