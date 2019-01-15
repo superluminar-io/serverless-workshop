@@ -59,6 +59,19 @@ custom:
   pythonRequirements:
     dockerizePip: true
 
+  alerts:
+    stages:
+    - dev
+    topics:
+      alarm:
+        topic: ${self:service}-alerts-alarm
+        notifications:
+        - protocol: email
+          endpoint: soenke.ruempler@superluminar.io
+    alarms:
+    - functionErrors
+    - functionThrottles
+
 resources:
   Resources:
     DynamoDBTable:
@@ -110,3 +123,4 @@ plugins:
   - serverless-python-requirements
   - serverless-plugin-tracing
   - serverless-plugin-bind-deployment-id
+  - serverless-plugin-aws-alerts
