@@ -64,10 +64,22 @@ version: 0.2
 
 ```
  
-### Hinweise:
+### Hinweise / weitere Uebungen:
 
- -  Docker-in-Docker ueberfluessig, man kann jetzt auch dockerizePip rauswerfen
- - CodeBuild braucht viele Rechte jetzt. Hier das neue IAM Geloet ausprobieren?
+- Docker-in-Docker ueberfluessig, man kann jetzt auch dockerizePip auswerfen
+ - CodeBuild hat/braucht viele Rechte jetzt. Weitere Links:
+   - https://www.puresec.io/blog/generating-least-privileged-iam-roles-for-aws-lambda-functions-the-easy-way
+   - https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies_access-advisor.html
+
+## Tracing
+
+1. X-Ray Plugin aktivieren
+2. API GW Tracing aktivieren ueber Hack
+
+### Links:
+
+- https://theburningmonk.com/2017/09/capture-and-forward-correlation-ids-through-different-lambda-event-sources/
+
 
 ## Referenzen:
 
