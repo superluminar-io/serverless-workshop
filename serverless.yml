@@ -87,7 +87,26 @@ resources:
         - AttributeName: "url"
           AttributeType: "S"
 
+    __deployment__:
+      Properties:
+        Description: This is my deployment
+    ApiGatewayStage:
+      Type: AWS::ApiGateway::Stage
+      Properties:
+        TracingEnabled: true # enable x-ray
+        DeploymentId:
+          Ref: __deployment__
+        RestApiId:
+          Ref: ApiGatewayRestApi
+        StageName: tracingenabled
+        MethodSettings:
+        - HttpMethod: "*"
+          ResourcePath: "/*"
+          MetricsEnabled: true
+          LoggingLevel: INFO
+          DataTraceEnabled: true
 
 plugins:
   - serverless-python-requirements
   - serverless-plugin-tracing
+  - serverless-plugin-bind-deployment-id
