@@ -46,6 +46,39 @@ An error occurred (ProvisionedThroughputExceededException) when calling the GetI
  - dynamodb.putItem ist idempotent damit auch die create-url
  - handler jetzt mal aufsplitten?
 
+## Was aendert sich, was bleibt gleich?
+
+### Was aendert sich mit Serverless
+
+Uebung: Den Teilnehmer*innen diese Frage stellen. Auf Karten schreiben.
+
+- Nutzung von Services statt Kauf von Produkten
+- Damit schnellere Time to Market
+- Groessere Transparenz der Kosten
+- Enforcement von 12-factor
+- Lieblingstechnologie -> Wissen ueber wann welche Cloud-Bausteine einzusetzen sind
+- Spezialist -> Cloud Generalist
+
+#### Weiterfuehrende Links
+
+- https://www.serverlessops.io/blog/serverless-ops-what-do-we-do-when-the-server-goes-away
+
+### Was bleibt gleich mit Serverless
+
+Uebung: Den Teilnehmer*innen diese Frage stellen. Auf Karten schreiben.
+
+- Hexagonal architecture, Ports and Adapters
+- Test pyramid
+- Domain Driven Design
+- Design patterns
+- CAP theorem
+- Fallacies of distributed computing
+- (SQL) injection
+
+#### Weiterfuehrende Links
+
+- https://medium.freecodecamp.org/the-best-ways-to-test-your-serverless-applications-40b88d6ee31e
+
 ## Ideen fuer zusaetzliche uebungen, falls Pairs frueher fertig sind.
 
  - schreibe html nach s3
