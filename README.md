@@ -59,9 +59,8 @@ Uebung: Den Teilnehmer*innen diese Frage stellen. Auf Karten schreiben.
 - Lieblingstechnologie -> Wissen ueber wann welche Cloud-Bausteine einzusetzen sind
 - Spezialist -> Cloud Generalist
 
-#### Weiterfuehrende Links
+### Weiterfuehrende Links
 
-- https://www.serverlessops.io/blog/serverless-ops-what-do-we-do-when-the-server-goes-away
 
 ### Was bleibt gleich mit Serverless
 
@@ -75,9 +74,11 @@ Uebung: Den Teilnehmer*innen diese Frage stellen. Auf Karten schreiben.
 - Fallacies of distributed computing
 - (SQL) injection
 
-#### Weiterfuehrende Links
+### Weiterfuehrende Links
 
 - https://medium.freecodecamp.org/the-best-ways-to-test-your-serverless-applications-40b88d6ee31e
+- https://www.serverlessops.io/blog/serverless-ops-what-do-we-do-when-the-server-goes-away
+- https://hackernoon.com/why-the-fuss-about-serverless-4370b1596da0
 
 ## Ideen fuer zusaetzliche uebungen, falls Pairs frueher fertig sind.
 
