@@ -45,7 +45,11 @@ An error occurred (ProvisionedThroughputExceededException) when calling the GetI
  - wo speicher ich das result des previews? in dynamodb oder in s3?
  - dynamodb.putItem ist idempotent damit auch die create-url
  - handler jetzt mal aufsplitten?
-
+ - timeout runtersetzen
+ - kaputte url reintun 
+ - langsame url reintun -> damit ziegen dass lambda auch an ein timeout stossen kann
+ - batch size kann man noch erklaeren
+ 
 ## Was aendert sich, was bleibt gleich?
 
 ### Was aendert sich mit Serverless
