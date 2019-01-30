@@ -1,5 +1,5 @@
 
-service: aws-python3 # NOTE: update this with your service name
+service: url-shortener
 
 provider:
   name: aws
