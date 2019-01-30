@@ -78,12 +78,6 @@ Uebung: Den Teilnehmer*innen diese Frage stellen. Auf Karten schreiben.
 - Fallacies of distributed computing
 - (SQL) injection
 
-### Weiterfuehrende Links
-
-- https://medium.freecodecamp.org/the-best-ways-to-test-your-serverless-applications-40b88d6ee31e
-- https://www.serverlessops.io/blog/serverless-ops-what-do-we-do-when-the-server-goes-away
-- https://hackernoon.com/why-the-fuss-about-serverless-4370b1596da0
-
 ## Ideen fuer zusaetzliche uebungen, falls Pairs frueher fertig sind.
 
  - schreibe html nach s3
@@ -114,10 +108,6 @@ version: 0.2
 
 1. X-Ray Plugin aktivieren: https://www.npmjs.com/package/serverless-plugin-tracing
 2. API GW Tracing aktivieren ueber Hack
-
-### Links:
-
-- https://theburningmonk.com/2017/09/capture-and-forward-correlation-ids-through-different-lambda-event-sources/
 
 ## Alerting
 
