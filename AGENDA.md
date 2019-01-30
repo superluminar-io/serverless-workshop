@@ -1,7 +1,3 @@
-## Didaktik:
-
- - Wusstet ihr schon X? Wenn ja: Dann Person/Pair vorstellen lassen, was sie schon herausgefunden haben.
-
 ## What to explain
 
 ### create-url / get-url
@@ -39,7 +35,7 @@ An error occurred (ProvisionedThroughputExceededException) when calling the GetI
 
 ### Scraper bauen
 
- - DynamoDB Streams (Bonus: oder sie erstmal einfach drauf loslassen bauen mit synchronem call, dann zeigen, dass das ggf. hart gekoppelt nicht so gut skaliert.)
+ - DynamoDB Streams 
  - GetAtt erklaeren
  - wie komme ich an die event struktur? `serverless logs` zeigen
  - wo speicher ich das result des previews? in dynamodb oder in s3?
@@ -115,8 +111,3 @@ Wir verwenden https://github.com/ACloudGuru/serverless-plugin-aws-alerts
 
  - Default alerts -> einmal triggern mit throttling funktion und apache bench
  - Custom Alert
-
-
-## Referenzen:
-
-- https://github.com/bracki/url-shortener/blob/master/create-url/main.go
