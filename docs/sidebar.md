@@ -1,0 +1,7 @@
+- [Welcome](/)
+- [Lab 0 - Setup](/setup)
+- [Lab 1 - REST API](/rest-api)
+- [Lab 2 - Testing](/testing)
+- [Lab 3 - Mini GameDay](/mini-gameday)
+- [Lab 4 - Static Hosting](/static-hosting)
+- [What’s next?](/next)

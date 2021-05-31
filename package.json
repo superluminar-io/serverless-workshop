@@ -1,0 +1,25 @@
+{
+  "name": "serverless-workshop",
+  "version": "1.0.0",
+  "description": "Building a REST API with Amazon API Gateway, Lambda and DynamodDB. All in a hands-on session. ",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "start": "docsify serve ./docs"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/superluminar-io/serverless-workshop.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/superluminar-io/serverless-workshop/issues"
+  },
+  "homepage": "https://github.com/superluminar-io/serverless-workshop#readme",
+  "devDependencies": {
+    "docsify-cli": "^4.4.3"
+  }
+}
