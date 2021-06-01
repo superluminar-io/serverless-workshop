@@ -8,8 +8,8 @@ jobs:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2
         with:
-          node-version: '15'
+          node-version: '16'
       - name: Install dependencies
         run: npm ci
-      - name: Build labs
-        run: npm run build --workspaces
+      - name: Synth labs
+        run: npm run synth --workspaces
