@@ -307,4 +307,4 @@ This task is tricky and it's okay to jump right into the step-by-step guide. We 
 
 ---
 
-You can find the complete implementation of this lab [here](https://github.com/superluminar-io/serverless-workshop/tree/main/lab4).
+You can find the complete implementation of this lab [here](https://github.com/superluminar-io/serverless-workshop/tree/main/packages/lab4).
