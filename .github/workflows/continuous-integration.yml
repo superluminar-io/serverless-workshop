@@ -1,6 +1,5 @@
 name: Continuous Integration
-on:
-  pull-request:
+on: push
 
 jobs:
   dependencies:
