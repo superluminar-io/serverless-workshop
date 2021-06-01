@@ -5,6 +5,9 @@
   "directories": {
     "doc": "docs"
   },
+  "workspaces": [
+    "packages/*"
+  ],
   "scripts": {
     "start": "docsify serve ./docs"
   },
