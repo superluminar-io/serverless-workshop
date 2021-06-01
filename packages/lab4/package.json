@@ -2,6 +2,7 @@
   "name": "lab4",
   "version": "0.1.0",
   "scripts": {
+    "postinstall": "cd frontend && npm i",
     "build": "tsc",
     "watch": "tsc -w",
     "test": "jest",
