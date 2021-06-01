@@ -243,4 +243,4 @@ Integration tests are super helpful to test the whole stack end-to-end. Write so
 
 ---
 
-You can find the complete implementation of this lab [here](https://github.com/superluminar-io/serverless-workshop/tree/main/lab2).
+You can find the complete implementation of this lab [here](https://github.com/superluminar-io/serverless-workshop/tree/main/packages/lab2).
