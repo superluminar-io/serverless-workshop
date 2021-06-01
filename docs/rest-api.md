@@ -470,4 +470,4 @@ HTTP/2 200
 
 ---
 
-You can find the complete implementation of this lab [here](https://github.com/superluminar-io/serverless-workshop/tree/main/lab1).
+You can find the complete implementation of this lab [here](https://github.com/superluminar-io/serverless-workshop/tree/main/packages/lab1).

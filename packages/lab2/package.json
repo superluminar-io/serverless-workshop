@@ -1,9 +1,6 @@
 {
-  "name": "notes-api",
+  "name": "lab2",
   "version": "0.1.0",
-  "bin": {
-    "notes-api": "bin/notes-api.js"
-  },
   "scripts": {
     "build": "tsc",
     "watch": "tsc -w",
