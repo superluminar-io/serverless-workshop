@@ -12,7 +12,7 @@
     "@aws-cdk/assert": "^1.101.0",
     "@types/aws-lambda": "^8.10.76",
     "@types/jest": "^26.0.23",
-    "@types/node": "15.6.1",
+    "@types/node": "15.6.2",
     "@types/node-fetch": "^2.5.10",
     "aws-cdk": "^1.101.0",
     "aws-sdk": "^2.919.0",
