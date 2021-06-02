@@ -6,6 +6,13 @@ updates:
     schedule:
       interval: "daily"
   
+  # NPM workspaces doesn't support nested workspaces
+  # Therefore we need to register the frontend folder explicitly
+  - package-ecosystem: "npm"
+    directory: "/packages/lab4/frontend"
+    schedule:
+      interval: "daily"
+  
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
