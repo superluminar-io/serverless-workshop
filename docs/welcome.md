@@ -4,7 +4,7 @@
 
 This workshop is designed to give you an overview of serverless development with AWS. We will create a REST API with Amazon API Gateway, Lambda and DynamoDB. After creating the API, we will break the system in an interactive GameDay session and try to identify best practices and antipatterns along the way.
 
-Let's get started! 🤩 :star_struck:
+Let's get started! 🤩
 
 ## Architecture Diagram
 
