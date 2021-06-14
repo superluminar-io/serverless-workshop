@@ -7,15 +7,15 @@
 
 ## Unit Testing
 
-### Task
+### 📝 Task
 
 Write unit tests for the AWS Lambda functions. Running the command `npm test` should execute your unit tests and pass all tests.
 
-### Hints
+### 🔎 Hints
 
 - [Mock the DynamoDB DocumentClient with Jest](https://stackoverflow.com/a/60478596)
 
-### Step-by-Step Guide
+### 🗺  Step-by-Step Guide
 
 <details>
 <summary>Collapse guide</summary>
@@ -151,17 +151,17 @@ Write unit tests for the AWS Lambda functions. Running the command `npm test` sh
 
 ## Integration Testing
 
-### Task
+### 📝 Task
 
 Integration tests are super helpful to test the whole stack end-to-end. Write some integration tests that essentially send some HTTP requests and validate the response.
 
-### Hints
+### 🔎 Hints
 
 - [Separating unit and integration tests in Jest](https://medium.com/coding-stones/separating-unit-and-integration-tests-in-jest-f6dd301f399c)
 - [node-fetch is your friend for sending HTTP requests](https://www.npmjs.com/package/node-fetch)
 - [Use environment variables to pass the API endpoint](https://www.twilio.com/blog/working-with-environment-variables-in-node-js-html)
 
-### Step-by-Step Guide
+### 🗺  Step-by-Step Guide
 
 <details>
 <summary>Collapse guide</summary>
