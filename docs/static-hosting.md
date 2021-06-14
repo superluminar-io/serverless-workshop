@@ -7,17 +7,17 @@
 
 ## Frontend Application
 
-### Task
+### 📝 Task
 
 First things first. We need a frontend app to deploy a static website. You can use whatever you want, we use [Create React App](https://github.com/facebook/create-react-app) in the step-by-step guide.
 
 Create a frontend app in a new subfolder.
 
-### Hints
+### 🔎 Hints
 
 - [Creating a TypeScript app with Create React App](https://create-react-app.dev/docs/getting-started/#creating-a-typescript-app)
 
-### Step-by-Step Guide
+### 🗺  Step-by-Step Guide
 
 <details>
 <summary>Collapse guide</summary>
@@ -41,20 +41,20 @@ Create a frontend app in a new subfolder.
 
 ## CloudFormation Stack
 
-### Task
+### 📝 Task
 
 Now that we have created a frontend app, we want to extend the infrastructure to deploy the frontend app.
 
 Create a new CloudFormation stack for the static hosting. The stack should include a S3 bucket for the assets, a CloudFront distributon and deployment steps to bundle the frontend assets.
 
-### Hints
+### 🔎 Hints
 
 - [Documentation AWS CDK Stacks](https://docs.aws.amazon.com/cdk/latest/guide/stacks.html)
 - [AWS Construct to deploy a S3 bucket with CloudFront distribution and cache invalidation](https://docs.aws.amazon.com/cdk/api/latest/docs/aws-s3-deployment-readme.html#cloudfront-invalidation)
 - [Documentation Invalidating Files in CloudFront (watch out for solutions to invalidate all files)](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/Invalidation.html)
 - [Bundle JS assets locally with AWS CDK S3 Deployment (scroll down to the last section)](https://aws.amazon.com/blogs/devops/building-apps-with-aws-cdk/)
 
-### Step-by-Step Guide
+### 🗺  Step-by-Step Guide
 
 <details>
 <summary>Collapse guide</summary>
@@ -160,7 +160,7 @@ Create a new CloudFormation stack for the static hosting. The stack should inclu
 
 </details>
 
-### Questions
+### ❓ Questions
 
 - What is the impact of the S3 bucket configuration?
 - What are the differences between static hosting with CloudFront and an S3 bucket with _static website hosting_ enabled?
@@ -168,15 +168,15 @@ Create a new CloudFormation stack for the static hosting. The stack should inclu
 
 ## Environment Variables
 
-### Task
+### 📝 Task
 
 This task is tricky and it's okay to jump right into the step-by-step guide. We deployed the frontend app succesfully, but to build the next awesome notes app, we actually need to know the API endpoint. For that, we need to pass the API endpoint to the bundle process to include the URL in the JS assets.
 
-### Hints
+### 🔎 Hints
 
 - [Environment variables with Create React App](https://create-react-app.dev/docs/adding-custom-environment-variables/)
 
-### Step-by-Step Guide
+### 🗺  Step-by-Step Guide
 
 <details>
 <summary>Collapse guide</summary>
