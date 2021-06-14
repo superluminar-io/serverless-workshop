@@ -7,15 +7,15 @@
 
 ## Bootstrapping AWS CDK
 
-### Task
+### 📝 Task
 
 Create a fresh AWS CDK app with the CLI.
 
-### Hints
+### 🔎 Hints
 
 - [Documentation: Your first AWS CDK app](https://docs.aws.amazon.com/cdk/latest/guide/hello_world.html)
 
-### Step-by-Step Guide
+### 🗺  Step-by-Step Guide
 
 <details>
 <summary>Collapse guide</summary>
@@ -49,17 +49,17 @@ Create a fresh AWS CDK app with the CLI.
 
 ## AWS Lambda function
 
-### Task
+### 📝 Task
 
 Now that we have an AWS CDK app, we want to deploy the first resource. Create a simple AWS Lambda function, that logs the message `Hello world :)`.
 
-### Hints
+### 🔎 Hints
 
 - [CDK Construct to create a Node.js Lambda function](https://docs.aws.amazon.com/cdk/api/latest/docs/aws-lambda-nodejs-readme.html#nodejs-function)
 - [Simple Lambda function with log output](https://docs.aws.amazon.com/lambda/latest/dg/nodejs-logging.html)
 - [Hint about local bundling (to avoid Docker)](https://docs.aws.amazon.com/cdk/api/latest/docs/aws-lambda-nodejs-readme.html#local-bundling)
 
-### Step-by-Step Guide
+### 🗺  Step-by-Step Guide
 
 <details>
 <summary>Collapse guide</summary>
@@ -104,7 +104,7 @@ Now that we have an AWS CDK app, we want to deploy the first resource. Create a 
 
 </details>
 
-### Questions
+### ❓ Questions
 
 - What resources did you create and why?
 - How can you execute the AWS Lambda function using the AWS Management Console?
@@ -112,7 +112,7 @@ Now that we have an AWS CDK app, we want to deploy the first resource. Create a 
 
 ## Amazon API Gateway
 
-### Task
+### 📝 Task
 
 The AWS Lambda function is already a big step, but now we want to create a HTTP endpoint so we can execute the AWS Lambda function. We use Amazon API Gateway to create a simple API.
 
@@ -125,13 +125,13 @@ HTTP/2 200
 {"hello":"world"}
 ```
 
-### Hints
+### 🔎 Hints
 
 - [CDK Construct to create an API Gateway with Lambda integration](https://docs.aws.amazon.com/cdk/api/latest/docs/aws-apigatewayv2-readme.html#defining-http-apis)
 - [Lambda function response format for API Gateway integrations](https://docs.aws.amazon.com/apigateway/latest/developerguide/http-api-develop-integrations-lambda.html#http-api-develop-integrations-lambda.response)
 - [CloudFormation stack output for the API endpoint](https://docs.aws.amazon.com/cdk/api/latest/docs/core-readme.html#stack-outputs)
 
-### Step-by-Step Guide
+### 🗺  Step-by-Step Guide
 
 <details>
 <summary>Collapse guide</summary>
@@ -199,7 +199,7 @@ HTTP/2 200
 
 </details>
 
-### Questions
+### ❓ Questions
 
 - What is a stack's output and where do you find it?
 - What is the response format for AWS Lambda functions when using them with Amazon API Gateway?
@@ -207,7 +207,7 @@ HTTP/2 200
 
 ## AWS DynamoDB
 
-### Task
+### 📝 Task
 
 We have an API in place, executing the AWS Lambda function to return a HTTP status code and some JSON. Great, now we want to create a DynamoDB table to persist some data.
 
@@ -220,7 +220,7 @@ HTTP/2 201
 
 The note should be persisted in the DynamoDB table.
 
-### Hints
+### 🔎 Hints
 
 - [CDK Construct to create a DynamoDB table](https://docs.aws.amazon.com/cdk/api/latest/docs/aws-dynamodb-readme.html)
 - [Prop to pass the DynamoDB table name to the AWS Lambda function environment](https://docs.aws.amazon.com/cdk/api/latest/docs/@aws-cdk_aws-lambda-nodejs.NodejsFunction.html#environment)
@@ -229,7 +229,7 @@ The note should be persisted in the DynamoDB table.
 - [Documentation for the DynamoDB DocumentClient](https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/DynamoDB/DocumentClient.html#put-property)
 - [Hint about promises for the DocumentClient](https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/using-promises.html)
 
-### Step-by-Step Guide
+### 🗺  Step-by-Step Guide
 
 <details>
 <summary>Collapse guide</summary>
@@ -332,7 +332,7 @@ The note should be persisted in the DynamoDB table.
 
 </details>
 
-### Questions
+### ❓ Questions
 
 - Where do you see the environment variables of the AWS Lambda function using the AWS Management Console?
 - When deleting the CloudFormation stack by accident, would the DynamoDB table be removed or not?
@@ -342,7 +342,7 @@ The note should be persisted in the DynamoDB table.
 
 ## Fetch list of notes
 
-### Task
+### 📝 Task
 
 The first endpoint works! Let's extend the API and provide another route to fetch all notes. The API should be able to handle this request:
 
@@ -353,11 +353,11 @@ HTTP/2 200
 [{"content":"abc","id":"2021-04-27T11:54:47.987Z","title":"Hello World"}]
 ```
 
-### Hints
+### 🔎 Hints
 
 - [DocumentClient Scan operation](https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/DynamoDB/DocumentClient.html#scan-property)
 
-### Step-by-Step Guide
+### 🗺  Step-by-Step Guide
 
 <details>
 <summary>Collapse guide</summary>
@@ -463,7 +463,7 @@ HTTP/2 200
 
 </details>
 
-### Questions
+### ❓ Questions
 
 - How many notes are returned in the worst case?
 - What is the difference between a DynamoDB Scan and Query operation?
