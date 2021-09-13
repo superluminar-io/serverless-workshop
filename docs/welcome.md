@@ -14,9 +14,8 @@ The API enables us to create the next awesome notes app. With two routes in plac
 
 ## Prerequisites
 
-If you are completing this workshop together with us, we have prepared individual playground accounts for every attendee. Please go to your AWS SSO login page that we will provide for you, click on **AWS Account** and search for **playground-$YOUR_NAME**. Click on the account name to collapse the details and then click on **Management console**. This should open the AWS console for your account. Otherwise, you can complete this workshop in your own time with your own account.
-
-All step-by-step guides are written in English, we recommend selecting _English (US)_ as the language for the AWS console. You find the option in the footer of the console.
+- AWS account with admin permissions
+- All step-by-step guides are written in English, we recommend selecting _English (US)_ as the language for the AWS console. You find the option in the footer of the console.
 
 ## Scope
 
