@@ -12,7 +12,7 @@
   "devDependencies": {
     "@aws-cdk/assert": "^1.123.0",
     "@types/aws-lambda": "^8.10.76",
-    "@types/fs-extra": "^9.0.11",
+    "@types/fs-extra": "^9.0.12",
     "@types/jest": "^26.0.23",
     "@types/node": "15.6.2",
     "@types/node-fetch": "^2.5.10",
