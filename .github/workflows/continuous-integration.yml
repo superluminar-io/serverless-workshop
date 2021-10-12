@@ -12,4 +12,4 @@ jobs:
       - name: Install dependencies
         run: npm ci
       - name: Synth labs
-        run: npm run cdk synth --workspaces
+        run: npm run synth --workspaces

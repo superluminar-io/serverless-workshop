@@ -13,139 +13,118 @@ Write unit tests for the AWS Lambda functions. Running the command `npm test` sh
 
 ### 🔎 Hints
 
-- [Mock the DynamoDB DocumentClient with Jest](https://stackoverflow.com/a/60478596)
+- [Mock the DynamoDB DocumentClient with AWS SDK Mock](https://github.com/dwyl/aws-sdk-mock#using-typescript)
 
 ### 🗺  Step-by-Step Guide
 
 <details>
 <summary>Collapse guide</summary>
 
-1. Delete the test file created by AWS CDK:
-   ```bash
-   rm ./test/notes-api.test.ts
-   ```
-1. Create a new folder:
-   ```bash
-   mkdir ./test/src
-   ```
+1. Extend the list of dev dependencies in the `.projenrc.js` configuration:
+  ```js
+  const { AwsCdkTypeScriptApp, NodePackageManager } = require('projen');
+  const project = new AwsCdkTypeScriptApp({
+    // …
+    devDeps: [
+      'esbuild@0',
+      '@types/aws-lambda',
+      'aws-sdk-mock'
+    ],
+    // …
+  });
+  project.synth();
+  ```
+1. Run `npm run projen` to install the new dependencies and re-generate the auto-generated files.
 1. Create a new file:
-
-   ```bash
-   touch ./test/src/listNotes.test.ts
-   ```
-
+  ```bash
+  touch ./test/main.list-notes.test.ts
+  ```
 1. Add the following code to the test file:
+  ```typescript
+  import AWSMock from 'aws-sdk-mock';
+  import { handler } from '../src/main.list-notes';
 
-   ```typescript
-   const scanSpy = jest.fn();
-   jest.mock("aws-sdk", () => ({
-     DynamoDB: {
-       DocumentClient: jest.fn(() => ({
-         scan: scanSpy,
-       })),
-     },
-   }));
+  it('should return notes', async () => {
+    const item = {
+      id: '2021-04-12T18:55:06.295Z',
+      title: 'Hello World',
+      content: 'Minim nulla dolore nostrud dolor aliquip minim.',
+    };
 
-   import { handler } from "../../src/listNotes";
+    AWSMock.mock('DynamoDB.DocumentClient', 'scan', (_, callback: Function) => {
+      callback(null, { Items: [item] });
+    });
 
-   beforeAll(() => {
-     process.env.TABLE_NAME = "foo";
-   });
+    const response = await handler();
 
-   afterEach(() => {
-     jest.resetAllMocks();
-   });
+    expect(response).toEqual({
+      statusCode: 200,
+      body: JSON.stringify([item]),
+    });
 
-   it("should return notes", async () => {
-     const item = {
-       id: "2021-04-12T18:55:06.295Z",
-       title: "Hello World",
-       content: "Minim nulla dolore nostrud dolor aliquip minim.",
-     };
-
-     scanSpy.mockImplementation(() => ({
-       promise() {
-         return Promise.resolve({ Items: [item] });
-       },
-     }));
-
-     const response = await handler();
-
-     expect(response).toEqual({
-       statusCode: 200,
-       body: JSON.stringify([item]),
-     });
-   });
-   ```
-
+    AWSMock.restore('DynamoDB.DocumentClient');
+  });
+  ```
 1. Create a new file:
-
    ```bash
-   touch test/src/putNotes.test.ts
+   touch test/main.put-note.test.ts
    ```
-
 1. Add the following code to the test file:
+  ```typescript
+  import AWSMock from 'aws-sdk-mock';
+  import { handler } from '../src/main.put-note';
 
-   ```typescript
-   const putSpy = jest.fn();
-   jest.mock("aws-sdk", () => ({
-     DynamoDB: {
-       DocumentClient: jest.fn(() => ({
-         put: putSpy,
-       })),
-     },
-   }));
+  describe("valid request", () => {
+    it("should return status code 201", async () => {
+      const tableName = 'foo';
+      const putItemSpy = jest.fn();
+      process.env.TABLE_NAME = tableName;
+      AWSMock.mock('DynamoDB.DocumentClient', 'put', (params, callback) => {
+        callback(null, putItemSpy(params));
+      });
 
-   import { APIGatewayProxyEvent } from "aws-lambda";
-   import { handler } from "../../src/putNote";
+      const requestBody = {
+        title: "Hello World",
+        content: "Minim nulla dolore nostrud dolor aliquip minim.",
+      };
 
-   beforeAll(() => {
-     process.env.TABLE_NAME = "foo";
-   });
+      const event = {
+        body: JSON.stringify(requestBody),
+      } as AWSLambda.APIGatewayProxyEvent;
+      
+      const response = await handler(event);
 
-   afterEach(() => {
-     jest.resetAllMocks();
-   });
+      expect(putItemSpy).toHaveBeenCalledWith({
+        Item: {
+          id: expect.any(String),
+          title: requestBody.title,
+          content: requestBody.content,
+        },
+        TableName: tableName,
+      })
 
-   describe("valid request", () => {
-     it("should return status code 201", async () => {
-       const requestBody = {
-         title: "Hello World",
-         content: "Minim nulla dolore nostrud dolor aliquip minim.",
-       };
+      expect(response).toEqual({
+        statusCode: 201,
+      });
 
-       putSpy.mockImplementation(() => ({
-         promise() {
-           return Promise.resolve();
-         },
-       }));
+      AWSMock.restore('DynamoDB.DocumentClient');
+    });
+  });
 
-       const event = {
-         body: JSON.stringify(requestBody),
-       } as APIGatewayProxyEvent;
-       const response = await handler(event);
+  describe("invalid request body", () => {
+    it("should return status code 400", async () => {
+      const response = await handler({} as AWSLambda.APIGatewayProxyEvent);
 
-       expect(response).toEqual({
-         statusCode: 201,
-       });
-     });
-   });
-
-   describe("invalid request body", () => {
-     it("should return status code 400", async () => {
-       const response = await handler({} as APIGatewayProxyEvent);
-
-       expect(response).toEqual({
-         statusCode: 400,
-       });
-     });
-   });
-   ```
-
+      expect(response).toEqual({
+        statusCode: 400,
+      });
+    });
+  });
+  ```
 1. Run the tests:
-   ```bash
-   npm test
-   ```
+  ```bash
+  npm test
+  ```
 
 </details>
 
@@ -157,7 +136,7 @@ Integration tests are super helpful to test the whole stack end-to-end. Write so
 
 ### 🔎 Hints
 
-- [Separating unit and integration tests in Jest](https://medium.com/coding-stones/separating-unit-and-integration-tests-in-jest-f6dd301f399c)
+- [Write your own Projen tasks](https://github.com/projen/projen/blob/main/docs/tasks.md)
 - [node-fetch is your friend for sending HTTP requests](https://www.npmjs.com/package/node-fetch)
 - [Use environment variables to pass the API endpoint](https://www.twilio.com/blog/working-with-environment-variables-in-node-js-html)
 
@@ -166,78 +145,62 @@ Integration tests are super helpful to test the whole stack end-to-end. Write so
 <details>
 <summary>Collapse guide</summary>
 
-1. Install dependencies:
-   ```bash
-   npm install node-fetch @types/node-fetch --save-dev
+1. Extend the list of dependencies in the `.projenrc.js` configuration:
+   ```js
+   const project = new AwsCdkTypeScriptApp({
+    // …
+    deps: [
+      'aws-sdk',
+      'node-fetch@2'
+    ],
+    devDeps: [
+      'esbuild@0',
+      '@types/aws-lambda',
+      'aws-sdk-mock',
+      '@types/node-fetch'
+    ],
+    // …
+  });
    ```
-1. Create a new folder:
-   ```
-   mkdir ./integration
-   ```
+1. In addition, add a new task to the `.projenrc.js` configuration:
+  ```js
+  project.addTask('test:e2e', {
+    exec: 'jest --testMatch "**/*.e2etest.ts"',
+  })
+  ```
+1. Run `npm run projen` to install the new dependencies and re-generate the auto-generated files.
 1. Create a new file:
    ```
-   touch ./integration/api.test.ts
+   touch ./test/main.e2etest.ts
    ```
 1. Add the following code to the file:
+  ```typescript
+  import fetch from "node-fetch";
 
-   ```typescript
-   import fetch from "node-fetch";
+  const endpoint = process.env.ENDPOINT;
 
-   const endpoint = process.env.ENDPOINT;
+  test("create a note", async () => {
+    const response = await fetch(`${endpoint}/notes`, {
+      method: "POST",
+      body: JSON.stringify({
+        title: "Hello World",
+        content: "Ex nisi do ad sint enim.",
+      }),
+    });
 
-   test("create a note", async () => {
-     const response = await fetch(`${endpoint}/notes`, {
-       method: "POST",
-       body: JSON.stringify({
-         title: "Hello World",
-         content: "Ex nisi do ad sint enim.",
-       }),
-     });
+    expect(response.status).toEqual(201);
+  });
 
-     expect(response.status).toEqual(201);
-   });
+  test("list notes", async () => {
+    const response = await fetch(`${endpoint}/notes`);
 
-   test("list notes", async () => {
-     const response = await fetch(`${endpoint}/notes`);
-
-     expect(response.status).toEqual(200);
-   });
-   ```
-
-1. Create a new file:
-   ```bash
-   touch jest.integration.config.js
-   ```
-1. Add the following code to the file:
-
-   ```typescript
-   module.exports = {
-     roots: ["<rootDir>/integration"],
-     testMatch: ["**/*.test.ts"],
-     transform: {
-       "^.+\\.tsx?$": "ts-jest",
-     },
-   };
-   ```
-
-1. Add this line to `.gitignore`:
-   ```
-   !jest.integration.config.js
-   ```
-1. Add a new script for integration tests to the `package.json`:
-   ```json
-   "scripts": {
-       "build": "tsc",
-       "watch": "tsc -w",
-       "test": "jest",
-       "cdk": "cdk",
-       "integration": "jest -c jest.integration.config.js"
-   },
-   ```
+    expect(response.status).toEqual(200);
+  });
+  ```
 1. Run the integration tests:
-   ```bash
-   ENDPOINT=https://XXXXXX.execute-api.eu-central-1.amazonaws.com npm run integration
-   ```
+  ```bash
+  ENDPOINT=https://XXXXXX.execute-api.eu-central-1.amazonaws.com npm run test:e2e
+  ```
 
 </details>
 
