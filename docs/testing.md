@@ -13,7 +13,7 @@ Write unit tests for the AWS Lambda functions. Running the command `npm test` sh
 
 ### 🔎 Hints
 
-- [Mock the DynamoDB DocumentClient with Jest](https://stackoverflow.com/a/60478596)
+- [Mock the DynamoDB DocumentClient with AWS SDK Mock](https://github.com/dwyl/aws-sdk-mock#using-typescript)
 
 ### 🗺  Step-by-Step Guide
 
@@ -136,7 +136,7 @@ Integration tests are super helpful to test the whole stack end-to-end. Write so
 
 ### 🔎 Hints
 
-- [Method to extend the list of Projen tasks](https://github.com/projen/projen/blob/main/API.md#addtaskname-options-)
+- [Write your own Projen tasks](https://github.com/projen/projen/blob/main/docs/tasks.md)
 - [node-fetch is your friend for sending HTTP requests](https://www.npmjs.com/package/node-fetch)
 - [Use environment variables to pass the API endpoint](https://www.twilio.com/blog/working-with-environment-variables-in-node-js-html)
 
