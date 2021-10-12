@@ -1,10 +1,9 @@
-import * as AWS from "aws-sdk";
-import { APIGatewayProxyEvent } from "aws-lambda";
+import * as AWS from 'aws-sdk';
 
 const DB = new AWS.DynamoDB.DocumentClient();
 
-export const handler = async (event: APIGatewayProxyEvent) => {
-  const body = JSON.parse(event.body || "{}");
+export const handler = async (event: AWSLambda.APIGatewayProxyEvent) => {
+  const body = JSON.parse(event.body || '{}');
 
   if (!body.title || !body.content) {
     return {

@@ -9,11 +9,11 @@
 
 ### 📝 Task
 
-Create a fresh AWS CDK app with the CLI.
+Create a fresh AWS CDK app with Projen.
 
 ### 🔎 Hints
 
-- [Documentation: Your first AWS CDK app](https://docs.aws.amazon.com/cdk/latest/guide/hello_world.html)
+- [Getting started with Projen](https://github.com/projen/projen#getting-started)
 
 ### 🗺  Step-by-Step Guide
 
@@ -28,13 +28,9 @@ Create a fresh AWS CDK app with the CLI.
    ```bash
    cd notes-api
    ```
-1. Init AWS CDK:
+1. Init AWS CDK with Projen:
    ```bash
-   npx cdk init app --language typescript
-   ```
-1. Update CDK to the latest version:
-   ```bash
-   npm install @aws-cdk/core@latest @aws-cdk/assert@latest aws-cdk@latest
+   npx projen new awscdk-app-ts --package-manager 'NPM' --github false --no-git
    ```
 1. Boostrap CDK for your account:
    ```bash
@@ -42,7 +38,7 @@ Create a fresh AWS CDK app with the CLI.
    ```
 1. Deploy the CloudFormation stack:
    ```bash
-   npx cdk deploy
+   npm run deploy
    ```
 
 </details>
@@ -58,19 +54,16 @@ Now that we have an AWS CDK app, we want to deploy the first resource. Create a 
 - [CDK Construct to create a Node.js Lambda function](https://docs.aws.amazon.com/cdk/api/latest/docs/aws-lambda-nodejs-readme.html#nodejs-function)
 - [Simple Lambda function with log output](https://docs.aws.amazon.com/lambda/latest/dg/nodejs-logging.html)
 - [Hint about local bundling (to avoid Docker)](https://docs.aws.amazon.com/cdk/api/latest/docs/aws-lambda-nodejs-readme.html#local-bundling)
+- [Adding CDK dependencies with Projen](https://github.com/projen/projen/blob/main/API.md#class-awscdktypescriptapp--)
 
 ### 🗺  Step-by-Step Guide
 
 <details>
 <summary>Collapse guide</summary>
 
-1. Create a new `src` folder:
-   ```bash
-   mkdir ./src
-   ```
 1. Create a new file for the AWS lambda function:
    ```bash
-   touch ./src/putNote.ts
+   touch ./src/main.put-note.ts 
    ```
 1. Add the following code to the file:
    ```typescript
@@ -78,29 +71,55 @@ Now that we have an AWS CDK app, we want to deploy the first resource. Create a 
      console.log("Hello World :)");
    };
    ```
-1. Install new dependencies:
-   ```bash
-   npm install @aws-cdk/aws-lambda-nodejs esbuild@0
-   ```
-1. Update the CloudFormation stack, so `./lib/notes-api-stack.ts`:
+1. Update the `.projenrc.js` configuration:
+  ```js
+  const { AwsCdkTypeScriptApp, NodePackageManager } = require('projen');
+  const project = new AwsCdkTypeScriptApp({
+    cdkVersion: '1.95.2',
+    defaultReleaseBranch: 'main',
+    github: false,
+    packageManager: NodePackageManager.NPM,
+    cdkDependencies: [
+      '@aws-cdk/aws-lambda-nodejs'
+    ],
+    // deps: [],                    /* Runtime dependencies of this module. */
+    // description: undefined,      /* The description is just a string that helps people understand the purpose of the package. */
+    devDeps: [
+      'esbuild@0'
+    ],
+    // packageName: undefined,      /* The "name" in package.json. */
+    // release: undefined,          /* Add release management to this project. */
+  });
+  project.synth();
+  ```
+1. Run `npm run projen` to install the new dependencies and re-generate the auto-generated files.
+1. Update the CloudFormation stack, so `./src/main.ts`:
+  ```typescript
+  import { App, Construct, Stack, StackProps } from '@aws-cdk/core';
+  import * as lambda from "@aws-cdk/aws-lambda-nodejs";
 
-   ```typescript
-   import * as cdk from "@aws-cdk/core";
-   import * as lambda from "@aws-cdk/aws-lambda-nodejs";
+  export class MyStack extends Stack {
+    constructor(scope: Construct, id: string, props: StackProps = {}) {
+      super(scope, id, props);
 
-   export class NotesApiStack extends cdk.Stack {
-     constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
-       super(scope, id, props);
+      new lambda.NodejsFunction(this, "put-note");
+    }
+  }
 
-       new lambda.NodejsFunction(this, "PutNote", {
-         entry: "src/putNote.ts",
-         handler: "handler",
-       });
-     }
-   }
-   ```
+  // for development, use account/region from cdk cli
+  const devEnv = {
+    account: process.env.CDK_DEFAULT_ACCOUNT,
+    region: process.env.CDK_DEFAULT_REGION,
+  };
 
-1. Deploy the latest changes: `npx cdk deploy`
+  const app = new App();
+
+  new MyStack(app, 'my-stack-dev', { env: devEnv });
+  // new MyStack(app, 'my-stack-prod', { env: prodEnv });
+
+  app.synth();
+  ```
+1. Deploy the latest changes: `npm run deploy`
 
 </details>
 
@@ -136,47 +155,64 @@ HTTP/2 200
 <details>
 <summary>Collapse guide</summary>
 
-1. Install NPM packages:
-   ```bash
-   npm install @aws-cdk/aws-apigatewayv2 @aws-cdk/aws-apigatewayv2-integrations
-   ```
-1. Update the CloudFormation stack, so `./lib/notes-api-stack.ts`:
-
+1. Extend the list of CDK dependencies in the `.projenrc.js` configuration:
+   ```js
+  const { AwsCdkTypeScriptApp, NodePackageManager } = require('projen');
+  const project = new AwsCdkTypeScriptApp({
+    // …
+    cdkDependencies: [
+      '@aws-cdk/aws-lambda-nodejs',
+      '@aws-cdk/aws-apigatewayv2',
+      '@aws-cdk/aws-apigatewayv2-integrations'
+    ],
+    // …
+  });
+  project.synth();
+  ```
+1. Run `npm run projen` to install the new dependencies and re-generate the auto-generated files.
+1. Update the CloudFormation stack, so `./src/main.ts`:
    ```typescript
-   import * as cdk from "@aws-cdk/core";
-   import * as lambda from "@aws-cdk/aws-lambda-nodejs";
-   import * as apigateway from "@aws-cdk/aws-apigatewayv2";
-   import * as apigatewayIntegrations from "@aws-cdk/aws-apigatewayv2-integrations";
+  import { App, Construct, Stack, StackProps, CfnOutput } from '@aws-cdk/core';
+  import * as lambda from "@aws-cdk/aws-lambda-nodejs";
+  import * as apigateway from "@aws-cdk/aws-apigatewayv2";
+  import * as apigatewayIntegrations from "@aws-cdk/aws-apigatewayv2-integrations";
 
-   export class NotesApiStack extends cdk.Stack {
-     constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
-       super(scope, id, props);
+  export class MyStack extends Stack {
+    constructor(scope: Construct, id: string, props: StackProps = {}) {
+      super(scope, id, props);
 
-       const putNote = new lambda.NodejsFunction(this, "PutNote", {
-         entry: "src/putNote.ts",
-         handler: "handler",
-       });
+      const putNote = new lambda.NodejsFunction(this, "put-note");
 
-       const putNoteIntegration =
-         new apigatewayIntegrations.LambdaProxyIntegration({
-           handler: putNote,
-         });
+      const putNoteIntegration = new apigatewayIntegrations.LambdaProxyIntegration({
+        handler: putNote,
+      });
 
-       const httpApi = new apigateway.HttpApi(this, "HttpApi");
+      const httpApi = new apigateway.HttpApi(this, "http-api");
 
-       httpApi.addRoutes({
-         path: "/notes",
-         methods: [apigateway.HttpMethod.POST],
-         integration: putNoteIntegration,
-       });
+      httpApi.addRoutes({
+        path: "/notes",
+        methods: [apigateway.HttpMethod.POST],
+        integration: putNoteIntegration,
+      });
 
-       new cdk.CfnOutput(this, "URL", { value: httpApi.apiEndpoint });
-     }
-   }
-   ```
+      new CfnOutput(this, "URL", { value: httpApi.apiEndpoint });
+    }
+  }
 
-1. Update the AWS Lambda function, so `./src/putNote.ts`:
+  // for development, use account/region from cdk cli
+  const devEnv = {
+    account: process.env.CDK_DEFAULT_ACCOUNT,
+    region: process.env.CDK_DEFAULT_REGION,
+  };
 
+  const app = new App();
+
+  new MyStack(app, 'my-stack-dev', { env: devEnv });
+  // new MyStack(app, 'my-stack-prod', { env: prodEnv });
+
+  app.synth();
+  ```
+1. Update the AWS Lambda function, so `./src/main.put-note.ts`:
    ```typescript
    export const handler = async () => {
      console.log("Hello World :)");
@@ -187,10 +223,9 @@ HTTP/2 200
      };
    };
    ```
-
 1. Deploy the latest changes:
    ```bash
-   npx cdk deploy
+   npm run deploy
    ```
 1. Copy the endpoint URL from the output of the deployment and run the following request to send a HTTP request:
    ```bash
@@ -234,65 +269,89 @@ The note should be persisted in the DynamoDB table.
 <details>
 <summary>Collapse guide</summary>
 
-1. Install new dependencies:
-   ```bash
-   npm install @aws-cdk/aws-dynamodb
-   npm install --save-dev aws-sdk @types/aws-lambda
-   ```
-1. Extend the CloudFormation stack, so `./lib/notes-api-stack.ts`:
+1. Extend the list of dependencies in the `.projenrc.js` configuration:
+  ```js
+  const { AwsCdkTypeScriptApp, NodePackageManager } = require('projen');
+  const project = new AwsCdkTypeScriptApp({
+    // …
+    cdkDependencies: [
+      '@aws-cdk/aws-lambda-nodejs',
+      '@aws-cdk/aws-apigatewayv2',
+      '@aws-cdk/aws-apigatewayv2-integrations',
+      '@aws-cdk/aws-dynamodb'
+    ],
+    deps: [
+      'aws-sdk'
+    ],
+    devDeps: [
+      'esbuild@0',
+      '@types/aws-lambda'
+    ],
+    // …
+  });
+  project.synth();
+  ```
+1. Run `npm run projen` to install the new dependencies and re-generate the auto-generated files.
+1. Extend the CloudFormation stack, so `./src/main.ts`:
+  ```typescript
+  import { App, Construct, Stack, StackProps, CfnOutput } from '@aws-cdk/core';
+  import * as lambda from "@aws-cdk/aws-lambda-nodejs";
+  import * as apigateway from "@aws-cdk/aws-apigatewayv2";
+  import * as apigatewayIntegrations from "@aws-cdk/aws-apigatewayv2-integrations";
+  import * as dynamodb from "@aws-cdk/aws-dynamodb";
 
-   ```typescript
-   import * as cdk from "@aws-cdk/core";
-   import * as lambda from "@aws-cdk/aws-lambda-nodejs";
-   import * as apigateway from "@aws-cdk/aws-apigatewayv2";
-   import * as apigatewayIntegrations from "@aws-cdk/aws-apigatewayv2-integrations";
-   import * as dynamodb from "@aws-cdk/aws-dynamodb";
+  export class MyStack extends Stack {
+    constructor(scope: Construct, id: string, props: StackProps = {}) {
+      super(scope, id, props);
 
-   export class NotesApiStack extends cdk.Stack {
-     constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
-       super(scope, id, props);
+      const notesTable = new dynamodb.Table(this, "notes-table", {
+        partitionKey: { name: "id", type: dynamodb.AttributeType.STRING },
+      });
 
-       const notesTable = new dynamodb.Table(this, "NotesTable", {
-         partitionKey: { name: "id", type: dynamodb.AttributeType.STRING },
-       });
+      const putNote = new lambda.NodejsFunction(this, "put-note", {
+        environment: {
+          TABLE_NAME: notesTable.tableName,
+        },
+      });
 
-       const putNote = new lambda.NodejsFunction(this, "PutNote", {
-         entry: "src/putNote.ts",
-         handler: "handler",
-         environment: {
-           TABLE_NAME: notesTable.tableName,
-         },
-       });
+      notesTable.grant(putNote, "dynamodb:PutItem");
+      
+      const putNoteIntegration = new apigatewayIntegrations.LambdaProxyIntegration({
+        handler: putNote,
+      });
 
-       notesTable.grant(putNote, "dynamodb:PutItem");
+      const httpApi = new apigateway.HttpApi(this, "http-api");
 
-       const putNoteIntegration =
-         new apigatewayIntegrations.LambdaProxyIntegration({
-           handler: putNote,
-         });
+      httpApi.addRoutes({
+        path: "/notes",
+        methods: [apigateway.HttpMethod.POST],
+        integration: putNoteIntegration,
+      });
 
-       const httpApi = new apigateway.HttpApi(this, "HttpApi");
+      new CfnOutput(this, "URL", { value: httpApi.apiEndpoint });
+    }
+  }
 
-       httpApi.addRoutes({
-         path: "/notes",
-         methods: [apigateway.HttpMethod.POST],
-         integration: putNoteIntegration,
-       });
+  // for development, use account/region from cdk cli
+  const devEnv = {
+    account: process.env.CDK_DEFAULT_ACCOUNT,
+    region: process.env.CDK_DEFAULT_REGION,
+  };
 
-       new cdk.CfnOutput(this, "URL", { value: httpApi.apiEndpoint });
-     }
-   }
-   ```
+  const app = new App();
 
+  new MyStack(app, 'my-stack-dev', { env: devEnv });
+  // new MyStack(app, 'my-stack-prod', { env: prodEnv });
+
+  app.synth();
+  ```
 1. Update the AWS Lambda function:
-
-   ```typescript
+  ```typescript
    import * as AWS from "aws-sdk";
-   import { APIGatewayProxyEvent } from "aws-lambda";
 
    const DB = new AWS.DynamoDB.DocumentClient();
 
-   export const handler = async (event: APIGatewayProxyEvent) => {
+   export const handler = async (event: AWSLambda.APIGatewayProxyEvent) => {
      const body = JSON.parse(event.body || "{}");
 
      if (!body.title || !body.content) {
@@ -315,19 +374,14 @@ The note should be persisted in the DynamoDB table.
      };
    };
    ```
-
 1. Deploy the latest changes:
-
    ```bash
-   npx cdk deploy
+   npm run deploy
    ```
-
 1. Send a HTTP request with your endpoint url:
-
    ```bash
    curl -X POST https://XXXXXX.execute-api.eu-central-1.amazonaws.com/notes --data '{ "title": "Hello World", "content": "abc" }' -H 'Content-Type: application/json' -i
    ```
-
 1. Ideally, your first note is stored in the DynamoDB table! 🎉
 
 </details>
@@ -362,99 +416,100 @@ HTTP/2 200
 <details>
 <summary>Collapse guide</summary>
 
-1. Extend the CloudFormation stack, so `./lib/notes-api-stack.ts` becomes:
+1. Extend the CloudFormation stack, so `./src/main.ts` becomes:
+  ```typescript
+  import { App, Construct, Stack, StackProps, CfnOutput } from '@aws-cdk/core';
+  import * as lambda from "@aws-cdk/aws-lambda-nodejs";
+  import * as apigateway from "@aws-cdk/aws-apigatewayv2";
+  import * as apigatewayIntegrations from "@aws-cdk/aws-apigatewayv2-integrations";
+  import * as dynamodb from "@aws-cdk/aws-dynamodb";
 
-   ```typescript
-   import * as cdk from "@aws-cdk/core";
-   import * as lambda from "@aws-cdk/aws-lambda-nodejs";
-   import * as apigateway from "@aws-cdk/aws-apigatewayv2";
-   import * as apigatewayIntegrations from "@aws-cdk/aws-apigatewayv2-integrations";
-   import * as dynamodb from "@aws-cdk/aws-dynamodb";
+  export class MyStack extends Stack {
+    constructor(scope: Construct, id: string, props: StackProps = {}) {
+      super(scope, id, props);
 
-   export class NotesApiStack extends cdk.Stack {
-     constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
-       super(scope, id, props);
+      const notesTable = new dynamodb.Table(this, "notes-table", {
+        partitionKey: { name: "id", type: dynamodb.AttributeType.STRING },
+      });
 
-       const notesTable = new dynamodb.Table(this, "NotesTable", {
-         partitionKey: { name: "id", type: dynamodb.AttributeType.STRING },
-       });
+      const putNote = new lambda.NodejsFunction(this, "put-note", {
+        environment: {
+          TABLE_NAME: notesTable.tableName,
+        },
+      });
 
-       const putNote = new lambda.NodejsFunction(this, "PutNote", {
-         entry: "src/putNote.ts",
-         handler: "handler",
-         environment: {
-           TABLE_NAME: notesTable.tableName,
-         },
-       });
+      const listNotes = new lambda.NodejsFunction(this, "list-notes", {
+        environment: {
+          TABLE_NAME: notesTable.tableName,
+        },
+      });
 
-       const listNotes = new lambda.NodejsFunction(this, "ListNotes", {
-         entry: "src/listNotes.ts",
-         handler: "handler",
-         environment: {
-           TABLE_NAME: notesTable.tableName,
-         },
-       });
+      notesTable.grant(putNote, "dynamodb:PutItem");
+      notesTable.grant(listNotes, "dynamodb:Scan");
 
-       notesTable.grant(putNote, "dynamodb:PutItem");
-       notesTable.grant(listNotes, "dynamodb:Scan");
+      const putNoteIntegration = new apigatewayIntegrations.LambdaProxyIntegration({
+        handler: putNote,
+      });
 
-       const putNoteIntegration =
-         new apigatewayIntegrations.LambdaProxyIntegration({
-           handler: putNote,
-         });
+      const listNotesIntegration = new apigatewayIntegrations.LambdaProxyIntegration({
+        handler: listNotes,
+      });
 
-       const listNotesIntegration =
-         new apigatewayIntegrations.LambdaProxyIntegration({
-           handler: listNotes,
-         });
+      const httpApi = new apigateway.HttpApi(this, "http-api");
 
-       const httpApi = new apigateway.HttpApi(this, "HttpApi");
+      httpApi.addRoutes({
+        path: "/notes",
+        methods: [apigateway.HttpMethod.POST],
+        integration: putNoteIntegration,
+      });
 
-       httpApi.addRoutes({
-         path: "/notes",
-         methods: [apigateway.HttpMethod.POST],
-         integration: putNoteIntegration,
-       });
+      httpApi.addRoutes({
+        path: "/notes",
+        methods: [apigateway.HttpMethod.GET],
+        integration: listNotesIntegration,
+      });
+      
+      new CfnOutput(this, "URL", { value: httpApi.apiEndpoint });
+    }
+  }
 
-       httpApi.addRoutes({
-         path: "/notes",
-         methods: [apigateway.HttpMethod.GET],
-         integration: listNotesIntegration,
-       });
+  // for development, use account/region from cdk cli
+  const devEnv = {
+    account: process.env.CDK_DEFAULT_ACCOUNT,
+    region: process.env.CDK_DEFAULT_REGION,
+  };
 
-       new cdk.CfnOutput(this, "URL", { value: httpApi.apiEndpoint });
-     }
-   }
-   ```
+  const app = new App();
 
+  new MyStack(app, 'my-stack-dev', { env: devEnv });
+  // new MyStack(app, 'my-stack-prod', { env: prodEnv });
+
+  app.synth();
+  ```
 1. Create a new file for the second AWS Lambda function:
-
    ```bash
-   touch src/listNotes.ts
+   touch src/main.list-notes.ts
    ```
-
 1. Add the following code to the file:
+  ```typescript
+  import * as AWS from "aws-sdk";
 
-   ```typescript
-   import * as AWS from "aws-sdk";
+  const DB = new AWS.DynamoDB.DocumentClient();
 
-   const DB = new AWS.DynamoDB.DocumentClient();
+  export const handler = async () => {
+    const response = await DB.scan({
+      TableName: process.env.TABLE_NAME!,
+    }).promise();
 
-   export const handler = async () => {
-     const response = await DB.scan({
-       TableName: process.env.TABLE_NAME!,
-     }).promise();
-
-     return {
-       statusCode: 200,
-       body: JSON.stringify(response.Items),
-     };
-   };
-   ```
-
+    return {
+      statusCode: 200,
+      body: JSON.stringify(response.Items),
+    };
+  };
+  ```
 1. Deploy the latest changes:
    ```bash
-   npx cdk deploy
+   npm run deploy
    ```
 1. Run the following request with your endpoint URL:
    ```bash
