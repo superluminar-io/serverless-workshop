@@ -2,7 +2,7 @@ const { AwsCdkTypeScriptApp, NodePackageManager } = require('projen');
 const project = new AwsCdkTypeScriptApp({
   cdkVersion: '1.95.2',
   defaultReleaseBranch: 'main',
-  name: 'lab1',
+  name: 'lab4',
   github: false,
   packageManager: NodePackageManager.NPM,
   cdkDependencies: [
