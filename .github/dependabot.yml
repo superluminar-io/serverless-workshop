@@ -2,9 +2,12 @@ version: 2
 
 updates:
   - package-ecosystem: "npm"
+    versioning-strategy: lockfile-only
     directory: "/"
     schedule:
       interval: "daily"
+    ignore:
+      - dependency-name: projen
   
   # NPM workspaces doesn't support nested workspaces
   # Therefore we need to register the frontend folder explicitly
