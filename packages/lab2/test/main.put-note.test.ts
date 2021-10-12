@@ -1,8 +1,8 @@
 import AWSMock from 'aws-sdk-mock';
 import { handler } from '../src/main.put-note';
 
-describe("valid request", () => {
-  it("should return status code 201", async () => {
+describe('valid request', () => {
+  it('should return status code 201', async () => {
     const tableName = 'foo';
     const putItemSpy = jest.fn();
     process.env.TABLE_NAME = tableName;
@@ -11,14 +11,14 @@ describe("valid request", () => {
     });
 
     const requestBody = {
-      title: "Hello World",
-      content: "Minim nulla dolore nostrud dolor aliquip minim.",
+      title: 'Hello World',
+      content: 'Minim nulla dolore nostrud dolor aliquip minim.',
     };
 
     const event = {
       body: JSON.stringify(requestBody),
     } as AWSLambda.APIGatewayProxyEvent;
-    
+
     const response = await handler(event);
 
     expect(putItemSpy).toHaveBeenCalledWith({
@@ -28,7 +28,7 @@ describe("valid request", () => {
         content: requestBody.content,
       },
       TableName: tableName,
-    })
+    });
 
     expect(response).toEqual({
       statusCode: 201,
@@ -38,8 +38,8 @@ describe("valid request", () => {
   });
 });
 
-describe("invalid request body", () => {
-  it("should return status code 400", async () => {
+describe('invalid request body', () => {
+  it('should return status code 400', async () => {
     const response = await handler({} as AWSLambda.APIGatewayProxyEvent);
 
     expect(response).toEqual({

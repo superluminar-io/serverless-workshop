@@ -13,14 +13,14 @@ const project = new AwsCdkTypeScriptApp({
   ],
   deps: [
     'aws-sdk',
-    'node-fetch@2'
+    'node-fetch@2',
   ],
   // description: undefined,      /* The description is just a string that helps people understand the purpose of the package. */
   devDeps: [
     'esbuild@0',
     '@types/aws-lambda',
     'aws-sdk-mock',
-    '@types/node-fetch'
+    '@types/node-fetch',
   ],
   // packageName: undefined,      /* The "name" in package.json. */
   // release: undefined,          /* Add release management to this project. */
@@ -28,6 +28,6 @@ const project = new AwsCdkTypeScriptApp({
 
 project.addTask('test:e2e', {
   exec: 'jest --testMatch "**/*.e2etest.ts"',
-})
+});
 
 project.synth();
