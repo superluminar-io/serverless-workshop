@@ -1,8 +1,8 @@
 import * as AWS from 'aws-sdk';
 
-const DB = new AWS.DynamoDB.DocumentClient();
-
 export const handler = async (event: AWSLambda.APIGatewayProxyEvent) => {
+  const DB = new AWS.DynamoDB.DocumentClient();
+
   const body = JSON.parse(event.body || '{}');
 
   if (!body.title || !body.content) {

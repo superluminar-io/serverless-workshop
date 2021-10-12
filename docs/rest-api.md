@@ -349,9 +349,9 @@ The note should be persisted in the DynamoDB table.
   ```typescript
    import * as AWS from "aws-sdk";
 
-   const DB = new AWS.DynamoDB.DocumentClient();
-
    export const handler = async (event: AWSLambda.APIGatewayProxyEvent) => {
+     const DB = new AWS.DynamoDB.DocumentClient();
+
      const body = JSON.parse(event.body || "{}");
 
      if (!body.title || !body.content) {
@@ -494,9 +494,9 @@ HTTP/2 200
   ```typescript
   import * as AWS from "aws-sdk";
 
-  const DB = new AWS.DynamoDB.DocumentClient();
-
   export const handler = async () => {
+    const DB = new AWS.DynamoDB.DocumentClient();
+
     const response = await DB.scan({
       TableName: process.env.TABLE_NAME!,
     }).promise();
