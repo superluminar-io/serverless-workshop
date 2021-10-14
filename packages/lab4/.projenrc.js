@@ -10,6 +10,7 @@ const project = new AwsCdkTypeScriptApp({
     '@aws-cdk/aws-apigatewayv2',
     '@aws-cdk/aws-apigatewayv2-integrations',
     '@aws-cdk/aws-dynamodb',
+    '@aws-cdk/aws-lambda-event-sources',
   ],
   deps: [
     'aws-sdk',
