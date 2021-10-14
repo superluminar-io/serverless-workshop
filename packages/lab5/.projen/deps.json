@@ -5,6 +5,10 @@
       "type": "build"
     },
     {
+      "name": "@types/fs-extra",
+      "type": "build"
+    },
+    {
       "name": "@types/jest",
       "type": "build"
     },
@@ -106,6 +110,16 @@
       "type": "runtime"
     },
     {
+      "name": "@aws-cdk/aws-cloudfront-origins",
+      "version": "^1.95.2",
+      "type": "runtime"
+    },
+    {
+      "name": "@aws-cdk/aws-cloudfront",
+      "version": "^1.95.2",
+      "type": "runtime"
+    },
+    {
       "name": "@aws-cdk/aws-dynamodb",
       "version": "^1.95.2",
       "type": "runtime"
@@ -116,12 +130,21 @@
       "type": "runtime"
     },
     {
+      "name": "@aws-cdk/aws-s3-deployment",
+      "version": "^1.95.2",
+      "type": "runtime"
+    },
+    {
       "name": "@aws-cdk/core",
       "version": "^1.95.2",
       "type": "runtime"
     },
     {
       "name": "aws-sdk",
+      "type": "runtime"
+    },
+    {
+      "name": "fs-extra",
       "type": "runtime"
     },
     {

@@ -2,7 +2,7 @@ const { AwsCdkTypeScriptApp, NodePackageManager } = require('projen');
 const project = new AwsCdkTypeScriptApp({
   cdkVersion: '1.95.2',
   defaultReleaseBranch: 'main',
-  name: 'lab4',
+  name: 'lab5',
   github: false,
   packageManager: NodePackageManager.NPM,
   cdkDependencies: [
@@ -10,10 +10,14 @@ const project = new AwsCdkTypeScriptApp({
     '@aws-cdk/aws-apigatewayv2',
     '@aws-cdk/aws-apigatewayv2-integrations',
     '@aws-cdk/aws-dynamodb',
+    '@aws-cdk/aws-s3-deployment',
+    '@aws-cdk/aws-cloudfront-origins',
+    '@aws-cdk/aws-cloudfront',
   ],
   deps: [
     'aws-sdk',
     'node-fetch@2',
+    'fs-extra',
   ],
   // description: undefined,      /* The description is just a string that helps people understand the purpose of the package. */
   devDeps: [
@@ -21,6 +25,7 @@ const project = new AwsCdkTypeScriptApp({
     '@types/aws-lambda',
     'aws-sdk-mock',
     '@types/node-fetch',
+    '@types/fs-extra',
   ],
   // packageName: undefined,      /* The "name" in package.json. */
   // release: undefined,          /* Add release management to this project. */
