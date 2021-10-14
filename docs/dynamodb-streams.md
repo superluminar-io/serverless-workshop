@@ -2,29 +2,41 @@
 
 ## In this lab …
 
-- Learn how to create a DynamoDB streams and handle asynchronous operations
+- Learn how to create a DynamoDB stream and handle asynchronous operations
 - Learn how to use dead letter queues for AWS Lambda functions
 
 ## DynamoDB Stream
 
 ### 📝 Task
 
-First things first. We need a frontend app to deploy a static website. You can use whatever you want, we use [Create React App](https://github.com/facebook/create-react-app) in the step-by-step guide.
-
-Create a frontend app in a new subfolder.
+Create a DynamoDB stream for the notes table. The AWS Lambda function should take the note, count the words and apply the number of words to the DynamoDB item. You can keep the word counting very simple as it just demonstrates asynchronous data processing.
 
 ### 🔎 Hints
 
-- [Creating a TypeScript app with Create React App](https://create-react-app.dev/docs/getting-started/#creating-a-typescript-app)
+- [DynamoDB stream with AWS CDK](https://docs.aws.amazon.com/cdk/api/latest/docs/aws-lambda-event-sources-readme.html#dynamodb-streams)
 
 ### 🗺  Step-by-Step Guide
 
 <details>
 <summary>Collapse guide</summary>
 
-1. Run create-react-app to bootstrap a new CRA project:
-  ```bash
-  npx create-react-app frontend --template typescript
+1. Extend the `.projenrc.js` configuration to add new CDK dependencies:
+  ```js
+  const project = new AwsCdkTypeScriptApp({
+    // …
+    cdkDependencies: [
+      '@aws-cdk/aws-lambda-nodejs',
+      '@aws-cdk/aws-apigatewayv2',
+      '@aws-cdk/aws-apigatewayv2-integrations',
+      '@aws-cdk/aws-dynamodb',
+      '@aws-cdk/aws-lambda-event-sources'
+    ],
+    // …
+  });
+  ```
+1. Extend the CloudFormation stack in `./src/main.ts` file:
+  ```ts
+  
   ```
 
 </details>
