@@ -29,6 +29,7 @@ Create a DynamoDB stream for the notes table. The AWS Lambda function should tak
       '@aws-cdk/aws-apigatewayv2',
       '@aws-cdk/aws-apigatewayv2-integrations',
       '@aws-cdk/aws-dynamodb',
+      '@aws-cdk/aws-lambda',
       '@aws-cdk/aws-lambda-event-sources'
     ],
     // …
@@ -36,10 +37,87 @@ Create a DynamoDB stream for the notes table. The AWS Lambda function should tak
   ```
 1. Extend the CloudFormation stack in `./src/main.ts` file:
   ```ts
-  
+  // … (more imports from previous labs)
+  import * as lambda from '@aws-cdk/aws-lambda';
+  import * as lambdaNodeJs from '@aws-cdk/aws-lambda-nodejs';
+  import * as lambdaEventSources from '@aws-cdk/aws-lambda-event-sources';
+
+  export class MyStack extends Stack {
+    constructor(scope: Construct, id: string, props: StackProps = {}) {
+      super(scope, id, props);
+
+      const notesTable = new dynamodb.Table(this, 'notes-table', {
+        partitionKey: { name: 'id', type: dynamodb.AttributeType.STRING },
+        stream: dynamodb.StreamViewType.NEW_IMAGE,
+      });
+
+      const stream = new lambdaNodeJs.NodejsFunction(this, 'stream', {
+        environment: {
+          TABLE_NAME: notesTable.tableName,
+        },
+      });
+      stream.addEventSource(new lambdaEventSources.DynamoEventSource(notesTable, {
+        startingPosition: lambda.StartingPosition.TRIM_HORIZON,
+        retryAttempts: 0,
+      }));
+
+      // … (more resources from previous labs)
+    }
+  }
   ```
+1. Create a new file for the AWS lambda function:
+  ```bash
+  touch src/main.stream.ts
+  ```
+1. Implement the AWS lambda function:
+  ```ts
+  import * as AWS from 'aws-sdk';
+
+  export const handler = async (event: AWSLambda.DynamoDBStreamEvent) => {
+    const DB = new AWS.DynamoDB.DocumentClient();
+
+    for (let record of event.Records) {
+      if (record.eventName !== 'INSERT' || !record.dynamodb || !record.dynamodb.NewImage) {
+        return;
+      }
+
+      const id = record.dynamodb.Keys?.id.S;
+      const newImage = record.dynamodb.NewImage;
+      const content = newImage.content?.S;
+      const wordCount = content?.split(' ').length;
+
+      await DB.update({
+        Key: {
+          id,
+        },
+        AttributeUpdates: {
+          wordCount: {
+            Value: wordCount,
+          },
+        },
+        TableName: process.env.TABLE_NAME!,
+      }).promise();
+    }
+  };
+  ```
+1. Deploy the CloudFormation stack:
+  ```
+  npm run deploy
+  ```
+1. Make a HTTP request:
+  ```bash
+  curl -X POST https://XXXXXX.execute-api.eu-central-1.amazonaws.com/notes --data '{ "title": "Count me", "content": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla vitae." }' -H 'Content-Type: application/json' -i
+  ```
+1. Go to the [DynamoDB console](https://console.aws.amazon.com/dynamodbv2) and check the word count.
 
 </details>
+
+### ❓ Questions
+
+- What stream types can we configure for the DynamoDB stream, and what are the benefits?
+- What is the default batch size, and what do we need to consider for the AWS lambda function configuration?
+- What are secenarios where retry policies for DynamoDB streams might be helpful? 
+- What happens with the event assuming the AWS Lambda function fails?
 
 ---
 
