@@ -126,6 +126,11 @@
       "type": "runtime"
     },
     {
+      "name": "@aws-cdk/aws-sqs",
+      "version": "^1.95.2",
+      "type": "runtime"
+    },
+    {
       "name": "@aws-cdk/core",
       "version": "^1.95.2",
       "type": "runtime"

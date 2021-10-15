@@ -6,11 +6,15 @@ import * as apigatewayIntegrations from '@aws-cdk/aws-apigatewayv2-integrations'
 import * as cloudfront from '@aws-cdk/aws-cloudfront';
 import * as origins from '@aws-cdk/aws-cloudfront-origins';
 import * as dynamodb from '@aws-cdk/aws-dynamodb';
-import * as lambda from '@aws-cdk/aws-lambda-nodejs';
 import * as s3 from '@aws-cdk/aws-s3';
 import * as s3deploy from '@aws-cdk/aws-s3-deployment';
 import { App, Construct, Stack, StackProps, CfnOutput, RemovalPolicy, DockerImage } from '@aws-cdk/core';
 import * as fs from 'fs-extra';
+import * as lambdaNodeJs from "@aws-cdk/aws-lambda-nodejs";
+import * as s3 from "@aws-cdk/aws-s3";
+import * as cloudfront from "@aws-cdk/aws-cloudfront";
+import * as origins from "@aws-cdk/aws-cloudfront-origins";
+import * as s3deploy from "@aws-cdk/aws-s3-deployment";
 
 export class MyStack extends Stack {
   constructor(scope: Construct, id: string, props: StackProps = {}) {
@@ -20,13 +24,13 @@ export class MyStack extends Stack {
       partitionKey: { name: 'id', type: dynamodb.AttributeType.STRING },
     });
 
-    const putNote = new lambda.NodejsFunction(this, 'put-note', {
+    const putNote = new lambdaNodeJs.NodejsFunction(this, 'put-note', {
       environment: {
         TABLE_NAME: notesTable.tableName,
       },
     });
 
-    const listNotes = new lambda.NodejsFunction(this, 'list-notes', {
+    const listNotes = new lambdaNodeJs.NodejsFunction(this, 'list-notes', {
       environment: {
         TABLE_NAME: notesTable.tableName,
       },
