@@ -15,12 +15,12 @@ export class MyStack extends Stack {
       stream: dynamodb.StreamViewType.NEW_IMAGE,
     });
 
-    const stream = new lambdaNodeJs.NodejsFunction(this, 'stream', {
+    const wordCount = new lambdaNodeJs.NodejsFunction(this, 'word-count', {
       environment: {
         TABLE_NAME: notesTable.tableName,
       },
     });
-    stream.addEventSource(new lambdaEventSources.DynamoEventSource(notesTable, {
+    wordCount.addEventSource(new lambdaEventSources.DynamoEventSource(notesTable, {
       startingPosition: lambda.StartingPosition.TRIM_HORIZON,
       retryAttempts: 0,
     }));
