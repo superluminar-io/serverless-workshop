@@ -1,17 +1,25 @@
 import * as AWS from 'aws-sdk';
 
-export const handler = async (event: AWSLambda.DynamoDBStreamEvent) => {
+export const handler = async (event: AWSLambda.SQSEvent) => {
   const DB = new AWS.DynamoDB.DocumentClient();
+  const tableName = process.env.TABLE_NAME!;
 
   for (let record of event.Records) {
-    if (record.eventName !== 'INSERT' || !record.dynamodb || !record.dynamodb.NewImage) {
+    const body = JSON.parse(record.body);
+    const id = body.noteId;
+    const note = await DB.get({
+      TableName: tableName,
+      Key: {
+        id: body.noteId,
+      },
+    }).promise();
+
+    if (!note.Item) {
       return;
     }
 
-    const id = record.dynamodb.Keys?.id.S;
-    const newImage = record.dynamodb.NewImage;
-    const content = newImage.content?.S;
-    const wordCount = content?.split(' ').length;
+    const content = note.Item.content;
+    const wordCount = content.split(' ').length;
 
     await DB.update({
       Key: {

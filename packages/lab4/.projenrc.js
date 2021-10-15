@@ -12,6 +12,7 @@ const project = new AwsCdkTypeScriptApp({
     '@aws-cdk/aws-dynamodb',
     '@aws-cdk/aws-lambda',
     '@aws-cdk/aws-lambda-event-sources',
+    '@aws-cdk/aws-sqs',
   ],
   deps: [
     'aws-sdk',

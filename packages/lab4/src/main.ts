@@ -4,6 +4,7 @@ import * as dynamodb from '@aws-cdk/aws-dynamodb';
 import * as lambda from '@aws-cdk/aws-lambda';
 import * as lambdaEventSources from '@aws-cdk/aws-lambda-event-sources';
 import * as lambdaNodeJs from '@aws-cdk/aws-lambda-nodejs';
+import * as sqs from '@aws-cdk/aws-sqs';
 import { App, Construct, Stack, StackProps, CfnOutput } from '@aws-cdk/core';
 
 export class MyStack extends Stack {
@@ -15,15 +16,24 @@ export class MyStack extends Stack {
       stream: dynamodb.StreamViewType.NEW_IMAGE,
     });
 
+    const queue = new sqs.Queue(this, 'queue');
+    const stream = new lambdaNodeJs.NodejsFunction(this, 'stream', {
+      environment: {
+        QUEUE_URL: queue.queueUrl,
+      }
+    });
+    stream.addEventSource(new lambdaEventSources.DynamoEventSource(notesTable, {
+      startingPosition: lambda.StartingPosition.TRIM_HORIZON,
+      retryAttempts: 0,
+    }));
+    queue.grantSendMessages(stream);
+
     const wordCount = new lambdaNodeJs.NodejsFunction(this, 'word-count', {
       environment: {
         TABLE_NAME: notesTable.tableName,
       },
     });
-    wordCount.addEventSource(new lambdaEventSources.DynamoEventSource(notesTable, {
-      startingPosition: lambda.StartingPosition.TRIM_HORIZON,
-      retryAttempts: 0,
-    }));
+    wordCount.addEventSource(new lambdaEventSources.SqsEventSource(queue));
 
     const putNote = new lambdaNodeJs.NodejsFunction(this, 'put-note', {
       environment: {
@@ -38,7 +48,7 @@ export class MyStack extends Stack {
     });
 
     notesTable.grant(putNote, 'dynamodb:PutItem');
-    notesTable.grant(stream, 'dynamodb:UpdateItem');
+    notesTable.grant(wordCount, 'dynamodb:GetItem', 'dynamodb:UpdateItem');
     notesTable.grant(listNotes, 'dynamodb:Scan');
 
     const putNoteIntegration = new apigatewayIntegrations.LambdaProxyIntegration({
