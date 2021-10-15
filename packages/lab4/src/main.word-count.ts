@@ -30,7 +30,7 @@ export const handler = async (event: AWSLambda.SQSEvent) => {
           Value: wordCount,
         },
       },
-      TableName: process.env.TABLE_NAME!,
+      TableName: tableName,
     }).promise();
   }
 };

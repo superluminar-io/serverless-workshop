@@ -271,7 +271,7 @@ Create a queue with AWS SQS and send the DynamoDB stream event to the queue. Pro
             Value: wordCount,
           },
         },
-        TableName: process.env.TABLE_NAME!,
+        TableName: tableName,
       }).promise();
     }
   };
