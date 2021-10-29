@@ -1,19 +1,8 @@
-# Serverless Workshop
+# Serverless Workshop 🎓
+> Hands-on AWS serverless workshop for beginners
 
-Please go to the [documentation](https://workshop.superluminar.io/) for more.
+👉 New here? Check out the [workshop website](https://workshop.superluminar.io).
 
-## Working on the documentation
+🤓 You want to contribute? Check [this](CONTRIBUTING.md).
 
-```sh
-$ > git clone git@github.com:superluminar-io/serverless-workshop.git
-
-$ > cd serverless-workshop
-
-# Install dependencies
-$ > npm install
-
-# Serve docs
-$ > npm start
-```
-
-Open http://localhost:3000.
+👩‍⚖️ Curious about the license? See our [license](LICENSE).
