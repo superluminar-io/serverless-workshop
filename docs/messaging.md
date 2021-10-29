@@ -1,9 +1,9 @@
-# DynamoDB Streams
+# Messaging
 
 ## In this lab …
 
 - Learn how to create a DynamoDB stream and handle asynchronous operations
-- Learn how to use AWS SQS as a message broker to improve the robustness
+- Learn how to use AWS SQS, AWS SNS, and AWS EventBridge for messages and events
 
 ## DynamoDB Stream
 
