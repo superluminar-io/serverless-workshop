@@ -1,4 +1,4 @@
-# Contribtuing 🤓
+# Contributing 🤓
 
 ## Bug report 🐞
 
