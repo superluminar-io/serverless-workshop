@@ -1,6 +1,6 @@
 # Serverless Workshop
 
-Please go to the [documentation](https://superluminar-io.github.io/serverless-workshop/) for more.
+Please go to the [documentation](https://workshop.superluminar.io/) for more.
 
 ## Working on the documentation
 
