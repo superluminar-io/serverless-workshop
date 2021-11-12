@@ -195,7 +195,7 @@
           "exec": "npm install"
         },
         {
-          "exec": "npm update @types/aws-lambda @types/jest @types/node-fetch @types/node @typescript-eslint/eslint-plugin @typescript-eslint/parser aws-cdk aws-sdk-mock esbuild eslint eslint-import-resolver-node eslint-import-resolver-typescript eslint-plugin-import jest jest-junit json-schema npm-check-updates ts-jest ts-node typescript @aws-cdk/assert @aws-cdk/aws-apigatewayv2-integrations @aws-cdk/aws-apigatewayv2 @aws-cdk/aws-dynamodb @aws-cdk/aws-lambda-event-sources @aws-cdk/aws-lambda-nodejs @aws-cdk/aws-lambda @aws-cdk/aws-sqs @aws-cdk/core aws-sdk node-fetch"
+          "exec": "npm update @types/aws-lambda @types/jest @types/node-fetch @types/node @typescript-eslint/eslint-plugin @typescript-eslint/parser aws-cdk aws-sdk-mock esbuild eslint eslint-import-resolver-node eslint-import-resolver-typescript eslint-plugin-import jest jest-junit json-schema npm-check-updates ts-jest ts-node typescript @aws-cdk/assert @aws-cdk/aws-apigatewayv2-integrations @aws-cdk/aws-apigatewayv2 @aws-cdk/aws-dynamodb @aws-cdk/aws-lambda-event-sources @aws-cdk/aws-lambda-nodejs @aws-cdk/aws-lambda @aws-cdk/aws-sns-subscriptions @aws-cdk/aws-sns @aws-cdk/aws-sqs @aws-cdk/core aws-sdk node-fetch"
         },
         {
           "exec": "npx projen"

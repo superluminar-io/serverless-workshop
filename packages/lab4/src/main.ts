@@ -5,6 +5,8 @@ import * as lambda from '@aws-cdk/aws-lambda';
 import * as lambdaEventSources from '@aws-cdk/aws-lambda-event-sources';
 import * as lambdaNodeJs from '@aws-cdk/aws-lambda-nodejs';
 import * as sqs from '@aws-cdk/aws-sqs';
+import * as sns from '@aws-cdk/aws-sns';
+import * as subscriptions from '@aws-cdk/aws-sns-subscriptions';
 import { App, Construct, Stack, StackProps, CfnOutput } from '@aws-cdk/core';
 
 export class MyStack extends Stack {
@@ -17,16 +19,29 @@ export class MyStack extends Stack {
     });
 
     const queue = new sqs.Queue(this, 'queue');
-    const stream = new lambdaNodeJs.NodejsFunction(this, 'stream', {
+    const queueFunction = new lambdaNodeJs.NodejsFunction(this, 'stream', {
       environment: {
         QUEUE_URL: queue.queueUrl,
       }
     });
-    stream.addEventSource(new lambdaEventSources.DynamoEventSource(notesTable, {
+    queueFunction.addEventSource(new lambdaEventSources.DynamoEventSource(notesTable, {
       startingPosition: lambda.StartingPosition.TRIM_HORIZON,
       retryAttempts: 0,
     }));
-    queue.grantSendMessages(stream);
+    queue.grantSendMessages(queueFunction);
+
+    const topic = new sns.Topic(this, 'webhook-topic');
+    topic.addSubscription(new subscriptions.UrlSubscription('https://enop8fgtr3z3a.x.pipedream.net'));
+    
+    const snsFunction = new lambdaNodeJs.NodejsFunction(this, 'sns', {
+      environment: {
+        TOPIC_ARN: topic.topicArn,
+      }
+    });
+    snsFunction.addEventSource(new lambdaEventSources.DynamoEventSource(notesTable, {
+      startingPosition: lambda.StartingPosition.TRIM_HORIZON,
+    }));
+    topic.grantPublish(snsFunction);
 
     const wordCount = new lambdaNodeJs.NodejsFunction(this, 'word-count', {
       environment: {

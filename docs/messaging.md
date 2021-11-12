@@ -167,16 +167,16 @@ Create a queue with AWS SQS and send the DynamoDB stream event to the queue. Pro
     constructor(scope: Construct, id: string, props: StackProps = {}) {
       super(scope, id, props);
       const queue = new sqs.Queue(this, 'queue');
-      const stream = new lambdaNodeJs.NodejsFunction(this, 'stream', {
+      const queueFunction = new lambdaNodeJs.NodejsFunction(this, 'stream', {
         environment: {
           QUEUE_URL: queue.queueUrl,
         }
       });
-      stream.addEventSource(new lambdaEventSources.DynamoEventSource(notesTable, {
+      queueFunction.addEventSource(new lambdaEventSources.DynamoEventSource(notesTable, {
         startingPosition: lambda.StartingPosition.TRIM_HORIZON,
         retryAttempts: 0,
       }));
-      queue.grantSendMessages(stream);
+      queue.grantSendMessages(queueFunction);
     
       // … (more resources from previous labs)
     }
@@ -191,7 +191,7 @@ Create a queue with AWS SQS and send the DynamoDB stream event to the queue. Pro
   import * as AWS from 'aws-sdk';
 
   export const handler = async (event: AWSLambda.DynamoDBStreamEvent) => {
-    var sqs = new AWS.SQS({apiVersion: '2012-11-05'});
+    const sqs = new AWS.SQS({apiVersion: '2012-11-05'});
 
     for (let record of event.Records) {
       if (record.eventName !== 'INSERT' || !record.dynamodb) {
@@ -283,6 +283,121 @@ Create a queue with AWS SQS and send the DynamoDB stream event to the queue. Pro
 1. After the deployment, the AWS Lambda function starts processing the messages in the queue and applies the word count to the DynamoDB items. Feel free to create more notes and observe the system.
 
 </details>
+
+## SNS
+
+### 📝 Task
+
+Another scenario for events is a simple fire-and-forget fanout. We want to introduce [SNS](https://aws.amazon.com/sns/) to trigger a [webhook](https://en.wikipedia.org/wiki/Webhook) and inform external services about new notes. 
+
+Create a new DynamoDB stream and send a message to an SNS topic for every new note. Create an HTTP endpoint with [requestbin](requestbin.com) and subscribe the endpoint to the SNS topic. The endpoint acts as an example for a webhook.
+
+### 🔎 Hints
+
+- [SNS topic with url subscription using AWS CDK](https://docs.aws.amazon.com/cdk/api/latest/docs/aws-sns-readme.html#subscriptions)
+- [Publish a message with Node.js](https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/sns-examples-publishing-messages.html#sns-examples-publishing-text-messages)
+- [Grant publish access with AWS CDK](https://docs.aws.amazon.com/cdk/api/latest/docs/@aws-cdk_aws-sns.Topic.html#grantwbrpublishgrantee)
+
+### 🗺  Step-by-Step Guide
+
+<details>
+<summary>Collapse guide</summary>
+
+1. Extend the list of CDK dependencies in the `.projenrc.js` configuration:
+  ```js
+  const { AwsCdkTypeScriptApp, NodePackageManager } = require('projen');
+  const project = new AwsCdkTypeScriptApp({
+    // …
+    cdkDependencies: [
+      '@aws-cdk/aws-lambda-nodejs',
+      '@aws-cdk/aws-apigatewayv2',
+      '@aws-cdk/aws-apigatewayv2-integrations',
+      '@aws-cdk/aws-dynamodb',
+      '@aws-cdk/aws-lambda',
+      '@aws-cdk/aws-lambda-event-sources',
+      '@aws-cdk/aws-sqs',
+      '@aws-cdk/aws-sns',
+      '@aws-cdk/aws-sns-subscriptions'
+    ],
+    // …
+  });
+  ```
+1. Run `npm run projen` to install the new dependencies and re-generate the auto-generated files.
+1. Create a public endpoint with [requestbin](https://requestbin.com/r) and copy the endpoint url.
+1. Extend the CloudFormation stack in `./src/main.ts` file. Don't forget to replace **YOUR_REQUESTBIN_ENDPOINT** with your endpoint.
+  ```ts
+  // … (more imports from previous labs)
+  import * as sns from '@aws-cdk/aws-sns';
+  import * as subscriptions from '@aws-cdk/aws-sns-subscriptions';
+
+  export class MyStack extends Stack {
+    constructor(scope: Construct, id: string, props: StackProps = {}) {
+      super(scope, id, props);
+
+      const topic = new sns.Topic(this, 'webhook-topic');
+      topic.addSubscription(new subscriptions.UrlSubscription('YOUR_REQUESTBIN_ENDPOINT'));
+      
+      const snsFunction = new lambdaNodeJs.NodejsFunction(this, 'sns', {
+        environment: {
+          TOPIC_ARN: topic.topicArn,
+        }
+      });
+      snsFunction.addEventSource(new lambdaEventSources.DynamoEventSource(notesTable, {
+        startingPosition: lambda.StartingPosition.TRIM_HORIZON,
+      }));
+      topic.grantPublish(snsFunction);
+
+      // … (more resources from previous labs)
+    }
+  }
+  ```
+1. Create a new file:
+  ```bash
+  touch src/main.sns.ts
+  ```
+1. Implement the AWS Lambda function:
+  ```ts
+  import * as AWS from 'aws-sdk';
+
+  export const handler = async (event: AWSLambda.DynamoDBStreamEvent) => {
+    const sns = new AWS.SNS({apiVersion: '2010-03-31'});
+    const topicArn = process.env.TOPIC_ARN;
+
+    for (let record of event.Records) {
+      if (record.eventName !== 'INSERT' || !record.dynamodb) {
+        return;
+      }
+
+      const id = record.dynamodb.Keys?.id.S;
+      const content = record.dynamodb.NewImage?.content.S;
+      const title = record.dynamodb.NewImage?.title.S;
+
+      const message = {
+        id,
+        content,
+        title
+      }
+    
+      await sns.publish({
+        Message: JSON.stringify(message),
+        TopicArn: topicArn,
+      }).promise()
+    }
+  };
+  ```
+1. Deploy the changes:
+  ```bash
+  npm run deploy
+  ```
+1. Go to requestbin. You should see the first request coming in. With the first request, we basically need to accept the subscription to receive further events. In the post body, you should find a **SubscribeURL**. Copy the URL and open it in a new tab. The subscription is now confirmed.
+1. Create a new note:
+  ```bash
+  curl -X POST https://XXXXXX.execute-api.eu-central-1.amazonaws.com/notes --data '{ "title": "Hello World", "content": "some text" }' -H 'Content-Type: application/json' -i
+  ```
+1. Go to requestbin again. You should see another request with the note we just created.
+
+</details>
+
 ---
 
 You can find the complete implementation of this lab [here](https://github.com/superluminar-io/serverless-workshop/tree/main/packages/lab4).
