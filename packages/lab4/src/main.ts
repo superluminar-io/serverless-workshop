@@ -13,42 +13,18 @@ export class MyStack extends Stack {
   constructor(scope: Construct, id: string, props: StackProps = {}) {
     super(scope, id, props);
 
+    // Notes Table
     const notesTable = new dynamodb.Table(this, 'notes-table', {
       partitionKey: { name: 'id', type: dynamodb.AttributeType.STRING },
       stream: dynamodb.StreamViewType.NEW_IMAGE,
     });
 
-    const queue = new sqs.Queue(this, 'queue');
-    const queueFunction = new lambdaNodeJs.NodejsFunction(this, 'stream', {
-      environment: {
-        QUEUE_URL: queue.queueUrl,
-      }
-    });
-    queueFunction.addEventSource(new lambdaEventSources.DynamoEventSource(notesTable, {
-      startingPosition: lambda.StartingPosition.TRIM_HORIZON,
-      retryAttempts: 0,
-    }));
-    queue.grantSendMessages(queueFunction);
-
-    const topic = new sns.Topic(this, 'webhook-topic');
-    topic.addSubscription(new subscriptions.UrlSubscription('https://enop8fgtr3z3a.x.pipedream.net'));
-    
-    const snsFunction = new lambdaNodeJs.NodejsFunction(this, 'sns', {
-      environment: {
-        TOPIC_ARN: topic.topicArn,
-      }
-    });
-    snsFunction.addEventSource(new lambdaEventSources.DynamoEventSource(notesTable, {
-      startingPosition: lambda.StartingPosition.TRIM_HORIZON,
-    }));
-    topic.grantPublish(snsFunction);
-
-    const wordCount = new lambdaNodeJs.NodejsFunction(this, 'word-count', {
+    // Notes API 
+    const listNotes = new lambdaNodeJs.NodejsFunction(this, 'list-notes', {
       environment: {
         TABLE_NAME: notesTable.tableName,
       },
     });
-    wordCount.addEventSource(new lambdaEventSources.SqsEventSource(queue));
 
     const putNote = new lambdaNodeJs.NodejsFunction(this, 'put-note', {
       environment: {
@@ -56,14 +32,7 @@ export class MyStack extends Stack {
       },
     });
 
-    const listNotes = new lambdaNodeJs.NodejsFunction(this, 'list-notes', {
-      environment: {
-        TABLE_NAME: notesTable.tableName,
-      },
-    });
-
     notesTable.grant(putNote, 'dynamodb:PutItem');
-    notesTable.grant(wordCount, 'dynamodb:GetItem', 'dynamodb:UpdateItem');
     notesTable.grant(listNotes, 'dynamodb:Scan');
 
     const putNoteIntegration = new apigatewayIntegrations.LambdaProxyIntegration({
@@ -88,6 +57,42 @@ export class MyStack extends Stack {
       integration: listNotesIntegration,
     });
 
+    // DynamoDB Stream with SQS
+    const queue = new sqs.Queue(this, 'queue');
+    const queueFunction = new lambdaNodeJs.NodejsFunction(this, 'stream', {
+      environment: {
+        QUEUE_URL: queue.queueUrl,
+      }
+    });
+    queueFunction.addEventSource(new lambdaEventSources.DynamoEventSource(notesTable, {
+      startingPosition: lambda.StartingPosition.TRIM_HORIZON,
+      retryAttempts: 0,
+    }));
+    queue.grantSendMessages(queueFunction);
+
+    const wordCount = new lambdaNodeJs.NodejsFunction(this, 'word-count', {
+      environment: {
+        TABLE_NAME: notesTable.tableName,
+      },
+    });
+    wordCount.addEventSource(new lambdaEventSources.SqsEventSource(queue));
+    notesTable.grant(wordCount, 'dynamodb:GetItem', 'dynamodb:UpdateItem');
+
+    // Fire-and-forget fanout with SNS
+    const topic = new sns.Topic(this, 'webhook-topic');
+    topic.addSubscription(new subscriptions.UrlSubscription('https://enhlp1mddjm7f.x.pipedream.net'));
+    
+    const snsFunction = new lambdaNodeJs.NodejsFunction(this, 'sns', {
+      environment: {
+        TOPIC_ARN: topic.topicArn,
+      }
+    });
+    snsFunction.addEventSource(new lambdaEventSources.DynamoEventSource(notesTable, {
+      startingPosition: lambda.StartingPosition.TRIM_HORIZON,
+    }));
+    topic.grantPublish(snsFunction);
+
+    // CloudFormation stack output
     new CfnOutput(this, 'URL', { value: httpApi.apiEndpoint });
   }
 }
