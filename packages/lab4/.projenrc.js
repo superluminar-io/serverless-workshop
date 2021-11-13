@@ -14,7 +14,9 @@ const project = new AwsCdkTypeScriptApp({
     '@aws-cdk/aws-lambda-event-sources',
     '@aws-cdk/aws-sqs',
     '@aws-cdk/aws-sns',
-    '@aws-cdk/aws-sns-subscriptions'
+    '@aws-cdk/aws-sns-subscriptions',
+    '@aws-cdk/aws-events',
+    '@aws-cdk/aws-events-targets'
   ],
   deps: [
     'aws-sdk',

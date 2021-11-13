@@ -6,6 +6,8 @@ import * as lambdaEventSources from '@aws-cdk/aws-lambda-event-sources';
 import * as lambdaNodeJs from '@aws-cdk/aws-lambda-nodejs';
 import * as sqs from '@aws-cdk/aws-sqs';
 import * as sns from '@aws-cdk/aws-sns';
+import * as events from '@aws-cdk/aws-events';
+import * as targets from '@aws-cdk/aws-events-targets';
 import * as subscriptions from '@aws-cdk/aws-sns-subscriptions';
 import { App, Construct, Stack, StackProps, CfnOutput } from '@aws-cdk/core';
 
@@ -57,6 +59,26 @@ export class MyStack extends Stack {
       integration: listNotesIntegration,
     });
 
+    // EventBridge
+    const bus = new events.EventBus(this, 'bus');
+    
+    const rule = new events.Rule(this, 'rule', {
+      eventPattern: {
+        source: ['custom.notes'],
+        detail: {
+          wordCount: [ 
+            { 
+              numeric: [ '>', 10 ],
+            },
+          ],
+        },
+      },
+      eventBus: bus
+    });
+    
+    const eventBusFunction = new lambdaNodeJs.NodejsFunction(this, 'event-bus');
+    rule.addTarget(new targets.LambdaFunction(eventBusFunction));
+
     // DynamoDB Stream with SQS
     const queue = new sqs.Queue(this, 'queue');
     const queueFunction = new lambdaNodeJs.NodejsFunction(this, 'stream', {
@@ -73,10 +95,12 @@ export class MyStack extends Stack {
     const wordCount = new lambdaNodeJs.NodejsFunction(this, 'word-count', {
       environment: {
         TABLE_NAME: notesTable.tableName,
+        EVENT_BUS_NAME: bus.eventBusName,
       },
     });
     wordCount.addEventSource(new lambdaEventSources.SqsEventSource(queue));
     notesTable.grant(wordCount, 'dynamodb:GetItem', 'dynamodb:UpdateItem');
+    bus.grantPutEventsTo(wordCount);
 
     // Fire-and-forget fanout with SNS
     const topic = new sns.Topic(this, 'webhook-topic');

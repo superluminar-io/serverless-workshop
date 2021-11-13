@@ -398,6 +398,144 @@ Create a new DynamoDB stream and send a message to an SNS topic for every new no
 
 </details>
 
+## EventBridge
+
+### 📝 Task
+
+Now that we have implemented a queue and fanout pattern, it's time to discover another AWS service. EventBridge is a managed event bus for AWS events, partner events (SaaS), and custom events.
+
+Create an event bus with EventBridge, emit a custom event and trigger a Lambda function. For example, you could extend the word count AWS Lambda function and emit an event that a word count got calculated. Based on that event, you could define a rule and trigger a Lambda function. 
+
+### 🔎 Hints
+
+- [EventBridge event bus using AWS CDK](https://docs.aws.amazon.com/cdk/api/latest/docs/@aws-cdk_aws-events.EventBus.html)
+- [Invoke a Lambda function using AWS CDK](https://docs.aws.amazon.com/cdk/api/latest/docs/aws-events-targets-readme.html#invoke-a-lambda-function)
+- [Granting PutEvents](https://docs.aws.amazon.com/cdk/api/latest/docs/aws-events-readme.html#granting-putevents-to-an-existing-eventbus)
+- [Put events with AWS SDK (Node.js)](https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/EventBridge.html#putEvents-property)
+
+### 🗺  Step-by-Step Guide
+
+<details>
+<summary>Collapse guide</summary>
+
+1. Extend the list of CDK dependencies in the `.projenrc.js` configuration:
+  ```js
+  const { AwsCdkTypeScriptApp, NodePackageManager } = require('projen');
+  const project = new AwsCdkTypeScriptApp({
+    // …
+    cdkDependencies: [
+      '@aws-cdk/aws-lambda-nodejs',
+      '@aws-cdk/aws-apigatewayv2',
+      '@aws-cdk/aws-apigatewayv2-integrations',
+      '@aws-cdk/aws-dynamodb',
+      '@aws-cdk/aws-lambda',
+      '@aws-cdk/aws-lambda-event-sources',
+      '@aws-cdk/aws-sqs',
+      '@aws-cdk/aws-sns',
+      '@aws-cdk/aws-sns-subscriptions',
+      '@aws-cdk/aws-events',
+      '@aws-cdk/aws-events-targets'
+    ],
+    // …
+  });
+  ```
+1. Run `npm run projen` to install the new dependencies and re-generate the auto-generated files.
+1. Extend the CloudFormation stack in `./src/main.ts` file:
+  ```ts
+  // … (more imports from previous labs)
+  import * as events from '@aws-cdk/aws-events';
+  import * as targets from '@aws-cdk/aws-events-targets';
+
+  export class MyStack extends Stack {
+    constructor(scope: Construct, id: string, props: StackProps = {}) {
+      super(scope, id, props);
+
+      // EventBridge
+      const bus = new events.EventBus(this, 'bus');
+      
+      const rule = new events.Rule(this, 'rule', {
+        eventPattern: {
+          source: ['custom.notes'],
+          detail: {
+            wordCount: [ 
+              { 
+                numeric: [ '>', 10 ],
+              },
+            ],
+          },
+        },
+        eventBus: bus
+      });
+      
+      const eventBusFunction = new lambdaNodeJs.NodejsFunction(this, 'event-bus');
+      rule.addTarget(new targets.LambdaFunction(eventBusFunction));
+
+      // Extend the word count lambda function
+      const wordCount = new lambdaNodeJs.NodejsFunction(this, 'word-count', {
+        environment: {
+          TABLE_NAME: notesTable.tableName,
+          EVENT_BUS_NAME: bus.eventBusName,
+        },
+      });
+      bus.grantPutEventsTo(wordCount);
+
+      // … (more resources from previous labs)
+    }
+  }
+  ```
+1. Extend the word count lambda function, so `src/main.word-count.ts`:
+  ```ts
+  import * as AWS from 'aws-sdk';
+
+  export const handler = async (event: AWSLambda.SQSEvent) => {
+    const eventbridge = new AWS.EventBridge();
+
+    const tableName = process.env.TABLE_NAME!;
+
+    for (let record of event.Records) {
+      // … code to calculate the word count
+      
+      await eventbridge.putEvents({
+        Entries: [
+          {
+            Detail: JSON.stringify({
+              id,
+              wordCount,
+              eventName: 'wordCountCreated'
+            }),
+            DetailType: 'NotesApi',
+            EventBusName: process.env.EVENT_BUS_NAME,
+            Source: 'custom.notes',
+            Time: new Date(),
+          },
+        ]
+      }).promise();
+    }
+  };
+  ```
+1. Create a new file:
+  ```bash
+  touch src/main.event-bus.ts
+  ```
+1. Implement the AWS Lambda function:
+  ```ts
+  export const handler = async (event: AWSLambda.EventBridgeEvent<any, any>) => {
+    // Just log the event
+    console.log(event);
+  };
+  ```
+1. Deploy the changes:
+  ```bash
+  npm run deploy
+  ```
+1. Create a new note:
+  ```bash
+  curl -X POST https://XXXXXX.execute-api.eu-central-1.amazonaws.com/notes --data '{ "title": "Hello World", "content": "some text" }' -H 'Content-Type: application/json' -i
+  ```
+1. Go to the [AWS Lambda console](https://console.aws.amazon.com/lambda) and check out the logs of the event bus function. You should see the custom event. 
+
+</details>
+
 ---
 
 You can find the complete implementation of this lab [here](https://github.com/superluminar-io/serverless-workshop/tree/main/packages/lab4).
