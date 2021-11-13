@@ -11,6 +11,10 @@
 
 Create a DynamoDB stream for the notes table. The AWS Lambda function should take the note, count the words and apply the number of words to the DynamoDB item. You can keep the word counting very simple as it just demonstrates asynchronous data processing.
 
+<br />
+
+![Architecture diagram for DynamoDB stream](/media/messaging/stream.drawio.svg)
+
 ### 🔎 Hints
 
 - [DynamoDB stream with AWS CDK](https://docs.aws.amazon.com/cdk/api/latest/docs/aws-lambda-event-sources-readme.html#dynamodb-streams)
@@ -127,6 +131,10 @@ Create a DynamoDB stream for the notes table. The AWS Lambda function should tak
 We already introduced a DynamoDB stream and implemented the business logic to count the words of the notes and apply the word count to the DynamoDB item. Now, we want to improve the setup and introduce a queue to decouple the systems and improve the robustness.
 
 Create a queue with AWS SQS and send the DynamoDB stream event to the queue. Process the event in the queue, count the words and apply the word count to the DynamoDB item.
+
+<br />
+
+![Architecture diagram for queue pattern](/media/messaging/sqs.drawio.svg)
 
 ### 🔎 Hints
 
@@ -291,6 +299,10 @@ Create a queue with AWS SQS and send the DynamoDB stream event to the queue. Pro
 Another scenario for events is a simple fire-and-forget fanout. We want to introduce [SNS](https://aws.amazon.com/sns/) to trigger a [webhook](https://en.wikipedia.org/wiki/Webhook) and inform external services about new notes. 
 
 Create a new DynamoDB stream and send a message to an SNS topic for every new note. Create an HTTP endpoint with [requestbin](requestbin.com) and subscribe the endpoint to the SNS topic. The endpoint acts as an example for a webhook.
+
+<br />
+
+![Architecture diagram for DynamoDB stream with SNS and URL subscription](/media/messaging/sns.drawio.svg)
 
 ### 🔎 Hints
 
