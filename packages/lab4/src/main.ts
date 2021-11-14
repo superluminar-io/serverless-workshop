@@ -1,16 +1,16 @@
-import * as fs from "fs-extra";
-import { execSync } from "child_process";
-import * as path from "path";
+import { execSync } from 'child_process';
+import * as path from 'path';
 
-import { App, Construct, Stack, StackProps, CfnOutput, RemovalPolicy, DockerImage } from '@aws-cdk/core';
 import * as apigateway from '@aws-cdk/aws-apigatewayv2';
 import * as apigatewayIntegrations from '@aws-cdk/aws-apigatewayv2-integrations';
+import * as cloudfront from '@aws-cdk/aws-cloudfront';
+import * as origins from '@aws-cdk/aws-cloudfront-origins';
 import * as dynamodb from '@aws-cdk/aws-dynamodb';
 import * as lambda from '@aws-cdk/aws-lambda-nodejs';
-import * as s3 from "@aws-cdk/aws-s3";
-import * as cloudfront from "@aws-cdk/aws-cloudfront";
-import * as origins from "@aws-cdk/aws-cloudfront-origins";
-import * as s3deploy from "@aws-cdk/aws-s3-deployment";
+import * as s3 from '@aws-cdk/aws-s3';
+import * as s3deploy from '@aws-cdk/aws-s3-deployment';
+import { App, Construct, Stack, StackProps, CfnOutput, RemovalPolicy, DockerImage } from '@aws-cdk/core';
+import * as fs from 'fs-extra';
 
 export class MyStack extends Stack {
   constructor(scope: Construct, id: string, props: StackProps = {}) {
@@ -57,28 +57,28 @@ export class MyStack extends Stack {
       integration: listNotesIntegration,
     });
 
-    const bucket = new s3.Bucket(this, "frontend", {
+    const bucket = new s3.Bucket(this, 'frontend', {
       removalPolicy: RemovalPolicy.DESTROY,
       autoDeleteObjects: true,
     });
 
     const distribution = new cloudfront.Distribution(
       this,
-      "frontend-distribution",
+      'frontend-distribution',
       {
         defaultBehavior: { origin: new origins.S3Origin(bucket) },
-        defaultRootObject: "index.html",
-      }
+        defaultRootObject: 'index.html',
+      },
     );
 
-    new s3deploy.BucketDeployment(this, "frontend-deployment", {
+    new s3deploy.BucketDeployment(this, 'frontend-deployment', {
       sources: [
-        s3deploy.Source.asset(path.join(__dirname, "../frontend"), {
+        s3deploy.Source.asset(path.join(__dirname, '../frontend'), {
           bundling: {
             local: {
               tryBundle(outputDir) {
                 try {
-                  execSync("npm --version");
+                  execSync('npm --version');
                 } catch {
                   return false;
                 }
@@ -89,24 +89,24 @@ export class MyStack extends Stack {
                 `);
 
                 fs.copySync(
-                  path.join(__dirname, "../frontend", "build"),
-                  outputDir
+                  path.join(__dirname, '../frontend', 'build'),
+                  outputDir,
                 );
 
                 return true;
               },
             },
-            image: DockerImage.fromRegistry("node:lts"),
+            image: DockerImage.fromRegistry('node:lts'),
             command: [],
           },
         }),
       ],
       destinationBucket: bucket,
       distribution,
-      distributionPaths: ["/*"],
+      distributionPaths: ['/*'],
     });
 
-    new CfnOutput(this, "FrontendURL", {
+    new CfnOutput(this, 'FrontendURL', {
       value: `https://${distribution.distributionDomainName}`,
     });
 

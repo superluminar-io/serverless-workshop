@@ -10,6 +10,7 @@ const project = new AwsCdkTypeScriptApp({
     '@aws-cdk/aws-apigatewayv2',
     '@aws-cdk/aws-apigatewayv2-integrations',
     '@aws-cdk/aws-dynamodb',
+    '@aws-cdk/aws-s3',
     '@aws-cdk/aws-s3-deployment',
     '@aws-cdk/aws-cloudfront-origins',
     '@aws-cdk/aws-cloudfront',
