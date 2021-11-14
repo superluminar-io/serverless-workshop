@@ -418,6 +418,10 @@ Now that we have implemented a queue and fanout pattern, it's time to discover a
 
 Create an event bus with EventBridge, emit a custom event and trigger a Lambda function. For example, you could extend the word count AWS Lambda function and emit an event that a word count got calculated. Based on that event, you could define a rule and trigger a Lambda function. 
 
+<br />
+
+![Architecture diagram for EventBridge](/media/messaging/eventbridge.drawio.svg)
+
 ### 🔎 Hints
 
 - [EventBridge event bus using AWS CDK](https://docs.aws.amazon.com/cdk/api/latest/docs/@aws-cdk_aws-events.EventBus.html)
