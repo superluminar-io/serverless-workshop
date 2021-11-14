@@ -26,28 +26,16 @@
     "@typescript-eslint/parser": "^5.3.1",
     "aws-cdk": "^1.95.2",
     "esbuild": "0",
-<<<<<<< HEAD
     "eslint": "^8.2.0",
     "eslint-import-resolver-node": "^0.3.6",
     "eslint-import-resolver-typescript": "^2.5.0",
     "eslint-plugin-import": "^2.25.3",
     "jest": "^27.3.1",
-=======
-    "eslint": "^8.0.1",
-    "eslint-import-resolver-node": "^0.3.6",
-    "eslint-import-resolver-typescript": "^2.5.0",
-    "eslint-plugin-import": "^2.25.2",
-    "jest": "^27.2.5",
->>>>>>> 6dfebbb (chore: upgrade dependencies)
     "jest-junit": "^12",
     "json-schema": "^0.4.0",
     "npm-check-updates": "^11",
     "projen": "^0.30.0",
-<<<<<<< HEAD
     "ts-jest": "^27.0.7",
-=======
-    "ts-jest": "^27.0.6",
->>>>>>> f557388 (refactor: rename lambda import to lambdaNodeJs for consistency)
     "ts-node": "^9",
     "typescript": "^4.4.4"
   },
@@ -58,15 +46,7 @@
     "@aws-cdk/aws-dynamodb": "^1.95.2",
     "@aws-cdk/aws-lambda-nodejs": "^1.95.2",
     "@aws-cdk/core": "^1.95.2",
-<<<<<<< HEAD
-<<<<<<< HEAD
     "aws-sdk": "^2.1028.0"
-=======
-    "aws-sdk": "^2.1007.0"
->>>>>>> 6dfebbb (chore: upgrade dependencies)
-=======
-    "aws-sdk": "^2.1008.0"
->>>>>>> f557388 (refactor: rename lambda import to lambdaNodeJs for consistency)
   },
   "bundledDependencies": [],
   "license": "Apache-2.0",

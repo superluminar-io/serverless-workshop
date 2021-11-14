@@ -11,10 +11,6 @@ import * as s3deploy from '@aws-cdk/aws-s3-deployment';
 import { App, Construct, Stack, StackProps, CfnOutput, RemovalPolicy, DockerImage } from '@aws-cdk/core';
 import * as fs from 'fs-extra';
 import * as lambdaNodeJs from "@aws-cdk/aws-lambda-nodejs";
-import * as s3 from "@aws-cdk/aws-s3";
-import * as cloudfront from "@aws-cdk/aws-cloudfront";
-import * as origins from "@aws-cdk/aws-cloudfront-origins";
-import * as s3deploy from "@aws-cdk/aws-s3-deployment";
 
 export class MyStack extends Stack {
   constructor(scope: Construct, id: string, props: StackProps = {}) {
