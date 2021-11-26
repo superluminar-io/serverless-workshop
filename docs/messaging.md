@@ -567,10 +567,18 @@ Create an event bus with EventBridge, emit a custom event and trigger a Lambda f
 
 ### ❓ Questions
 
-- How many rules can we attach to a single event bus?
-- What do we need to consider from a pricing perspective?
+- How many rules can we attach to a single event bus? And how many targets can we attach to a rule?
 - What are SaaS partners for EventBridge? What scenarios could we think of for such an integration?
 - What is content filtering and what are the benefits compared to SNS filter policies?
+- What are EventBridge schemas?
+- What are input transformer and why are they helpful?
+
+
+## When to use what?
+
+Well, it depends on your use case, and you should choose the right AWS service carefully. All services have their pros and cons, quotas, and pricing aspects. We suggest you write down your requirements for your feature and compare them with the feature set of the AWS services.
+
+You can find a good comparison of SQS, SNS, and EventBridge on [AWS](https://aws.amazon.com/blogs/compute/choosing-between-messaging-services-for-serverless-applications/).
 
 ---
 
