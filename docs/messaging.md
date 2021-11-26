@@ -292,6 +292,13 @@ Create a queue with AWS SQS and send the DynamoDB stream event to the queue. Pro
 
 </details>
 
+### ❓ Questions
+
+- What queue types are available for SQS and what are the benefits?
+- What is the maximum age of SQS messages?
+- What is the maximum size of SQS messages?
+- Is the SQS queue created in this chapter encrypted at rest? What options do we have?
+
 ## SNS
 
 ### 📝 Task
@@ -409,6 +416,12 @@ Create a new DynamoDB stream and send a message to an SNS topic for every new no
 1. Go to requestbin again. You should see another request with the note we just created.
 
 </details>
+
+### ❓ Questions
+
+- What happens with the SNS message in case of an error emitted by the subscription?
+- How many subscribers can we attach to an SNS topic?
+- What are SNS subscription filter policies?
 
 ## EventBridge
 
@@ -551,6 +564,13 @@ Create an event bus with EventBridge, emit a custom event and trigger a Lambda f
 1. Go to the [AWS Lambda console](https://console.aws.amazon.com/lambda) and check out the logs of the event bus function. You should see the custom event. 
 
 </details>
+
+### ❓ Questions
+
+- How many rules can we attach to a single event bus?
+- What do we need to consider from a pricing perspective?
+- What are SaaS partners for EventBridge? What scenarios could we think of for such an integration?
+- What is content filtering and what are the benefits compared to SNS filter policies?
 
 ---
 
