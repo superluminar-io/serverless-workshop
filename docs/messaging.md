@@ -578,7 +578,12 @@ Create an event bus with EventBridge, emit a custom event and trigger a Lambda f
 
 Well, it depends on your use case, and you should choose the right AWS service carefully. All services have their pros and cons, quotas, and pricing aspects. We suggest you write down your requirements for your feature and compare them with the feature set of the AWS services.
 
-You can find a good comparison of SQS, SNS, and EventBridge on [AWS](https://aws.amazon.com/blogs/compute/choosing-between-messaging-services-for-serverless-applications/).
+In short:
+- Use _SNS_ for notfications or fanout patterns
+- Use _SQS_ for queueing, delaying or throttling workloads
+- Use _EventBridge_ for an event-driven and loosely coupled microservice architecture
+
+An in-depth comparison of SQS, SNS, and EventBridge is available on [AWS](https://aws.amazon.com/blogs/compute/choosing-between-messaging-services-for-serverless-applications/).
 
 ---
 
