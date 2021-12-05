@@ -37,7 +37,7 @@ Best,
 [name]
 ```
 
-Template for the meeting:
+Template for the calendar invitation:
 
 ```txt
 Hello everyone, 
