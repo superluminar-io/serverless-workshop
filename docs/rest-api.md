@@ -96,13 +96,13 @@ Now that we have an AWS CDK app, we want to deploy the first resource. Create a 
 1. Update the CloudFormation stack, so `./src/main.ts`:
   ```typescript
   import { App, Construct, Stack, StackProps } from '@aws-cdk/core';
-  import * as lambda from "@aws-cdk/aws-lambda-nodejs";
+  import * as lambdaNodeJs from "@aws-cdk/aws-lambda-nodejs";
 
   export class MyStack extends Stack {
     constructor(scope: Construct, id: string, props: StackProps = {}) {
       super(scope, id, props);
 
-      new lambda.NodejsFunction(this, "put-note");
+      new lambdaNodeJs.NodejsFunction(this, "put-note");
     }
   }
 
@@ -173,7 +173,7 @@ HTTP/2 200
 1. Update the CloudFormation stack, so `./src/main.ts`:
    ```typescript
   import { App, Construct, Stack, StackProps, CfnOutput } from '@aws-cdk/core';
-  import * as lambda from "@aws-cdk/aws-lambda-nodejs";
+  import * as lambdaNodeJs from "@aws-cdk/aws-lambda-nodejs";
   import * as apigateway from "@aws-cdk/aws-apigatewayv2";
   import * as apigatewayIntegrations from "@aws-cdk/aws-apigatewayv2-integrations";
 
@@ -181,7 +181,7 @@ HTTP/2 200
     constructor(scope: Construct, id: string, props: StackProps = {}) {
       super(scope, id, props);
 
-      const putNote = new lambda.NodejsFunction(this, "put-note");
+      const putNote = new lambdaNodeJs.NodejsFunction(this, "put-note");
 
       const putNoteIntegration = new apigatewayIntegrations.LambdaProxyIntegration({
         handler: putNote,
@@ -295,7 +295,7 @@ The note should be persisted in the DynamoDB table.
 1. Extend the CloudFormation stack, so `./src/main.ts`:
   ```typescript
   import { App, Construct, Stack, StackProps, CfnOutput } from '@aws-cdk/core';
-  import * as lambda from "@aws-cdk/aws-lambda-nodejs";
+  import * as lambdaNodeJs from "@aws-cdk/aws-lambda-nodejs";
   import * as apigateway from "@aws-cdk/aws-apigatewayv2";
   import * as apigatewayIntegrations from "@aws-cdk/aws-apigatewayv2-integrations";
   import * as dynamodb from "@aws-cdk/aws-dynamodb";
@@ -308,7 +308,7 @@ The note should be persisted in the DynamoDB table.
         partitionKey: { name: "id", type: dynamodb.AttributeType.STRING },
       });
 
-      const putNote = new lambda.NodejsFunction(this, "put-note", {
+      const putNote = new lambdaNodeJs.NodejsFunction(this, "put-note", {
         environment: {
           TABLE_NAME: notesTable.tableName,
         },
@@ -419,7 +419,7 @@ HTTP/2 200
 1. Extend the CloudFormation stack, so `./src/main.ts` becomes:
   ```typescript
   import { App, Construct, Stack, StackProps, CfnOutput } from '@aws-cdk/core';
-  import * as lambda from "@aws-cdk/aws-lambda-nodejs";
+  import * as lambdaNodeJs from "@aws-cdk/aws-lambda-nodejs";
   import * as apigateway from "@aws-cdk/aws-apigatewayv2";
   import * as apigatewayIntegrations from "@aws-cdk/aws-apigatewayv2-integrations";
   import * as dynamodb from "@aws-cdk/aws-dynamodb";
@@ -432,13 +432,13 @@ HTTP/2 200
         partitionKey: { name: "id", type: dynamodb.AttributeType.STRING },
       });
 
-      const putNote = new lambda.NodejsFunction(this, "put-note", {
+      const putNote = new lambdaNodeJs.NodejsFunction(this, "put-note", {
         environment: {
           TABLE_NAME: notesTable.tableName,
         },
       });
 
-      const listNotes = new lambda.NodejsFunction(this, "list-notes", {
+      const listNotes = new lambdaNodeJs.NodejsFunction(this, "list-notes", {
         environment: {
           TABLE_NAME: notesTable.tableName,
         },

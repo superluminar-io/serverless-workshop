@@ -1,5 +1,5 @@
 {
-  "name": "lab4",
+  "name": "lab5",
   "scripts": {
     "clobber": "npx projen clobber",
     "compile": "npx projen compile",
@@ -21,6 +21,7 @@
   },
   "devDependencies": {
     "@types/aws-lambda": "^8.10.85",
+    "@types/fs-extra": "^9.0.13",
     "@types/jest": "^27.0.2",
     "@types/node": "^14.17.0",
     "@types/node-fetch": "^3.0.3",
@@ -46,17 +47,15 @@
     "@aws-cdk/assert": "^1.95.2",
     "@aws-cdk/aws-apigatewayv2": "^1.95.2",
     "@aws-cdk/aws-apigatewayv2-integrations": "^1.95.2",
+    "@aws-cdk/aws-cloudfront": "^1.95.2",
+    "@aws-cdk/aws-cloudfront-origins": "^1.95.2",
     "@aws-cdk/aws-dynamodb": "^1.95.2",
-    "@aws-cdk/aws-events": "^1.95.2",
-    "@aws-cdk/aws-events-targets": "^1.95.2",
-    "@aws-cdk/aws-lambda": "^1.95.2",
-    "@aws-cdk/aws-lambda-event-sources": "^1.95.2",
     "@aws-cdk/aws-lambda-nodejs": "^1.95.2",
-    "@aws-cdk/aws-sns": "^1.95.2",
-    "@aws-cdk/aws-sns-subscriptions": "^1.95.2",
-    "@aws-cdk/aws-sqs": "^1.95.2",
+    "@aws-cdk/aws-s3": "^1.95.2",
+    "@aws-cdk/aws-s3-deployment": "^1.95.2",
     "@aws-cdk/core": "^1.95.2",
-    "aws-sdk": "^2.1027.0",
+    "aws-sdk": "^2.1028.0",
+    "fs-extra": "^10.0.0",
     "node-fetch": "2"
   },
   "bundledDependencies": [],

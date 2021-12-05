@@ -180,4 +180,4 @@ Create a new CloudFormation stack for the static hosting. The stack should inclu
 
 ---
 
-You can find the complete implementation of this lab [here](https://github.com/superluminar-io/serverless-workshop/tree/main/packages/lab4).
+You can find the complete implementation of this lab [here](https://github.com/superluminar-io/serverless-workshop/tree/main/packages/lab5).

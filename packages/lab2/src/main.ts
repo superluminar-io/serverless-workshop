@@ -1,7 +1,7 @@
 import * as apigateway from '@aws-cdk/aws-apigatewayv2';
 import * as apigatewayIntegrations from '@aws-cdk/aws-apigatewayv2-integrations';
 import * as dynamodb from '@aws-cdk/aws-dynamodb';
-import * as lambda from '@aws-cdk/aws-lambda-nodejs';
+import * as lambdaNodeJs from "@aws-cdk/aws-lambda-nodejs";
 import { App, Construct, Stack, StackProps, CfnOutput } from '@aws-cdk/core';
 
 export class MyStack extends Stack {
@@ -12,13 +12,13 @@ export class MyStack extends Stack {
       partitionKey: { name: 'id', type: dynamodb.AttributeType.STRING },
     });
 
-    const putNote = new lambda.NodejsFunction(this, 'put-note', {
+    const putNote = new lambdaNodeJs.NodejsFunction(this, 'put-note', {
       environment: {
         TABLE_NAME: notesTable.tableName,
       },
     });
 
-    const listNotes = new lambda.NodejsFunction(this, 'list-notes', {
+    const listNotes = new lambdaNodeJs.NodejsFunction(this, 'list-notes', {
       environment: {
         TABLE_NAME: notesTable.tableName,
       },

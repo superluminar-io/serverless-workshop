@@ -5,6 +5,10 @@
       "type": "build"
     },
     {
+      "name": "@types/fs-extra",
+      "type": "build"
+    },
+    {
       "name": "@types/jest",
       "type": "build"
     },
@@ -106,22 +110,17 @@
       "type": "runtime"
     },
     {
+      "name": "@aws-cdk/aws-cloudfront-origins",
+      "version": "^1.95.2",
+      "type": "runtime"
+    },
+    {
+      "name": "@aws-cdk/aws-cloudfront",
+      "version": "^1.95.2",
+      "type": "runtime"
+    },
+    {
       "name": "@aws-cdk/aws-dynamodb",
-      "version": "^1.95.2",
-      "type": "runtime"
-    },
-    {
-      "name": "@aws-cdk/aws-events-targets",
-      "version": "^1.95.2",
-      "type": "runtime"
-    },
-    {
-      "name": "@aws-cdk/aws-events",
-      "version": "^1.95.2",
-      "type": "runtime"
-    },
-    {
-      "name": "@aws-cdk/aws-lambda-event-sources",
       "version": "^1.95.2",
       "type": "runtime"
     },
@@ -131,22 +130,12 @@
       "type": "runtime"
     },
     {
-      "name": "@aws-cdk/aws-lambda",
+      "name": "@aws-cdk/aws-s3-deployment",
       "version": "^1.95.2",
       "type": "runtime"
     },
     {
-      "name": "@aws-cdk/aws-sns-subscriptions",
-      "version": "^1.95.2",
-      "type": "runtime"
-    },
-    {
-      "name": "@aws-cdk/aws-sns",
-      "version": "^1.95.2",
-      "type": "runtime"
-    },
-    {
-      "name": "@aws-cdk/aws-sqs",
+      "name": "@aws-cdk/aws-s3",
       "version": "^1.95.2",
       "type": "runtime"
     },
@@ -157,6 +146,10 @@
     },
     {
       "name": "aws-sdk",
+      "type": "runtime"
+    },
+    {
+      "name": "fs-extra",
       "type": "runtime"
     },
     {

@@ -1,32 +1,34 @@
-import { execSync } from 'child_process';
-import * as path from 'path';
-
 import * as apigateway from '@aws-cdk/aws-apigatewayv2';
 import * as apigatewayIntegrations from '@aws-cdk/aws-apigatewayv2-integrations';
-import * as cloudfront from '@aws-cdk/aws-cloudfront';
-import * as origins from '@aws-cdk/aws-cloudfront-origins';
 import * as dynamodb from '@aws-cdk/aws-dynamodb';
-import * as lambda from '@aws-cdk/aws-lambda-nodejs';
-import * as s3 from '@aws-cdk/aws-s3';
-import * as s3deploy from '@aws-cdk/aws-s3-deployment';
-import { App, Construct, Stack, StackProps, CfnOutput, RemovalPolicy, DockerImage } from '@aws-cdk/core';
-import * as fs from 'fs-extra';
+import * as lambda from '@aws-cdk/aws-lambda';
+import * as lambdaEventSources from '@aws-cdk/aws-lambda-event-sources';
+import * as lambdaNodeJs from '@aws-cdk/aws-lambda-nodejs';
+import * as sqs from '@aws-cdk/aws-sqs';
+import * as sns from '@aws-cdk/aws-sns';
+import * as events from '@aws-cdk/aws-events';
+import * as targets from '@aws-cdk/aws-events-targets';
+import * as subscriptions from '@aws-cdk/aws-sns-subscriptions';
+import { App, Construct, Stack, StackProps, CfnOutput } from '@aws-cdk/core';
 
 export class MyStack extends Stack {
   constructor(scope: Construct, id: string, props: StackProps = {}) {
     super(scope, id, props);
 
+    // Notes Table
     const notesTable = new dynamodb.Table(this, 'notes-table', {
       partitionKey: { name: 'id', type: dynamodb.AttributeType.STRING },
+      stream: dynamodb.StreamViewType.NEW_IMAGE,
     });
 
-    const putNote = new lambda.NodejsFunction(this, 'put-note', {
+    // Notes API 
+    const listNotes = new lambdaNodeJs.NodejsFunction(this, 'list-notes', {
       environment: {
         TABLE_NAME: notesTable.tableName,
       },
     });
 
-    const listNotes = new lambda.NodejsFunction(this, 'list-notes', {
+    const putNote = new lambdaNodeJs.NodejsFunction(this, 'put-note', {
       environment: {
         TABLE_NAME: notesTable.tableName,
       },
@@ -57,59 +59,64 @@ export class MyStack extends Stack {
       integration: listNotesIntegration,
     });
 
-    const bucket = new s3.Bucket(this, 'frontend', {
-      removalPolicy: RemovalPolicy.DESTROY,
-      autoDeleteObjects: true,
-    });
-
-    const distribution = new cloudfront.Distribution(
-      this,
-      'frontend-distribution',
-      {
-        defaultBehavior: { origin: new origins.S3Origin(bucket) },
-        defaultRootObject: 'index.html',
-      },
-    );
-
-    new s3deploy.BucketDeployment(this, 'frontend-deployment', {
-      sources: [
-        s3deploy.Source.asset(path.join(__dirname, '../frontend'), {
-          bundling: {
-            local: {
-              tryBundle(outputDir) {
-                try {
-                  execSync('npm --version');
-                } catch {
-                  return false;
-                }
-
-                execSync(`
-                  npm --prefix ./frontend i && 
-                  npm --prefix ./frontend run build
-                `);
-
-                fs.copySync(
-                  path.join(__dirname, '../frontend', 'build'),
-                  outputDir,
-                );
-
-                return true;
-              },
+    // EventBridge
+    const bus = new events.EventBus(this, 'bus');
+    
+    const rule = new events.Rule(this, 'rule', {
+      eventPattern: {
+        source: ['custom.notes'],
+        detail: {
+          wordCount: [ 
+            { 
+              numeric: [ '>', 10 ],
             },
-            image: DockerImage.fromRegistry('node:lts'),
-            command: [],
-          },
-        }),
-      ],
-      destinationBucket: bucket,
-      distribution,
-      distributionPaths: ['/*'],
+          ],
+        },
+      },
+      eventBus: bus
     });
+    
+    const eventBusFunction = new lambdaNodeJs.NodejsFunction(this, 'event-bus');
+    rule.addTarget(new targets.LambdaFunction(eventBusFunction));
 
-    new CfnOutput(this, 'FrontendURL', {
-      value: `https://${distribution.distributionDomainName}`,
+    // DynamoDB Stream with SQS
+    const queue = new sqs.Queue(this, 'queue');
+    const queueFunction = new lambdaNodeJs.NodejsFunction(this, 'stream', {
+      environment: {
+        QUEUE_URL: queue.queueUrl,
+      }
     });
+    queueFunction.addEventSource(new lambdaEventSources.DynamoEventSource(notesTable, {
+      startingPosition: lambda.StartingPosition.TRIM_HORIZON,
+      retryAttempts: 0,
+    }));
+    queue.grantSendMessages(queueFunction);
 
+    const wordCount = new lambdaNodeJs.NodejsFunction(this, 'word-count', {
+      environment: {
+        TABLE_NAME: notesTable.tableName,
+        EVENT_BUS_NAME: bus.eventBusName,
+      },
+    });
+    wordCount.addEventSource(new lambdaEventSources.SqsEventSource(queue));
+    notesTable.grant(wordCount, 'dynamodb:GetItem', 'dynamodb:UpdateItem');
+    bus.grantPutEventsTo(wordCount);
+
+    // Fire-and-forget fanout with SNS
+    const topic = new sns.Topic(this, 'webhook-topic');
+    topic.addSubscription(new subscriptions.UrlSubscription('https://enhlp1mddjm7f.x.pipedream.net'));
+    
+    const snsFunction = new lambdaNodeJs.NodejsFunction(this, 'sns', {
+      environment: {
+        TOPIC_ARN: topic.topicArn,
+      }
+    });
+    snsFunction.addEventSource(new lambdaEventSources.DynamoEventSource(notesTable, {
+      startingPosition: lambda.StartingPosition.TRIM_HORIZON,
+    }));
+    topic.grantPublish(snsFunction);
+
+    // CloudFormation stack output
     new CfnOutput(this, 'URL', { value: httpApi.apiEndpoint });
   }
 }
