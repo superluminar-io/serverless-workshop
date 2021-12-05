@@ -3,7 +3,7 @@ import * as AWS from 'aws-sdk';
 export const handler = async (event: AWSLambda.DynamoDBStreamEvent) => {
   const sqs = new AWS.SQS({apiVersion: '2012-11-05'});
 
-  for (let record of event.Records) {
+  for (const record of event.Records) {
     if (record.eventName !== 'INSERT' || !record.dynamodb) {
       return;
     }

@@ -4,7 +4,7 @@ export const handler = async (event: AWSLambda.DynamoDBStreamEvent) => {
   const sns = new AWS.SNS({apiVersion: '2010-03-31'});
   const topicArn = process.env.TOPIC_ARN;
 
-  for (let record of event.Records) {
+  for (const record of event.Records) {
     if (record.eventName !== 'INSERT' || !record.dynamodb) {
       return;
     }

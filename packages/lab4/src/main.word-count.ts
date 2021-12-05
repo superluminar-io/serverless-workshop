@@ -6,7 +6,7 @@ export const handler = async (event: AWSLambda.SQSEvent) => {
 
   const tableName = process.env.TABLE_NAME!;
 
-  for (let record of event.Records) {
+  for (const record of event.Records) {
     const body = JSON.parse(record.body);
     const id = body.noteId;
     const note = await DB.get({

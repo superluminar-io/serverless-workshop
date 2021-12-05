@@ -81,7 +81,7 @@ Create a DynamoDB stream for the notes table. The AWS Lambda function should tak
   export const handler = async (event: AWSLambda.DynamoDBStreamEvent) => {
     const DB = new AWS.DynamoDB.DocumentClient();
 
-    for (let record of event.Records) {
+    for (const record of event.Records) {
       if (record.eventName !== 'INSERT' || !record.dynamodb || !record.dynamodb.NewImage) {
         return;
       }
@@ -201,7 +201,7 @@ Create a queue with AWS SQS and send the DynamoDB stream event to the queue. Pro
   export const handler = async (event: AWSLambda.DynamoDBStreamEvent) => {
     const sqs = new AWS.SQS({apiVersion: '2012-11-05'});
 
-    for (let record of event.Records) {
+    for (const record of event.Records) {
       if (record.eventName !== 'INSERT' || !record.dynamodb) {
         return;
       }
@@ -253,7 +253,7 @@ Create a queue with AWS SQS and send the DynamoDB stream event to the queue. Pro
     const DB = new AWS.DynamoDB.DocumentClient();
     const tableName = process.env.TABLE_NAME!;
 
-    for (let record of event.Records) {
+    for (const record of event.Records) {
       const body = JSON.parse(record.body);
       const id = body.noteId;
       const note = await DB.get({
@@ -382,7 +382,7 @@ Create a new DynamoDB stream and send a message to an SNS topic for every new no
     const sns = new AWS.SNS({apiVersion: '2010-03-31'});
     const topicArn = process.env.TOPIC_ARN;
 
-    for (let record of event.Records) {
+    for (const record of event.Records) {
       if (record.eventName !== 'INSERT' || !record.dynamodb) {
         return;
       }
@@ -521,7 +521,7 @@ Create an event bus with EventBridge, emit a custom event and trigger a Lambda f
 
     const tableName = process.env.TABLE_NAME!;
 
-    for (let record of event.Records) {
+    for (const record of event.Records) {
       // … code to calculate the word count
       
       await eventbridge.putEvents({
