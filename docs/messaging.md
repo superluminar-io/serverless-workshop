@@ -146,7 +146,7 @@ Create a queue with AWS SQS and send the DynamoDB stream event to the queue. Pro
 
 1. Extend the list of CDK dependencies in the `.projenrc.js` configuration:
    ```js
-   const { AwsCdkTypeScriptApp, NodePackageManager } = require('projen');
+   // …
    const project = new AwsCdkTypeScriptApp({
      // …
      cdkDependencies: [
@@ -315,7 +315,7 @@ Create a new DynamoDB stream and send a message to an SNS topic for every new no
 
 1. Extend the list of CDK dependencies in the `.projenrc.js` configuration:
    ```js
-   const { AwsCdkTypeScriptApp, NodePackageManager } = require('projen');
+   // …
    const project = new AwsCdkTypeScriptApp({
      // …
      cdkDependencies: [
@@ -434,7 +434,7 @@ Create an event bus with EventBridge, emit a custom event and trigger a Lambda f
 
 1. Extend the list of CDK dependencies in the `.projenrc.js` configuration:
    ```js
-   const { AwsCdkTypeScriptApp, NodePackageManager } = require('projen');
+   // …
    const project = new AwsCdkTypeScriptApp({
      // …
      cdkDependencies: [
