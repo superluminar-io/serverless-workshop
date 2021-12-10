@@ -80,12 +80,12 @@ Now that we have an AWS CDK app, we want to deploy the first resource. Create a 
     github: false,
     packageManager: NodePackageManager.NPM,
     cdkDependencies: [
-      '@aws-cdk/aws-lambda-nodejs'
+      '@aws-cdk/aws-lambda-nodejs',
     ],
     // deps: [],                    /* Runtime dependencies of this module. */
     // description: undefined,      /* The description is just a string that helps people understand the purpose of the package. */
     devDeps: [
-      'esbuild@0'
+      'esbuild@0',
     ],
     // packageName: undefined,      /* The "name" in package.json. */
     // release: undefined,          /* Add release management to this project. */
@@ -163,7 +163,7 @@ HTTP/2 200
     cdkDependencies: [
       '@aws-cdk/aws-lambda-nodejs',
       '@aws-cdk/aws-apigatewayv2',
-      '@aws-cdk/aws-apigatewayv2-integrations'
+      '@aws-cdk/aws-apigatewayv2-integrations',
     ],
     // …
   });
@@ -172,30 +172,30 @@ HTTP/2 200
 1. Run `npm run projen` to install the new dependencies and re-generate the auto-generated files.
 1. Update the CloudFormation stack, so `./src/main.ts`:
    ```typescript
+  import * as apigateway from '@aws-cdk/aws-apigatewayv2';
+  import * as apigatewayIntegrations from '@aws-cdk/aws-apigatewayv2-integrations';
+  import * as lambdaNodeJs from '@aws-cdk/aws-lambda-nodejs';
   import { App, Construct, Stack, StackProps, CfnOutput } from '@aws-cdk/core';
-  import * as lambdaNodeJs from "@aws-cdk/aws-lambda-nodejs";
-  import * as apigateway from "@aws-cdk/aws-apigatewayv2";
-  import * as apigatewayIntegrations from "@aws-cdk/aws-apigatewayv2-integrations";
 
   export class MyStack extends Stack {
     constructor(scope: Construct, id: string, props: StackProps = {}) {
       super(scope, id, props);
 
-      const putNote = new lambdaNodeJs.NodejsFunction(this, "put-note");
+      const putNote = new lambdaNodeJs.NodejsFunction(this, 'put-note');
 
       const putNoteIntegration = new apigatewayIntegrations.LambdaProxyIntegration({
         handler: putNote,
       });
 
-      const httpApi = new apigateway.HttpApi(this, "http-api");
+      const httpApi = new apigateway.HttpApi(this, 'http-api');
 
       httpApi.addRoutes({
-        path: "/notes",
+        path: '/notes',
         methods: [apigateway.HttpMethod.POST],
         integration: putNoteIntegration,
       });
 
-      new CfnOutput(this, "URL", { value: httpApi.apiEndpoint });
+      new CfnOutput(this, 'URL', { value: httpApi.apiEndpoint });
     }
   }
 
@@ -215,11 +215,11 @@ HTTP/2 200
 1. Update the AWS Lambda function, so `./src/main.put-note.ts`:
    ```typescript
    export const handler = async () => {
-     console.log("Hello World :)");
+     console.log('Hello World :)');
 
      return {
        statusCode: 200,
-       body: JSON.stringify({ hello: "world" }),
+       body: JSON.stringify({ hello: 'world' }),
      };
    };
    ```
@@ -278,14 +278,14 @@ The note should be persisted in the DynamoDB table.
       '@aws-cdk/aws-lambda-nodejs',
       '@aws-cdk/aws-apigatewayv2',
       '@aws-cdk/aws-apigatewayv2-integrations',
-      '@aws-cdk/aws-dynamodb'
+      '@aws-cdk/aws-dynamodb',
     ],
     deps: [
-      'aws-sdk'
+      'aws-sdk',
     ],
     devDeps: [
       'esbuild@0',
-      '@types/aws-lambda'
+      '@types/aws-lambda',
     ],
     // …
   });
@@ -294,41 +294,41 @@ The note should be persisted in the DynamoDB table.
 1. Run `npm run projen` to install the new dependencies and re-generate the auto-generated files.
 1. Extend the CloudFormation stack, so `./src/main.ts`:
   ```typescript
+  import * as apigateway from '@aws-cdk/aws-apigatewayv2';
+  import * as apigatewayIntegrations from '@aws-cdk/aws-apigatewayv2-integrations';
+  import * as dynamodb from '@aws-cdk/aws-dynamodb';
+  import * as lambdaNodeJs from '@aws-cdk/aws-lambda-nodejs';
   import { App, Construct, Stack, StackProps, CfnOutput } from '@aws-cdk/core';
-  import * as lambdaNodeJs from "@aws-cdk/aws-lambda-nodejs";
-  import * as apigateway from "@aws-cdk/aws-apigatewayv2";
-  import * as apigatewayIntegrations from "@aws-cdk/aws-apigatewayv2-integrations";
-  import * as dynamodb from "@aws-cdk/aws-dynamodb";
 
   export class MyStack extends Stack {
     constructor(scope: Construct, id: string, props: StackProps = {}) {
       super(scope, id, props);
 
-      const notesTable = new dynamodb.Table(this, "notes-table", {
-        partitionKey: { name: "id", type: dynamodb.AttributeType.STRING },
+      const notesTable = new dynamodb.Table(this, 'notes-table', {
+        partitionKey: { name: 'id', type: dynamodb.AttributeType.STRING },
       });
 
-      const putNote = new lambdaNodeJs.NodejsFunction(this, "put-note", {
+      const putNote = new lambdaNodeJs.NodejsFunction(this, 'put-note', {
         environment: {
           TABLE_NAME: notesTable.tableName,
         },
       });
 
-      notesTable.grant(putNote, "dynamodb:PutItem");
-      
+      notesTable.grant(putNote, 'dynamodb:PutItem');
+
       const putNoteIntegration = new apigatewayIntegrations.LambdaProxyIntegration({
         handler: putNote,
       });
 
-      const httpApi = new apigateway.HttpApi(this, "http-api");
+      const httpApi = new apigateway.HttpApi(this, 'http-api');
 
       httpApi.addRoutes({
-        path: "/notes",
+        path: '/notes',
         methods: [apigateway.HttpMethod.POST],
         integration: putNoteIntegration,
       });
 
-      new CfnOutput(this, "URL", { value: httpApi.apiEndpoint });
+      new CfnOutput(this, 'URL', { value: httpApi.apiEndpoint });
     }
   }
 
@@ -347,12 +347,12 @@ The note should be persisted in the DynamoDB table.
   ```
 1. Update the AWS Lambda function:
   ```typescript
-   import * as AWS from "aws-sdk";
+   import * as AWS from 'aws-sdk';
 
    export const handler = async (event: AWSLambda.APIGatewayProxyEvent) => {
      const DB = new AWS.DynamoDB.DocumentClient();
 
-     const body = JSON.parse(event.body || "{}");
+     const body = JSON.parse(event.body || '{}');
 
      if (!body.title || !body.content) {
        return {
@@ -418,34 +418,34 @@ HTTP/2 200
 
 1. Extend the CloudFormation stack, so `./src/main.ts` becomes:
   ```typescript
+  import * as apigateway from '@aws-cdk/aws-apigatewayv2';
+  import * as apigatewayIntegrations from '@aws-cdk/aws-apigatewayv2-integrations';
+  import * as dynamodb from '@aws-cdk/aws-dynamodb';
+  import * as lambdaNodeJs from '@aws-cdk/aws-lambda-nodejs';
   import { App, Construct, Stack, StackProps, CfnOutput } from '@aws-cdk/core';
-  import * as lambdaNodeJs from "@aws-cdk/aws-lambda-nodejs";
-  import * as apigateway from "@aws-cdk/aws-apigatewayv2";
-  import * as apigatewayIntegrations from "@aws-cdk/aws-apigatewayv2-integrations";
-  import * as dynamodb from "@aws-cdk/aws-dynamodb";
 
   export class MyStack extends Stack {
     constructor(scope: Construct, id: string, props: StackProps = {}) {
       super(scope, id, props);
 
-      const notesTable = new dynamodb.Table(this, "notes-table", {
-        partitionKey: { name: "id", type: dynamodb.AttributeType.STRING },
+      const notesTable = new dynamodb.Table(this, 'notes-table', {
+        partitionKey: { name: 'id', type: dynamodb.AttributeType.STRING },
       });
 
-      const putNote = new lambdaNodeJs.NodejsFunction(this, "put-note", {
+      const putNote = new lambdaNodeJs.NodejsFunction(this, 'put-note', {
         environment: {
           TABLE_NAME: notesTable.tableName,
         },
       });
 
-      const listNotes = new lambdaNodeJs.NodejsFunction(this, "list-notes", {
+      const listNotes = new lambdaNodeJs.NodejsFunction(this, 'list-notes', {
         environment: {
           TABLE_NAME: notesTable.tableName,
         },
       });
 
-      notesTable.grant(putNote, "dynamodb:PutItem");
-      notesTable.grant(listNotes, "dynamodb:Scan");
+      notesTable.grant(putNote, 'dynamodb:PutItem');
+      notesTable.grant(listNotes, 'dynamodb:Scan');
 
       const putNoteIntegration = new apigatewayIntegrations.LambdaProxyIntegration({
         handler: putNote,
@@ -455,21 +455,21 @@ HTTP/2 200
         handler: listNotes,
       });
 
-      const httpApi = new apigateway.HttpApi(this, "http-api");
+      const httpApi = new apigateway.HttpApi(this, 'http-api');
 
       httpApi.addRoutes({
-        path: "/notes",
+        path: '/notes',
         methods: [apigateway.HttpMethod.POST],
         integration: putNoteIntegration,
       });
 
       httpApi.addRoutes({
-        path: "/notes",
+        path: '/notes',
         methods: [apigateway.HttpMethod.GET],
         integration: listNotesIntegration,
       });
-      
-      new CfnOutput(this, "URL", { value: httpApi.apiEndpoint });
+
+      new CfnOutput(this, 'URL', { value: httpApi.apiEndpoint });
     }
   }
 
@@ -492,7 +492,7 @@ HTTP/2 200
    ```
 1. Add the following code to the file:
   ```typescript
-  import * as AWS from "aws-sdk";
+  import * as AWS from 'aws-sdk';
 
   export const handler = async () => {
     const DB = new AWS.DynamoDB.DocumentClient();

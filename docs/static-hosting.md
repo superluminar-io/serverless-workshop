@@ -95,74 +95,75 @@ Create a new CloudFormation stack for the static hosting. The stack should inclu
 1. Extend the CloudFormation stack in the `./src/main.ts` file:
    ```typescript
    // … (imports from previous labs)
-   import { execSync } from "child_process";
-   import * as path from "path";
-   import * as fs from "fs-extra";
-   import * as s3 from "@aws-cdk/aws-s3";
-   import * as cloudfront from "@aws-cdk/aws-cloudfront";
-   import * as origins from "@aws-cdk/aws-cloudfront-origins";
-   import * as s3deploy from "@aws-cdk/aws-s3-deployment";
+   import { execSync } from 'child_process';
+   import * as path from 'path';
+   import * as cloudfront from '@aws-cdk/aws-cloudfront';
+   import * as origins from '@aws-cdk/aws-cloudfront-origins';
+   import * as s3 from '@aws-cdk/aws-s3';
+   import * as s3deploy from '@aws-cdk/aws-s3-deployment';
+   import * as fs from 'fs-extra';
 
    export class MyStack extends Stack {
-    constructor(scope: Construct, id: string, props: StackProps = {}) {
-      super(scope, id, props);
+     constructor(scope: Construct, id: string, props: StackProps = {}) {
+       super(scope, id, props);
 
-      // … (resources from previous labs)
+       // … (resources from previous labs)
 
-      const bucket = new s3.Bucket(this, "frontend", {
-        removalPolicy: RemovalPolicy.DESTROY,
-        autoDeleteObjects: true,
-      });
+       const bucket = new s3.Bucket(this, 'frontend', {
+         removalPolicy: RemovalPolicy.DESTROY,
+         autoDeleteObjects: true,
+       });
 
-      const distribution = new cloudfront.Distribution(
-        this,
-        "frontend-distribution",
-        {
-          defaultBehavior: { origin: new origins.S3Origin(bucket) },
-          defaultRootObject: "index.html",
-        }
-      );
+       const distribution = new cloudfront.Distribution(
+         this,
+         'frontend-distribution',
+         {
+           defaultBehavior: { origin: new origins.S3Origin(bucket) },
+           defaultRootObject: 'index.html',
+         },
+       );
 
-      new s3deploy.BucketDeployment(this, "frontend-deployment", {
-        sources: [
-          s3deploy.Source.asset(path.join(__dirname, "../frontend"), {
-            bundling: {
-              local: {
-                tryBundle(outputDir) {
-                  try {
-                    execSync("npm --version");
-                  } catch {
-                    return false;
-                  }
+       new s3deploy.BucketDeployment(this, 'frontend-deployment', {
+         sources: [
+           s3deploy.Source.asset(path.join(__dirname, '../frontend'), {
+             bundling: {
+               local: {
+                 tryBundle(outputDir) {
+                   try {
+                     execSync('npm --version');
+                   } catch {
+                     return false;
+                   }
 
-                  execSync(`
-                    npm --prefix ./frontend i && 
-                    npm --prefix ./frontend run build
-                  `);
-                  
-                  fs.copySync(
-                    path.join(__dirname, "../frontend", "build"),
-                    outputDir
-                  );
+                   execSync(`
+                       npm --prefix ./frontend i &&
+                       npm --prefix ./frontend run build
+                     `);
 
-                  return true;
-                },
-              },
-              image: DockerImage.fromRegistry("node:lts"),
-              command: [],
-            },
-          }),
-        ],
-        destinationBucket: bucket,
-        distribution,
-        distributionPaths: ["/*"],
-      });
+                   fs.copySync(
+                     path.join(__dirname, '../frontend', 'build'),
+                     outputDir,
+                   );
 
-      new CfnOutput(this, "FrontendURL", {
-        value: `https://${distribution.distributionDomainName}`,
-      });
-    }
-  }
+                   return true;
+                 },
+               },
+               image: DockerImage.fromRegistry('node:lts'),
+               command: [],
+             },
+           }),
+         ],
+         destinationBucket: bucket,
+         distribution,
+         distributionPaths: ['/*'],
+       });
+
+       new CfnOutput(this, 'FrontendURL', {
+         value: `https://${distribution.distributionDomainName}`,
+       });
+     }
+   }
+
   ```
 1. Deploy the latest changes:
    ```bash
