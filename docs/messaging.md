@@ -34,13 +34,13 @@ Create a DynamoDB stream for the notes table. The AWS Lambda function should tak
       '@aws-cdk/aws-apigatewayv2-integrations',
       '@aws-cdk/aws-dynamodb',
       '@aws-cdk/aws-lambda',
-      '@aws-cdk/aws-lambda-event-sources'
+      '@aws-cdk/aws-lambda-event-sources',
     ],
     // …
   });
   ```
 1. Extend the CloudFormation stack in `./src/main.ts` file:
-  ```ts
+  ```typescript
   // … (more imports from previous labs)
   import * as lambda from '@aws-cdk/aws-lambda';
   import * as lambdaNodeJs from '@aws-cdk/aws-lambda-nodejs';
@@ -75,7 +75,7 @@ Create a DynamoDB stream for the notes table. The AWS Lambda function should tak
   touch src/main.word-count.ts
   ```
 1. Implement the AWS lambda function:
-  ```ts
+  ```typescript
   import * as AWS from 'aws-sdk';
 
   export const handler = async (event: AWSLambda.DynamoDBStreamEvent) => {
@@ -394,7 +394,7 @@ Create a new DynamoDB stream and send a message to an SNS topic for every new no
       const message = {
         id,
         content,
-        title
+        title,
       }
     
       await sns.publish({

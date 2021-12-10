@@ -28,7 +28,7 @@ Write unit tests for the AWS Lambda functions. Running the command `npm test` sh
     devDeps: [
       'esbuild@0',
       '@types/aws-lambda',
-      'aws-sdk-mock'
+      'aws-sdk-mock',
     ],
     // …
   });
@@ -74,8 +74,8 @@ Write unit tests for the AWS Lambda functions. Running the command `npm test` sh
   import AWSMock from 'aws-sdk-mock';
   import { handler } from '../src/main.put-note';
 
-  describe("valid request", () => {
-    it("should return status code 201", async () => {
+  describe('valid request', () => {
+    it('should return status code 201', async () => {
       const tableName = 'foo';
       const putItemSpy = jest.fn();
       process.env.TABLE_NAME = tableName;
@@ -84,14 +84,14 @@ Write unit tests for the AWS Lambda functions. Running the command `npm test` sh
       });
 
       const requestBody = {
-        title: "Hello World",
-        content: "Minim nulla dolore nostrud dolor aliquip minim.",
+        title: 'Hello World',
+        content: 'Minim nulla dolore nostrud dolor aliquip minim.',
       };
 
       const event = {
         body: JSON.stringify(requestBody),
       } as AWSLambda.APIGatewayProxyEvent;
-      
+
       const response = await handler(event);
 
       expect(putItemSpy).toHaveBeenCalledWith({
@@ -101,7 +101,7 @@ Write unit tests for the AWS Lambda functions. Running the command `npm test` sh
           content: requestBody.content,
         },
         TableName: tableName,
-      })
+      });
 
       expect(response).toEqual({
         statusCode: 201,
@@ -111,8 +111,8 @@ Write unit tests for the AWS Lambda functions. Running the command `npm test` sh
     });
   });
 
-  describe("invalid request body", () => {
-    it("should return status code 400", async () => {
+  describe('invalid request body', () => {
+    it('should return status code 400', async () => {
       const response = await handler({} as AWSLambda.APIGatewayProxyEvent);
 
       expect(response).toEqual({
@@ -151,13 +151,13 @@ Integration tests are super helpful to test the whole stack end-to-end. Write so
     // …
     deps: [
       'aws-sdk',
-      'node-fetch@2'
+      'node-fetch@2',
     ],
     devDeps: [
       'esbuild@0',
       '@types/aws-lambda',
       'aws-sdk-mock',
-      '@types/node-fetch'
+      '@types/node-fetch@2',
     ],
     // …
   });
