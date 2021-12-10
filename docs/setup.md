@@ -38,3 +38,4 @@ If you don't want to invest time setting up a locally running development enviro
 5. Keep the default settings and click on **Next step**
 6. Scroll down and click on **Create environment**
 7. That's it. You should arrive in the Cloud9 editor.
+8. Enable hidden files in the file explorer. See [documentation](https://docs.aws.amazon.com/cloud9/latest/user-guide/tour-ide.html#tour-ide-environment).
