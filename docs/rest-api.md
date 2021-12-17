@@ -30,7 +30,7 @@ Create a fresh AWS CDK app with Projen.
    ```
 1. Init AWS CDK with Projen:
    ```bash
-   npx projen new awscdk-app-ts --package-manager 'NPM' --github false --no-git
+   npx projen@latest new awscdk-app-ts --package-manager 'NPM' --github false --no-git
    ```
 1. Go to the file `./src/main.ts` and rename the stack, like so:
   ```typescript
