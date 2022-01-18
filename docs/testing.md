@@ -17,9 +17,6 @@ Write unit tests for the AWS Lambda functions. Running the command `npm test` sh
 
 ### 🗺  Step-by-Step Guide
 
-<details>
-<summary>Collapse guide</summary>
-
 1. Extend the list of dev dependencies in the `.projenrc.js` configuration:
   ```js
   const { AwsCdkTypeScriptApp, NodePackageManager } = require('projen');
@@ -126,8 +123,6 @@ Write unit tests for the AWS Lambda functions. Running the command `npm test` sh
   npm test
   ```
 
-</details>
-
 ## Integration Testing
 
 ### 📝 Task
@@ -141,9 +136,6 @@ Integration tests are super helpful to test the whole stack end-to-end. Write so
 - [Use environment variables to pass the API endpoint](https://www.twilio.com/blog/working-with-environment-variables-in-node-js-html)
 
 ### 🗺  Step-by-Step Guide
-
-<details>
-<summary>Collapse guide</summary>
 
 1. Extend the list of dependencies in the `.projenrc.js` configuration:
    ```js
@@ -201,8 +193,6 @@ Integration tests are super helpful to test the whole stack end-to-end. Write so
   ```bash
   ENDPOINT=https://XXXXXX.execute-api.eu-central-1.amazonaws.com npm run test:e2e
   ```
-
-</details>
 
 ---
 
