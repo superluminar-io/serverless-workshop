@@ -19,9 +19,6 @@ Create a frontend app in a new subfolder.
 
 ### 🗺  Step-by-Step Guide
 
-<details>
-<summary>Collapse guide</summary>
-
 1. Run create-react-app to bootstrap a new CRA project:
   ```bash
   npx create-react-app frontend --template typescript
@@ -41,7 +38,6 @@ Create a frontend app in a new subfolder.
    ```
    Go to http://localhost:3000 and enjoy the app!
 
-</details>
 
 ## CloudFormation Stack
 
@@ -59,9 +55,6 @@ Create a new CloudFormation stack for the static hosting. The stack should inclu
 - [Bundle JS assets locally with AWS CDK S3 Deployment (scroll down to the last section)](https://aws.amazon.com/blogs/devops/building-apps-with-aws-cdk/)
 
 ### 🗺  Step-by-Step Guide
-
-<details>
-<summary>Collapse guide</summary>
 
 1. Extend the list of CDK dependencies in the `.projenrc.js` configuration:
   ```js
@@ -170,8 +163,6 @@ Create a new CloudFormation stack for the static hosting. The stack should inclu
    npm run deploy
    ```
 1. Get the frontend URL from the CloudFormation output and visit the site.
-
-</details>
 
 ### ❓ Questions
 
