@@ -39,7 +39,7 @@ Write unit tests for the AWS Lambda functions. Running the command `npm test` sh
 1. Add the following code to the test file:
   ```typescript
   import AWSMock from 'aws-sdk-mock';
-  import { handler } from '../src/main.list-notes';
+  import { handler } from '../src/rest-api.list-notes';
 
   it('should return notes', async () => {
     const item = {
@@ -69,7 +69,7 @@ Write unit tests for the AWS Lambda functions. Running the command `npm test` sh
 1. Add the following code to the test file:
   ```typescript
   import AWSMock from 'aws-sdk-mock';
-  import { handler } from '../src/main.put-note';
+  import { handler } from '../src/rest-api.put-note';
 
   describe('valid request', () => {
     it('should return status code 201', async () => {
