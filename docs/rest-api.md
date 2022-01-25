@@ -186,7 +186,7 @@ HTTP/2 200
    ```bash
    npm run deploy
    ```
-1. Copy the endpoint URL from the output of the deployment and run the following request to send a HTTP request:
+1. Copy the endpoint URL from the output of the deployment in your terminal and run the following request to send a HTTP request:
    ```bash
    curl -X POST https://XXXXX.execute-api.eu-central-1.amazonaws.com/prod/notes
    ```
