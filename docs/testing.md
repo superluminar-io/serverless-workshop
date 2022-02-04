@@ -21,20 +21,25 @@ Write unit tests for the AWS Lambda functions. Running the command `npm test` sh
   ```js
   const { AwsCdkTypeScriptApp, NodePackageManager } = require('projen');
   const project = new AwsCdkTypeScriptApp({
-    // …
+    cdkVersion: '2.1.0',
+    defaultReleaseBranch: 'main',
+    github: false,
+    name: 'notes-api',
+    packageManager: javascript.NodePackageManager.NPM,
+    deps: [
+      'aws-sdk',
     devDeps: [
-      'esbuild@0',
       '@types/aws-lambda',
       'aws-sdk-mock',
     ],
-    // …
   });
+
   project.synth();
   ```
 1. Run `npm run projen` to install the new dependencies and re-generate the auto-generated files.
 1. Create a new file:
   ```bash
-  touch ./test/main.list-notes.test.ts
+  touch ./test/rest-api.list-notes.test.ts
   ```
 1. Add the following code to the test file:
   ```typescript
@@ -64,7 +69,7 @@ Write unit tests for the AWS Lambda functions. Running the command `npm test` sh
   ```
 1. Create a new file:
    ```bash
-   touch test/main.put-note.test.ts
+   touch test/rest-api.put-note.test.ts
    ```
 1. Add the following code to the test file:
   ```typescript
@@ -139,20 +144,24 @@ Integration tests are super helpful to test the whole stack end-to-end. Write so
 
 1. Extend the list of dependencies in the `.projenrc.js` configuration:
    ```js
-   const project = new AwsCdkTypeScriptApp({
-    // …
+  const { AwsCdkTypeScriptApp, NodePackageManager } = require('projen');
+  const project = new AwsCdkTypeScriptApp({
+    cdkVersion: '2.1.0',
+    defaultReleaseBranch: 'main',
+    github: false,
+    name: 'notes-api',
+    packageManager: javascript.NodePackageManager.NPM,
     deps: [
       'aws-sdk',
       'node-fetch@2',
-    ],
     devDeps: [
-      'esbuild@0',
       '@types/aws-lambda',
       'aws-sdk-mock',
       '@types/node-fetch@2',
     ],
-    // …
   });
+  
+  project.synth();
    ```
 1. In addition, add a new task to the `.projenrc.js` configuration:
   ```js
@@ -163,7 +172,7 @@ Integration tests are super helpful to test the whole stack end-to-end. Write so
 1. Run `npm run projen` to install the new dependencies and re-generate the auto-generated files.
 1. Create a new file:
    ```
-   touch ./test/main.e2etest.ts
+   touch ./test/rest-api.e2etest.ts
    ```
 1. Add the following code to the file:
   ```typescript
