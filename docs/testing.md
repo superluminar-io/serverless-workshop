@@ -53,7 +53,7 @@ Write unit tests for the AWS Lambda functions. Running the command `npm test` sh
       content: 'Minim nulla dolore nostrud dolor aliquip minim.',
     };
 
-    AWSMock.mock('DynamoDB.DocumentClient', 'scan', (_, callback: Function) => {
+    AWSMock.mock('DynamoDB.DocumentClient', 'scan', (_: any, callback: Function) => {
       callback(null, { Items: [item] });
     });
 
@@ -81,7 +81,7 @@ Write unit tests for the AWS Lambda functions. Running the command `npm test` sh
       const tableName = 'foo';
       const putItemSpy = jest.fn();
       process.env.TABLE_NAME = tableName;
-      AWSMock.mock('DynamoDB.DocumentClient', 'put', (params, callback) => {
+      AWSMock.mock('DynamoDB.DocumentClient', 'put', (params: any, callback: Function) => {
         callback(null, putItemSpy(params));
       });
 
@@ -200,7 +200,7 @@ Integration tests are super helpful to test the whole stack end-to-end. Write so
   ```
 1. Run the integration tests:
   ```bash
-  ENDPOINT=https://XXXXXX.execute-api.eu-central-1.amazonaws.com npm run test:e2e
+  ENDPOINT=https://XXXXXX.execute-api.eu-central-1.amazonaws.com/prod npm run test:e2e
   ```
 
 ---
