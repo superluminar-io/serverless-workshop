@@ -70,8 +70,8 @@ Now that we have an AWS CDK app, we want to deploy the first resource. Create a 
    const project = new awscdk.AwsCdkTypeScriptApp({
      cdkVersion: '2.1.0',
      defaultReleaseBranch: 'main',
-     name: 'lab1',
      github: false,
+     name: 'notes-api',
      packageManager: javascript.NodePackageManager.NPM,
      deps: [
        'aws-sdk',
