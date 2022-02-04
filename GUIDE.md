@@ -42,22 +42,22 @@ Template for the calendar invitation:
 ```txt
 Hello everyone, 
 
-my name is [name] and I am your trainer for the serverless workshop. My colleague [name] joins me. We are both Cloud Consultants with years of experience with AWS.
+my name is [name] and I'm your trainer for the serverless workshop. My colleague [name] joins me. To join the session, please click on the Google Meet link in the calendar invitation.
 
-The event will take place remotely. Please join the session by clicking on the Google Meet link attached to this invitation.
+The workshop includes hands-on sessions, where we play around with AWS services, deploy infrastructure directly from our computers, and click around in the AWS management console. 
 
-At the beginning of the workshop, we will give a short introduction to serverless technologies but our main focus will be hands-on sessions with you. Therefore, we need to prepare our computers and install some tools. You can find the list below. Don’t worry if you can’t prepare your computer, we can also find alternatives with cloud-based IDEs. 
-
-Prerequisites:
+Therefore, we kindly ask you to prepare some tools on your computer:
 
 - IDE (e.g. VS Code)
 - Terminal (e.g. iTerm or Integrated Terminal in VS Code)
 - Node.js (v16)
 - AWS CLI
 
-If you have questions or problems with the setup, don’t hesitate to write me an e-mail (henrik.fricke@superluminar.io). 
+In any case, we can also provide cloud-based IDEs as an alternative.
 
-See you in [X] weeks,
+If you have questions or problems with the setup, don’t hesitate to write me an e-mail ([email address]). 
+
+See you, 
 
 [name]
 ```
