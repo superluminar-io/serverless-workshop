@@ -58,106 +58,133 @@ Create a new CloudFormation stack for the static hosting. The stack should inclu
 
 1. Extend the list of CDK dependencies in the `.projenrc.js` configuration:
   ```js
-   const project = new AwsCdkTypeScriptApp({
-    // …
-    cdkDependencies: [
-      '@aws-cdk/aws-lambda-nodejs',
-      '@aws-cdk/aws-apigatewayv2',
-      '@aws-cdk/aws-apigatewayv2-integrations',
-      '@aws-cdk/aws-dynamodb',
-      '@aws-cdk/aws-s3-deployment',
-      '@aws-cdk/aws-cloudfront-origins',
-      '@aws-cdk/aws-cloudfront',
-    ],
+   const { awscdk, javascript } = require('projen');
+   const project = new awscdk.AwsCdkTypeScriptApp({
+    cdkVersion: '2.1.0',
+    defaultReleaseBranch: 'main',
+    github: false,
+    name: 'notes-api',
+    packageManager: javascript.NodePackageManager.NPM,
     deps: [
       'aws-sdk',
       'node-fetch@2',
       'fs-extra',
     ],
     devDeps: [
-      'esbuild@0',
       '@types/aws-lambda',
       'aws-sdk-mock',
-      '@types/node-fetch',
+      '@types/node-fetch@2',
       '@types/fs-extra',
     ],
-    // …
-  });
+    project.addTask('test:e2e', {
+      exec: 'jest --testMatch "**/*.e2etest.ts"',
+    });
+
+    project.synth();
    ```
 1. Run `npm run projen` in the root project to install the new dependencies and re-generate the auto-generated files.
-1. Extend the CloudFormation stack in the `./src/main.ts` file:
+1. Create a file for the new construct:
+   ```bash
+   touch ./src/static-hosting.ts 
+   ```
+1. Open the file and paste the following code:
+    ```typescript 
+    import { execSync } from 'child_process';
+    import * as path from 'path';
+    import { 
+      aws_cloudfront as cloudfront, 
+      aws_cloudfront_origins as origins, 
+      aws_s3 as s3, 
+      aws_s3_deployment as s3deploy, 
+      CfnOutput, 
+      DockerImage, 
+      RemovalPolicy } from 'aws-cdk-lib';
+    import { Construct } from 'constructs';
+    import * as fs from 'fs-extra';
+
+    export class StaticHosting extends Construct {
+
+      constructor(scope: Construct, id: string) {
+        super(scope, id);
+
+        const bucket = new s3.Bucket(this, 'frontend', {
+          removalPolicy: RemovalPolicy.DESTROY,
+          autoDeleteObjects: true,
+        });
+
+        const distribution = new cloudfront.Distribution(
+          this,
+          'frontend-distribution',
+          {
+            defaultBehavior: { origin: new origins.S3Origin(bucket) },
+            defaultRootObject: 'index.html',
+          },
+        );
+
+        new s3deploy.BucketDeployment(this, 'frontend-deployment', {
+          sources: [
+            s3deploy.Source.asset(path.join(__dirname, '../frontend'), {
+              bundling: {
+                local: {
+                  tryBundle(outputDir) {
+                    try {
+                      execSync('npm --version');
+                    } catch {
+                      return false;
+                    }
+
+                    execSync(`
+                        npm --prefix ./frontend i &&
+                        npm --prefix ./frontend run build
+                      `);
+
+                    fs.copySync(
+                      path.join(__dirname, '../frontend', 'build'),
+                      outputDir,
+                    );
+
+                    return true;
+                  },
+                },
+                image: DockerImage.fromRegistry('node:lts'),
+                command: [],
+              },
+            }),
+          ],
+          destinationBucket: bucket,
+          distribution,
+          distributionPaths: ['/*'],
+        });
+
+        new CfnOutput(this, 'FrontendURL', {
+          value: `https://${distribution.distributionDomainName}`,
+        });
+      }
+    }
+    ```
+1. Update the main stack in the `./src/main.ts` file:
    ```typescript
-   // … (imports from previous labs)
-   import { execSync } from 'child_process';
-   import * as path from 'path';
-   import * as cloudfront from '@aws-cdk/aws-cloudfront';
-   import * as origins from '@aws-cdk/aws-cloudfront-origins';
-   import * as s3 from '@aws-cdk/aws-s3';
-   import * as s3deploy from '@aws-cdk/aws-s3-deployment';
-   import * as fs from 'fs-extra';
+   import { App, Stack, StackProps } from 'aws-cdk-lib';
+   import { Construct } from 'constructs';
+   import { RestApi } from './rest-api';
+   import { StaticHosting } from './static-hosting';
+   import { WordCount } from './word-count';
 
    export class MyStack extends Stack {
-     constructor(scope: Construct, id: string, props: StackProps = {}) {
-       super(scope, id, props);
+      constructor(scope: Construct, id: string, props: StackProps = {}) {
+      super(scope, id, props);
 
-       // … (resources from previous labs)
+      const restApi = new RestApi(this, 'rest-api');
 
-       const bucket = new s3.Bucket(this, 'frontend', {
-         removalPolicy: RemovalPolicy.DESTROY,
-         autoDeleteObjects: true,
-       });
+      new WordCount(this, 'word-count', {
+        notesTable: restApi.notesTable,
+      });
 
-       const distribution = new cloudfront.Distribution(
-         this,
-         'frontend-distribution',
-         {
-           defaultBehavior: { origin: new origins.S3Origin(bucket) },
-           defaultRootObject: 'index.html',
-         },
-       );
-
-       new s3deploy.BucketDeployment(this, 'frontend-deployment', {
-         sources: [
-           s3deploy.Source.asset(path.join(__dirname, '../frontend'), {
-             bundling: {
-               local: {
-                 tryBundle(outputDir) {
-                   try {
-                     execSync('npm --version');
-                   } catch {
-                     return false;
-                   }
-
-                   execSync(`
-                       npm --prefix ./frontend i &&
-                       npm --prefix ./frontend run build
-                     `);
-
-                   fs.copySync(
-                     path.join(__dirname, '../frontend', 'build'),
-                     outputDir,
-                   );
-
-                   return true;
-                 },
-               },
-               image: DockerImage.fromRegistry('node:lts'),
-               command: [],
-             },
-           }),
-         ],
-         destinationBucket: bucket,
-         distribution,
-         distributionPaths: ['/*'],
-       });
-
-       new CfnOutput(this, 'FrontendURL', {
-         value: `https://${distribution.distributionDomainName}`,
-       });
-     }
-   }
-
+      new StaticHosting(this, 'static-hosting');
+    }
+  }
   ```
+  ⚠️Important: Only update the imports and the class. Everything below the class should be the same.
 1. Deploy the latest changes:
    ```bash
    npm run deploy
