@@ -103,7 +103,6 @@ Create a new CloudFormation stack for the static hosting. The stack should inclu
     import * as fs from 'fs-extra';
 
     export class StaticHosting extends Construct {
-
       constructor(scope: Construct, id: string) {
         super(scope, id);
 
