@@ -28,6 +28,7 @@ Write unit tests for the AWS Lambda functions. Running the command `npm test` sh
     packageManager: javascript.NodePackageManager.NPM,
     deps: [
       'aws-sdk',
+    ],
     devDeps: [
       '@types/aws-lambda',
       'aws-sdk-mock',
@@ -154,6 +155,7 @@ Integration tests are super helpful to test the whole stack end-to-end. Write so
     deps: [
       'aws-sdk',
       'node-fetch@2',
+    ],
     devDeps: [
       '@types/aws-lambda',
       'aws-sdk-mock',
@@ -167,7 +169,7 @@ Integration tests are super helpful to test the whole stack end-to-end. Write so
   ```js
   project.addTask('test:e2e', {
     exec: 'jest --testMatch "**/*.e2etest.ts"',
-  })
+  });
   ```
 1. Run `npm run projen` to install the new dependencies and re-generate the auto-generated files.
 1. Create a new file:
