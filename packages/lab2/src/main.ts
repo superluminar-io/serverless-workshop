@@ -1,55 +1,12 @@
-import * as apigateway from '@aws-cdk/aws-apigatewayv2';
-import * as apigatewayIntegrations from '@aws-cdk/aws-apigatewayv2-integrations';
-import * as dynamodb from '@aws-cdk/aws-dynamodb';
-import * as lambdaNodeJs from "@aws-cdk/aws-lambda-nodejs";
-import { App, Construct, Stack, StackProps, CfnOutput } from '@aws-cdk/core';
+import { App, Stack, StackProps } from 'aws-cdk-lib';
+import { Construct } from 'constructs';
+import { RestApi } from './rest-api';
 
 export class MyStack extends Stack {
   constructor(scope: Construct, id: string, props: StackProps = {}) {
     super(scope, id, props);
 
-    const notesTable = new dynamodb.Table(this, 'notes-table', {
-      partitionKey: { name: 'id', type: dynamodb.AttributeType.STRING },
-    });
-
-    const putNote = new lambdaNodeJs.NodejsFunction(this, 'put-note', {
-      environment: {
-        TABLE_NAME: notesTable.tableName,
-      },
-    });
-
-    const listNotes = new lambdaNodeJs.NodejsFunction(this, 'list-notes', {
-      environment: {
-        TABLE_NAME: notesTable.tableName,
-      },
-    });
-
-    notesTable.grant(putNote, 'dynamodb:PutItem');
-    notesTable.grant(listNotes, 'dynamodb:Scan');
-
-    const putNoteIntegration = new apigatewayIntegrations.LambdaProxyIntegration({
-      handler: putNote,
-    });
-
-    const listNotesIntegration = new apigatewayIntegrations.LambdaProxyIntegration({
-      handler: listNotes,
-    });
-
-    const httpApi = new apigateway.HttpApi(this, 'http-api');
-
-    httpApi.addRoutes({
-      path: '/notes',
-      methods: [apigateway.HttpMethod.POST],
-      integration: putNoteIntegration,
-    });
-
-    httpApi.addRoutes({
-      path: '/notes',
-      methods: [apigateway.HttpMethod.GET],
-      integration: listNotesIntegration,
-    });
-
-    new CfnOutput(this, 'URL', { value: httpApi.apiEndpoint });
+    new RestApi(this, 'rest-api');
   }
 }
 

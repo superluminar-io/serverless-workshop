@@ -1,12 +1,12 @@
 import AWSMock from 'aws-sdk-mock';
-import { handler } from '../src/main.put-note';
+import { handler } from '../src/rest-api.put-note';
 
 describe('valid request', () => {
   it('should return status code 201', async () => {
     const tableName = 'foo';
     const putItemSpy = jest.fn();
     process.env.TABLE_NAME = tableName;
-    AWSMock.mock('DynamoDB.DocumentClient', 'put', (params, callback) => {
+    AWSMock.mock('DynamoDB.DocumentClient', 'put', (params: any, callback: Function) => {
       callback(null, putItemSpy(params));
     });
 

@@ -17,32 +17,35 @@ Write unit tests for the AWS Lambda functions. Running the command `npm test` sh
 
 ### 🗺  Step-by-Step Guide
 
-<details>
-<summary>Collapse guide</summary>
-
 1. Extend the list of dev dependencies in the `.projenrc.js` configuration:
   ```js
   const { AwsCdkTypeScriptApp, NodePackageManager } = require('projen');
   const project = new AwsCdkTypeScriptApp({
-    // …
+    cdkVersion: '2.1.0',
+    defaultReleaseBranch: 'main',
+    github: false,
+    name: 'notes-api',
+    packageManager: javascript.NodePackageManager.NPM,
+    deps: [
+      'aws-sdk',
+    ],
     devDeps: [
-      'esbuild@0',
       '@types/aws-lambda',
       'aws-sdk-mock',
     ],
-    // …
   });
+
   project.synth();
   ```
 1. Run `npm run projen` to install the new dependencies and re-generate the auto-generated files.
 1. Create a new file:
   ```bash
-  touch ./test/main.list-notes.test.ts
+  touch ./test/rest-api.list-notes.test.ts
   ```
 1. Add the following code to the test file:
   ```typescript
   import AWSMock from 'aws-sdk-mock';
-  import { handler } from '../src/main.list-notes';
+  import { handler } from '../src/rest-api.list-notes';
 
   it('should return notes', async () => {
     const item = {
@@ -51,7 +54,7 @@ Write unit tests for the AWS Lambda functions. Running the command `npm test` sh
       content: 'Minim nulla dolore nostrud dolor aliquip minim.',
     };
 
-    AWSMock.mock('DynamoDB.DocumentClient', 'scan', (_, callback: Function) => {
+    AWSMock.mock('DynamoDB.DocumentClient', 'scan', (_: any, callback: Function) => {
       callback(null, { Items: [item] });
     });
 
@@ -67,19 +70,19 @@ Write unit tests for the AWS Lambda functions. Running the command `npm test` sh
   ```
 1. Create a new file:
    ```bash
-   touch test/main.put-note.test.ts
+   touch test/rest-api.put-note.test.ts
    ```
 1. Add the following code to the test file:
   ```typescript
   import AWSMock from 'aws-sdk-mock';
-  import { handler } from '../src/main.put-note';
+  import { handler } from '../src/rest-api.put-note';
 
   describe('valid request', () => {
     it('should return status code 201', async () => {
       const tableName = 'foo';
       const putItemSpy = jest.fn();
       process.env.TABLE_NAME = tableName;
-      AWSMock.mock('DynamoDB.DocumentClient', 'put', (params, callback) => {
+      AWSMock.mock('DynamoDB.DocumentClient', 'put', (params: any, callback: Function) => {
         callback(null, putItemSpy(params));
       });
 
@@ -126,8 +129,6 @@ Write unit tests for the AWS Lambda functions. Running the command `npm test` sh
   npm test
   ```
 
-</details>
-
 ## Integration Testing
 
 ### 📝 Task
@@ -142,36 +143,38 @@ Integration tests are super helpful to test the whole stack end-to-end. Write so
 
 ### 🗺  Step-by-Step Guide
 
-<details>
-<summary>Collapse guide</summary>
-
 1. Extend the list of dependencies in the `.projenrc.js` configuration:
    ```js
-   const project = new AwsCdkTypeScriptApp({
-    // …
+  const { AwsCdkTypeScriptApp, NodePackageManager } = require('projen');
+  const project = new AwsCdkTypeScriptApp({
+    cdkVersion: '2.1.0',
+    defaultReleaseBranch: 'main',
+    github: false,
+    name: 'notes-api',
+    packageManager: javascript.NodePackageManager.NPM,
     deps: [
       'aws-sdk',
       'node-fetch@2',
     ],
     devDeps: [
-      'esbuild@0',
       '@types/aws-lambda',
       'aws-sdk-mock',
       '@types/node-fetch@2',
     ],
-    // …
   });
+  
+  project.synth();
    ```
 1. In addition, add a new task to the `.projenrc.js` configuration:
   ```js
   project.addTask('test:e2e', {
     exec: 'jest --testMatch "**/*.e2etest.ts"',
-  })
+  });
   ```
 1. Run `npm run projen` to install the new dependencies and re-generate the auto-generated files.
 1. Create a new file:
    ```
-   touch ./test/main.e2etest.ts
+   touch ./test/rest-api.e2etest.ts
    ```
 1. Add the following code to the file:
   ```typescript
@@ -199,10 +202,8 @@ Integration tests are super helpful to test the whole stack end-to-end. Write so
   ```
 1. Run the integration tests:
   ```bash
-  ENDPOINT=https://XXXXXX.execute-api.eu-central-1.amazonaws.com npm run test:e2e
+  ENDPOINT=https://XXXXXX.execute-api.eu-central-1.amazonaws.com/prod npm run test:e2e
   ```
-
-</details>
 
 ---
 

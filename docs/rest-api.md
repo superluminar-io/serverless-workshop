@@ -3,9 +3,9 @@
 ## In this lab …
 
 - Setting up AWS CDK
-- Setting up REST API with Amazon API Gateway, Lambda and DynamoDB
+- Setting up REST API with Amazon API Gateway, Lambda, and DynamoDB
 
-## Bootstrapping AWS CDK
+## Bootstrapping
 
 ### 📝 Task
 
@@ -17,14 +17,11 @@ Create a fresh AWS CDK app with Projen.
 
 ### 🗺  Step-by-Step Guide
 
-<details>
-<summary>Collapse guide</summary>
-
-1. Create a new folder `notes-api`, so:
+1. Create a new folder `notes-api`:
    ```bash
    mkdir notes-api
    ```
-1. Step into the folder, so:
+1. Step into the folder:
    ```bash
    cd notes-api
    ```
@@ -32,16 +29,15 @@ Create a fresh AWS CDK app with Projen.
    ```bash
    npx projen@latest new awscdk-app-ts --package-manager 'NPM' --github false --no-git
    ```
-1. Go to the file `./src/main.ts` and rename the stack, like so:
-  ```typescript
-  new MyStack(app, 'my-stack-$MY_NAME', { env: devEnv });
+1. Go to the file `./src/main.ts`. Scroll down and find this line:
+  ```ts
+  new MyStack(app, 'my-stack-dev', { env: devEnv });
   ```
+  Rename `my-stack-dev` to something unique (e.g. append your name).
 1. Deploy the CloudFormation stack:
    ```bash
    npm run deploy
    ```
-
-</details>
 
 ## AWS Lambda function
 
@@ -58,12 +54,9 @@ Now that we have an AWS CDK app, we want to deploy the first resource. Create a 
 
 ### 🗺  Step-by-Step Guide
 
-<details>
-<summary>Collapse guide</summary>
-
 1. Create a new file for the AWS Lambda function:
    ```bash
-   touch ./src/main.put-note.ts 
+   touch ./src/rest-api.put-note.ts 
    ```
 1. Add the following code to the file:
    ```typescript
@@ -71,39 +64,62 @@ Now that we have an AWS CDK app, we want to deploy the first resource. Create a 
      console.log("Hello World :)");
    };
    ```
-1. Add cdk dependencies in the `.projenrc.js` configuration:
+1. Update the `.projenrc.js` configuration:
    ```js
-   // …
-   const project = new AwsCdkTypeScriptApp({
-     // …
-     devDeps: [
-       'esbuild@0',
+   const { awscdk, javascript } = require('projen');
+   const project = new awscdk.AwsCdkTypeScriptApp({
+     cdkVersion: '2.1.0',
+     defaultReleaseBranch: 'main',
+     github: false,
+     name: 'notes-api',
+     packageManager: javascript.NodePackageManager.NPM,
+     deps: [
+       'aws-sdk',
      ],
-     cdkDependencies: [
-       '@aws-cdk/aws-lambda-nodejs',
+     devDeps: [
+       '@types/aws-lambda',
      ],
    });
-   // …
+   project.synth();
    ```
 1. Run `npm run projen` to install the new dependencies and re-generate the auto-generated files.
-1. Update the CloudFormation stack, so `./src/main.ts`:
+1. Create a new file for our first construct:
+   ```bash
+   touch ./src/rest-api.ts 
+   ```
+1. Add the following code to the file:
    ```typescript
-   // … (more imports)
-   import * as lambdaNodeJs from "@aws-cdk/aws-lambda-nodejs";
-
-   export class MyStack extends Stack {
-     constructor(scope: Construct, id: string, props: StackProps = {}) {
-       super(scope, id, props);
-
+   import { aws_lambda_nodejs as lambdaNodeJs } from 'aws-cdk-lib';
+   import { Construct } from 'constructs';
+   
+   export class RestApi extends Construct {
+     constructor(scope: Construct, id: string) {
+       super(scope, id);
+   
        new lambdaNodeJs.NodejsFunction(this, "put-note");
      }
    }
-
-   // …
    ```
+1. Update the file `./src/main.ts`:
+   ```typescript
+   import { App, Stack, StackProps } from 'aws-cdk-lib';
+   import { Construct } from 'constructs';
+   import { RestApi } from './rest-api';
+   
+   export class MyStack extends Stack {
+     constructor(scope: Construct, id: string, props: StackProps = {}) {
+       super(scope, id, props);
+   
+       new RestApi(this, 'rest-api');
+     }
+   }
+   ```
+   ⚠️Important: Only update the imports and the class. Everything below the class should be the same.
 1. Deploy the latest changes: `npm run deploy`
 
-</details>
+   Be aware you will be asked to confirm IAM Statement and IAM Policy Changes:
+
+   ![deployment confirmation](./media/rest-api/deployment-confirmation.png)
 
 ### ❓ Questions
 
@@ -134,56 +150,28 @@ HTTP/2 200
 
 ### 🗺  Step-by-Step Guide
 
-<details>
-<summary>Collapse guide</summary>
-
-1. Extend the list of CDK dependencies in the `.projenrc.js` configuration:
-   ```js
-   // …
-   const project = new AwsCdkTypeScriptApp({
-     // …
-     cdkDependencies: [
-       // … (previous dependencies)
-       '@aws-cdk/aws-apigatewayv2',
-       '@aws-cdk/aws-apigatewayv2-integrations',
-     ],
-     // …
-   });
-   // …
-   ```
-1. Run `npm run projen` to install the new dependencies and re-generate the auto-generated files.
-1. Update the CloudFormation stack, so `./src/main.ts`:
+1. Update the file `./src/rest-api.ts`:
    ```typescript
-   // … (more imports)
-   import * as apigateway from '@aws-cdk/aws-apigatewayv2';
-   import * as apigatewayIntegrations from '@aws-cdk/aws-apigatewayv2-integrations';
-   import { App, Construct, Stack, StackProps, CfnOutput } from '@aws-cdk/core';
-
-   export class MyStack extends Stack {
-     constructor(scope: Construct, id: string, props: StackProps = {}) {
-       super(scope, id, props);
-
-       const putNote = new lambdaNodeJs.NodejsFunction(this, "put-note");
-
-       const putNoteIntegration = new apigatewayIntegrations.LambdaProxyIntegration({
-         handler: putNote,
-       });
-
-       const httpApi = new apigateway.HttpApi(this, 'http-api');
-
-       httpApi.addRoutes({
-         path: '/notes',
-         methods: [apigateway.HttpMethod.POST],
-         integration: putNoteIntegration,
-       });
-
-       new CfnOutput(this, 'URL', { value: httpApi.apiEndpoint });
+   import {
+     aws_lambda_nodejs as lambdaNodeJs,
+     aws_apigateway as apigateway,
+   } from 'aws-cdk-lib';
+   import { Construct } from 'constructs';
+   
+   export class RestApi extends Construct {   
+     constructor(scope: Construct, id: string) {
+       super(scope, id);
+   
+       const putNote = new lambdaNodeJs.NodejsFunction(this, 'put-note');
+   
+       const api = new apigateway.RestApi(this, 'api');
+       const resource = api.root.addResource('notes');
+   
+       resource.addMethod('POST', new apigateway.LambdaIntegration(putNote));
      }
    }
-
-   // …
    ```
-1. Update the AWS Lambda function, so `./src/main.put-note.ts`:
+1. Update the AWS Lambda function (`./src/rest-api.put-note.ts`):
    ```typescript
    export const handler = async () => {
      console.log('Hello World :)');
@@ -198,12 +186,10 @@ HTTP/2 200
    ```bash
    npm run deploy
    ```
-1. Copy the endpoint URL from the output of the deployment and run the following request to send a HTTP request:
+1. Copy the endpoint URL from the output of the deployment in your terminal and run the following request to send a HTTP request:
    ```bash
-   curl -X POST https://XXXXX.execute-api.eu-central-1.amazonaws.com/notes
+   curl -X POST https://XXXXX.execute-api.eu-central-1.amazonaws.com/prod/notes
    ```
-
-</details>
 
 ### ❓ Questions
 
@@ -237,58 +223,41 @@ The note should be persisted in the DynamoDB table.
 
 ### 🗺  Step-by-Step Guide
 
-<details>
-<summary>Collapse guide</summary>
-
-1. Extend the list of dependencies in the `.projenrc.js` configuration:
-   ```js
-   // …
-   const project = new AwsCdkTypeScriptApp({
-     // …
-     cdkDependencies: [
-       // … (previous dependencies)
-       '@aws-cdk/aws-dynamodb',
-     ],
-     deps: [
-       'aws-sdk',
-     ],
-     devDeps: [
-       'esbuild@0',
-       '@types/aws-lambda',
-     ],
-     // …
-   });
-   // …
-   ```
-1. Run `npm run projen` to install the new dependencies and re-generate the auto-generated files.
-1. Extend the CloudFormation stack, so `./src/main.ts`:
+1. Update the construct (`src/rest-api.ts`):
    ```typescript
-   // … (more imports)
-   import * as dynamodb from '@aws-cdk/aws-dynamodb';
-
-   export class MyStack extends Stack {
-     constructor(scope: Construct, id: string, props: StackProps = {}) {
-       super(scope, id, props);
-
-       const notesTable = new dynamodb.Table(this, 'notes-table', {
+   import {
+     aws_dynamodb as dynamodb,
+     aws_lambda_nodejs as lambdaNodeJs,
+     aws_apigateway as apigateway,
+   } from 'aws-cdk-lib';
+   import { Construct } from 'constructs';
+   
+   export class RestApi extends Construct {
+     public notesTable: dynamodb.Table;
+   
+     constructor(scope: Construct, id: string) {
+       super(scope, id);
+   
+       this.notesTable = new dynamodb.Table(this, 'notes-table', {
          partitionKey: { name: 'id', type: dynamodb.AttributeType.STRING },
        });
-
+   
        const putNote = new lambdaNodeJs.NodejsFunction(this, 'put-note', {
          environment: {
-           TABLE_NAME: notesTable.tableName,
+           TABLE_NAME: this.notesTable.tableName,
          },
        });
-
-       notesTable.grant(putNote, 'dynamodb:PutItem');
-
-       // … (more resources)
+      
+       this.notesTable.grant(putNote, 'dynamodb:PutItem');
+   
+       const api = new apigateway.RestApi(this, 'api');
+       const resource = api.root.addResource('notes');
+   
+       resource.addMethod('POST', new apigateway.LambdaIntegration(putNote));
      }
    }
-
-   // …
    ```
-1. Update the AWS Lambda function:
+1. Update the AWS Lambda function (`src/rest-api.put-not.ts`):
    ```typescript
    import * as AWS from 'aws-sdk';
 
@@ -323,11 +292,9 @@ The note should be persisted in the DynamoDB table.
    ```
 1. Send a HTTP request with your endpoint url:
    ```bash
-   curl -X POST https://XXXXXX.execute-api.eu-central-1.amazonaws.com/notes --data '{ "title": "Hello World", "content": "abc" }' -H 'Content-Type: application/json' -i
+   curl -X POST https://XXXXXX.execute-api.eu-central-1.amazonaws.com/prod/notes --data '{ "title": "Hello World", "content": "abc" }' -H 'Content-Type: application/json' -i
    ```
-1. Ideally, your first note is stored in the DynamoDB table! 🎉
-
-</details>
+1. Ideally, we have stored the first DynamoDB item! 🎉
 
 ### ❓ Questions
 
@@ -356,46 +323,51 @@ HTTP/2 200
 
 ### 🗺  Step-by-Step Guide
 
-<details>
-<summary>Collapse guide</summary>
-
-1. Extend the CloudFormation stack, so `./src/main.ts` becomes:
+1. Extend the construct (`./src/rest-api.ts`):
    ```typescript
-   // … (imports)
-
-   export class MyStack extends Stack {
-     constructor(scope: Construct, id: string, props: StackProps = {}) {
-       super(scope, id, props);
-
-       // … (more resources)
-
-       const listNotes = new lambdaNodeJs.NodejsFunction(this, 'list-notes', {
+   import {
+     aws_dynamodb as dynamodb,
+     aws_lambda_nodejs as lambdaNodeJs,
+     aws_apigateway as apigateway,
+   } from 'aws-cdk-lib';
+   import { Construct } from 'constructs';
+   
+   export class RestApi extends Construct {
+     public notesTable: dynamodb.Table;
+   
+     constructor(scope: Construct, id: string) {
+       super(scope, id);
+   
+       this.notesTable = new dynamodb.Table(this, 'notes-table', {
+         partitionKey: { name: 'id', type: dynamodb.AttributeType.STRING },
+       });
+   
+       const putNote = new lambdaNodeJs.NodejsFunction(this, 'put-note', {
          environment: {
-           TABLE_NAME: notesTable.tableName,
+           TABLE_NAME: this.notesTable.tableName,
          },
        });
-
-       notesTable.grant(listNotes, 'dynamodb:Scan');
-
-       const listNotesIntegration = new apigatewayIntegrations.LambdaProxyIntegration({
-         handler: listNotes,
+   
+       const listNotes = new lambdaNodeJs.NodejsFunction(this, 'list-notes', {
+         environment: {
+           TABLE_NAME: this.notesTable.tableName,
+         },
        });
-
-       httpApi.addRoutes({
-         path: '/notes',
-         methods: [apigateway.HttpMethod.GET],
-         integration: listNotesIntegration,
-       });
-
-       // … (more resources)
+   
+       this.notesTable.grant(putNote, 'dynamodb:PutItem');
+       this.notesTable.grant(listNotes, 'dynamodb:Scan');
+   
+       const api = new apigateway.RestApi(this, 'api');
+       const resource = api.root.addResource('notes');
+   
+       resource.addMethod('POST', new apigateway.LambdaIntegration(putNote));
+       resource.addMethod('GET', new apigateway.LambdaIntegration(listNotes));
      }
    }
-
-   // …
    ```
 1. Create a new file for the second AWS Lambda function:
    ```bash
-   touch src/main.list-notes.ts
+   touch src/rest-api.list-notes.ts
    ```
 1. Add the following code to the file:
    ```typescript
@@ -420,10 +392,8 @@ HTTP/2 200
    ```
 1. Run the following request with your endpoint URL:
    ```bash
-   curl https://XXXXXX.execute-api.eu-central-1.amazonaws.com/notes
+   curl https://XXXXXX.execute-api.eu-central-1.amazonaws.com/prod/notes
    ```
-
-</details>
 
 ### ❓ Questions
 
