@@ -3,263 +3,142 @@
 exports[`Snapshot 1`] = `
 Object {
   "Outputs": Object {
-    "URL": Object {
+    "restapiEndpoint59F0B73F": Object {
       "Value": Object {
-        "Fn::GetAtt": Array [
-          "httpapiE8E4C45A",
-          "ApiEndpoint",
+        "Fn::Join": Array [
+          "",
+          Array [
+            "https://",
+            Object {
+              "Ref": "restapi955FE7EE",
+            },
+            ".execute-api.",
+            Object {
+              "Ref": "AWS::Region",
+            },
+            ".",
+            Object {
+              "Ref": "AWS::URLSuffix",
+            },
+            "/",
+            Object {
+              "Ref": "restapiDeploymentStageprodD0BC9A49",
+            },
+            "/",
+          ],
         ],
       },
     },
   },
   "Parameters": Object {
-    "AssetParametersa0a80f383d9356c32c46fb7fb9d148532e36d99defa0b726207641915a71505fArtifactHash126EEE64": Object {
-      "Description": "Artifact hash for asset \\"a0a80f383d9356c32c46fb7fb9d148532e36d99defa0b726207641915a71505f\\"",
-      "Type": "String",
-    },
-    "AssetParametersa0a80f383d9356c32c46fb7fb9d148532e36d99defa0b726207641915a71505fS3Bucket66B20A8A": Object {
-      "Description": "S3 bucket for asset \\"a0a80f383d9356c32c46fb7fb9d148532e36d99defa0b726207641915a71505f\\"",
-      "Type": "String",
-    },
-    "AssetParametersa0a80f383d9356c32c46fb7fb9d148532e36d99defa0b726207641915a71505fS3VersionKeyA2C8CB34": Object {
-      "Description": "S3 key for asset version \\"a0a80f383d9356c32c46fb7fb9d148532e36d99defa0b726207641915a71505f\\"",
-      "Type": "String",
-    },
-    "AssetParametersbda48242a55380f7e53385c85f74a0bae2bec89bda433810810cb0a67274fb16ArtifactHashA875D974": Object {
-      "Description": "Artifact hash for asset \\"bda48242a55380f7e53385c85f74a0bae2bec89bda433810810cb0a67274fb16\\"",
-      "Type": "String",
-    },
-    "AssetParametersbda48242a55380f7e53385c85f74a0bae2bec89bda433810810cb0a67274fb16S3BucketDC951C6A": Object {
-      "Description": "S3 bucket for asset \\"bda48242a55380f7e53385c85f74a0bae2bec89bda433810810cb0a67274fb16\\"",
-      "Type": "String",
-    },
-    "AssetParametersbda48242a55380f7e53385c85f74a0bae2bec89bda433810810cb0a67274fb16S3VersionKeyD0CB1218": Object {
-      "Description": "S3 key for asset version \\"bda48242a55380f7e53385c85f74a0bae2bec89bda433810810cb0a67274fb16\\"",
-      "Type": "String",
+    "BootstrapVersion": Object {
+      "Default": "/cdk-bootstrap/hnb659fds/version",
+      "Description": "Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store. [cdk:skip]",
+      "Type": "AWS::SSM::Parameter::Value<String>",
     },
   },
   "Resources": Object {
-    "httpapiDefaultStage7AF19DCA": Object {
+    "restapi955FE7EE": Object {
       "Properties": Object {
-        "ApiId": Object {
-          "Ref": "httpapiE8E4C45A",
-        },
-        "AutoDeploy": true,
-        "StageName": "$default",
+        "Name": "api",
       },
-      "Type": "AWS::ApiGatewayV2::Stage",
+      "Type": "AWS::ApiGateway::RestApi",
     },
-    "httpapiE8E4C45A": Object {
-      "Properties": Object {
-        "Name": "http-api",
-        "ProtocolType": "HTTP",
-      },
-      "Type": "AWS::ApiGatewayV2::Api",
-    },
-    "httpapiGETnotesE5E2DD57": Object {
-      "Properties": Object {
-        "ApiId": Object {
-          "Ref": "httpapiE8E4C45A",
-        },
-        "AuthorizationType": "NONE",
-        "RouteKey": "GET /notes",
-        "Target": Object {
-          "Fn::Join": Array [
-            "",
-            Array [
-              "integrations/",
-              Object {
-                "Ref": "httpapiGETnotesHttpIntegration7c5b70ed607b42b659e955b79bcb80c6703A879A",
-              },
-            ],
-          ],
-        },
-      },
-      "Type": "AWS::ApiGatewayV2::Route",
-    },
-    "httpapiGETnotesHttpIntegration7c5b70ed607b42b659e955b79bcb80c6703A879A": Object {
-      "Properties": Object {
-        "ApiId": Object {
-          "Ref": "httpapiE8E4C45A",
-        },
-        "IntegrationType": "AWS_PROXY",
-        "IntegrationUri": Object {
-          "Fn::GetAtt": Array [
-            "listnotes764F3ED0",
-            "Arn",
-          ],
-        },
-        "PayloadFormatVersion": "2.0",
-      },
-      "Type": "AWS::ApiGatewayV2::Integration",
-    },
-    "httpapiGETnotestesthttpapiGETnotesA7A17F11PermissionCBE2DB6B": Object {
-      "Properties": Object {
-        "Action": "lambda:InvokeFunction",
-        "FunctionName": Object {
-          "Fn::GetAtt": Array [
-            "listnotes764F3ED0",
-            "Arn",
-          ],
-        },
-        "Principal": "apigateway.amazonaws.com",
-        "SourceArn": Object {
-          "Fn::Join": Array [
-            "",
-            Array [
-              "arn:",
-              Object {
-                "Ref": "AWS::Partition",
-              },
-              ":execute-api:",
-              Object {
-                "Ref": "AWS::Region",
-              },
-              ":",
-              Object {
-                "Ref": "AWS::AccountId",
-              },
-              ":",
-              Object {
-                "Ref": "httpapiE8E4C45A",
-              },
-              "/*/*/notes",
-            ],
-          ],
-        },
-      },
-      "Type": "AWS::Lambda::Permission",
-    },
-    "httpapiPOSTnotes0EE9CE61": Object {
-      "Properties": Object {
-        "ApiId": Object {
-          "Ref": "httpapiE8E4C45A",
-        },
-        "AuthorizationType": "NONE",
-        "RouteKey": "POST /notes",
-        "Target": Object {
-          "Fn::Join": Array [
-            "",
-            Array [
-              "integrations/",
-              Object {
-                "Ref": "httpapiPOSTnotesHttpIntegration7f1bcad4f39a32788ee384f093c4e62a55518836",
-              },
-            ],
-          ],
-        },
-      },
-      "Type": "AWS::ApiGatewayV2::Route",
-    },
-    "httpapiPOSTnotesHttpIntegration7f1bcad4f39a32788ee384f093c4e62a55518836": Object {
-      "Properties": Object {
-        "ApiId": Object {
-          "Ref": "httpapiE8E4C45A",
-        },
-        "IntegrationType": "AWS_PROXY",
-        "IntegrationUri": Object {
-          "Fn::GetAtt": Array [
-            "putnote0FBD4368",
-            "Arn",
-          ],
-        },
-        "PayloadFormatVersion": "2.0",
-      },
-      "Type": "AWS::ApiGatewayV2::Integration",
-    },
-    "httpapiPOSTnotestesthttpapiPOSTnotes7D543B71Permission7D419FE2": Object {
-      "Properties": Object {
-        "Action": "lambda:InvokeFunction",
-        "FunctionName": Object {
-          "Fn::GetAtt": Array [
-            "putnote0FBD4368",
-            "Arn",
-          ],
-        },
-        "Principal": "apigateway.amazonaws.com",
-        "SourceArn": Object {
-          "Fn::Join": Array [
-            "",
-            Array [
-              "arn:",
-              Object {
-                "Ref": "AWS::Partition",
-              },
-              ":execute-api:",
-              Object {
-                "Ref": "AWS::Region",
-              },
-              ":",
-              Object {
-                "Ref": "AWS::AccountId",
-              },
-              ":",
-              Object {
-                "Ref": "httpapiE8E4C45A",
-              },
-              "/*/*/notes",
-            ],
-          ],
-        },
-      },
-      "Type": "AWS::Lambda::Permission",
-    },
-    "listnotes764F3ED0": Object {
+    "restapiAccount60CB3373": Object {
       "DependsOn": Array [
-        "listnotesServiceRoleDefaultPolicy077E627D",
-        "listnotesServiceRole9069072F",
+        "restapi955FE7EE",
+      ],
+      "Properties": Object {
+        "CloudWatchRoleArn": Object {
+          "Fn::GetAtt": Array [
+            "restapiCloudWatchRoleCE742A10",
+            "Arn",
+          ],
+        },
+      },
+      "Type": "AWS::ApiGateway::Account",
+    },
+    "restapiCloudWatchRoleCE742A10": Object {
+      "Properties": Object {
+        "AssumeRolePolicyDocument": Object {
+          "Statement": Array [
+            Object {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": Object {
+                "Service": "apigateway.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "ManagedPolicyArns": Array [
+          Object {
+            "Fn::Join": Array [
+              "",
+              Array [
+                "arn:",
+                Object {
+                  "Ref": "AWS::Partition",
+                },
+                ":iam::aws:policy/service-role/AmazonAPIGatewayPushToCloudWatchLogs",
+              ],
+            ],
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "restapiDeploymentC2F9DE708b927929c48caf8409ca73e0076086ae": Object {
+      "DependsOn": Array [
+        "restapinotesGETAFC57B48",
+        "restapinotesPOSTB8CD2FDB",
+        "restapinotes65DC8F7A",
+      ],
+      "Properties": Object {
+        "Description": "Automatically created by the RestApi construct",
+        "RestApiId": Object {
+          "Ref": "restapi955FE7EE",
+        },
+      },
+      "Type": "AWS::ApiGateway::Deployment",
+    },
+    "restapiDeploymentStageprodD0BC9A49": Object {
+      "Properties": Object {
+        "DeploymentId": Object {
+          "Ref": "restapiDeploymentC2F9DE708b927929c48caf8409ca73e0076086ae",
+        },
+        "RestApiId": Object {
+          "Ref": "restapi955FE7EE",
+        },
+        "StageName": "prod",
+      },
+      "Type": "AWS::ApiGateway::Stage",
+    },
+    "restapilistnotesA6C96244": Object {
+      "DependsOn": Array [
+        "restapilistnotesServiceRoleDefaultPolicyC3168DB9",
+        "restapilistnotesServiceRoleF0B5FBE8",
       ],
       "Properties": Object {
         "Code": Object {
           "S3Bucket": Object {
-            "Ref": "AssetParametersbda48242a55380f7e53385c85f74a0bae2bec89bda433810810cb0a67274fb16S3BucketDC951C6A",
+            "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
           },
-          "S3Key": Object {
-            "Fn::Join": Array [
-              "",
-              Array [
-                Object {
-                  "Fn::Select": Array [
-                    0,
-                    Object {
-                      "Fn::Split": Array [
-                        "||",
-                        Object {
-                          "Ref": "AssetParametersbda48242a55380f7e53385c85f74a0bae2bec89bda433810810cb0a67274fb16S3VersionKeyD0CB1218",
-                        },
-                      ],
-                    },
-                  ],
-                },
-                Object {
-                  "Fn::Select": Array [
-                    1,
-                    Object {
-                      "Fn::Split": Array [
-                        "||",
-                        Object {
-                          "Ref": "AssetParametersbda48242a55380f7e53385c85f74a0bae2bec89bda433810810cb0a67274fb16S3VersionKeyD0CB1218",
-                        },
-                      ],
-                    },
-                  ],
-                },
-              ],
-            ],
-          },
+          "S3Key": "3720f171727aff5fce4399b69c0f2525f1009747a5f57ab84c6d3149f67b5d76.zip",
         },
         "Environment": Object {
           "Variables": Object {
             "AWS_NODEJS_CONNECTION_REUSE_ENABLED": "1",
             "TABLE_NAME": Object {
-              "Ref": "notestable702635DB",
+              "Ref": "restapinotestable817BCE94",
             },
           },
         },
         "Handler": "index.handler",
         "Role": Object {
           "Fn::GetAtt": Array [
-            "listnotesServiceRole9069072F",
+            "restapilistnotesServiceRoleF0B5FBE8",
             "Arn",
           ],
         },
@@ -267,7 +146,38 @@ Object {
       },
       "Type": "AWS::Lambda::Function",
     },
-    "listnotesServiceRole9069072F": Object {
+    "restapilistnotesServiceRoleDefaultPolicyC3168DB9": Object {
+      "Properties": Object {
+        "PolicyDocument": Object {
+          "Statement": Array [
+            Object {
+              "Action": "dynamodb:Scan",
+              "Effect": "Allow",
+              "Resource": Array [
+                Object {
+                  "Fn::GetAtt": Array [
+                    "restapinotestable817BCE94",
+                    "Arn",
+                  ],
+                },
+                Object {
+                  "Ref": "AWS::NoValue",
+                },
+              ],
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "PolicyName": "restapilistnotesServiceRoleDefaultPolicyC3168DB9",
+        "Roles": Array [
+          Object {
+            "Ref": "restapilistnotesServiceRoleF0B5FBE8",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Policy",
+    },
+    "restapilistnotesServiceRoleF0B5FBE8": Object {
       "Properties": Object {
         "AssumeRolePolicyDocument": Object {
           "Statement": Array [
@@ -298,38 +208,258 @@ Object {
       },
       "Type": "AWS::IAM::Role",
     },
-    "listnotesServiceRoleDefaultPolicy077E627D": Object {
+    "restapinotes65DC8F7A": Object {
       "Properties": Object {
-        "PolicyDocument": Object {
-          "Statement": Array [
-            Object {
-              "Action": "dynamodb:Scan",
-              "Effect": "Allow",
-              "Resource": Array [
+        "ParentId": Object {
+          "Fn::GetAtt": Array [
+            "restapi955FE7EE",
+            "RootResourceId",
+          ],
+        },
+        "PathPart": "notes",
+        "RestApiId": Object {
+          "Ref": "restapi955FE7EE",
+        },
+      },
+      "Type": "AWS::ApiGateway::Resource",
+    },
+    "restapinotesGETAFC57B48": Object {
+      "Properties": Object {
+        "AuthorizationType": "NONE",
+        "HttpMethod": "GET",
+        "Integration": Object {
+          "IntegrationHttpMethod": "POST",
+          "Type": "AWS_PROXY",
+          "Uri": Object {
+            "Fn::Join": Array [
+              "",
+              Array [
+                "arn:",
+                Object {
+                  "Ref": "AWS::Partition",
+                },
+                ":apigateway:",
+                Object {
+                  "Ref": "AWS::Region",
+                },
+                ":lambda:path/2015-03-31/functions/",
                 Object {
                   "Fn::GetAtt": Array [
-                    "notestable702635DB",
+                    "restapilistnotesA6C96244",
                     "Arn",
                   ],
                 },
-                Object {
-                  "Ref": "AWS::NoValue",
-                },
+                "/invocations",
               ],
-            },
-          ],
-          "Version": "2012-10-17",
-        },
-        "PolicyName": "listnotesServiceRoleDefaultPolicy077E627D",
-        "Roles": Array [
-          Object {
-            "Ref": "listnotesServiceRole9069072F",
+            ],
           },
-        ],
+        },
+        "ResourceId": Object {
+          "Ref": "restapinotes65DC8F7A",
+        },
+        "RestApiId": Object {
+          "Ref": "restapi955FE7EE",
+        },
       },
-      "Type": "AWS::IAM::Policy",
+      "Type": "AWS::ApiGateway::Method",
     },
-    "notestable702635DB": Object {
+    "restapinotesGETApiPermissionTesttestrestapi6761200BGETnotes4B01F47C": Object {
+      "Properties": Object {
+        "Action": "lambda:InvokeFunction",
+        "FunctionName": Object {
+          "Fn::GetAtt": Array [
+            "restapilistnotesA6C96244",
+            "Arn",
+          ],
+        },
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": Object {
+          "Fn::Join": Array [
+            "",
+            Array [
+              "arn:",
+              Object {
+                "Ref": "AWS::Partition",
+              },
+              ":execute-api:",
+              Object {
+                "Ref": "AWS::Region",
+              },
+              ":",
+              Object {
+                "Ref": "AWS::AccountId",
+              },
+              ":",
+              Object {
+                "Ref": "restapi955FE7EE",
+              },
+              "/test-invoke-stage/GET/notes",
+            ],
+          ],
+        },
+      },
+      "Type": "AWS::Lambda::Permission",
+    },
+    "restapinotesGETApiPermissiontestrestapi6761200BGETnotesA2BCA8E4": Object {
+      "Properties": Object {
+        "Action": "lambda:InvokeFunction",
+        "FunctionName": Object {
+          "Fn::GetAtt": Array [
+            "restapilistnotesA6C96244",
+            "Arn",
+          ],
+        },
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": Object {
+          "Fn::Join": Array [
+            "",
+            Array [
+              "arn:",
+              Object {
+                "Ref": "AWS::Partition",
+              },
+              ":execute-api:",
+              Object {
+                "Ref": "AWS::Region",
+              },
+              ":",
+              Object {
+                "Ref": "AWS::AccountId",
+              },
+              ":",
+              Object {
+                "Ref": "restapi955FE7EE",
+              },
+              "/",
+              Object {
+                "Ref": "restapiDeploymentStageprodD0BC9A49",
+              },
+              "/GET/notes",
+            ],
+          ],
+        },
+      },
+      "Type": "AWS::Lambda::Permission",
+    },
+    "restapinotesPOSTApiPermissionTesttestrestapi6761200BPOSTnotes388F178A": Object {
+      "Properties": Object {
+        "Action": "lambda:InvokeFunction",
+        "FunctionName": Object {
+          "Fn::GetAtt": Array [
+            "restapiputnoteA36C2303",
+            "Arn",
+          ],
+        },
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": Object {
+          "Fn::Join": Array [
+            "",
+            Array [
+              "arn:",
+              Object {
+                "Ref": "AWS::Partition",
+              },
+              ":execute-api:",
+              Object {
+                "Ref": "AWS::Region",
+              },
+              ":",
+              Object {
+                "Ref": "AWS::AccountId",
+              },
+              ":",
+              Object {
+                "Ref": "restapi955FE7EE",
+              },
+              "/test-invoke-stage/POST/notes",
+            ],
+          ],
+        },
+      },
+      "Type": "AWS::Lambda::Permission",
+    },
+    "restapinotesPOSTApiPermissiontestrestapi6761200BPOSTnotesC38CB23A": Object {
+      "Properties": Object {
+        "Action": "lambda:InvokeFunction",
+        "FunctionName": Object {
+          "Fn::GetAtt": Array [
+            "restapiputnoteA36C2303",
+            "Arn",
+          ],
+        },
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": Object {
+          "Fn::Join": Array [
+            "",
+            Array [
+              "arn:",
+              Object {
+                "Ref": "AWS::Partition",
+              },
+              ":execute-api:",
+              Object {
+                "Ref": "AWS::Region",
+              },
+              ":",
+              Object {
+                "Ref": "AWS::AccountId",
+              },
+              ":",
+              Object {
+                "Ref": "restapi955FE7EE",
+              },
+              "/",
+              Object {
+                "Ref": "restapiDeploymentStageprodD0BC9A49",
+              },
+              "/POST/notes",
+            ],
+          ],
+        },
+      },
+      "Type": "AWS::Lambda::Permission",
+    },
+    "restapinotesPOSTB8CD2FDB": Object {
+      "Properties": Object {
+        "AuthorizationType": "NONE",
+        "HttpMethod": "POST",
+        "Integration": Object {
+          "IntegrationHttpMethod": "POST",
+          "Type": "AWS_PROXY",
+          "Uri": Object {
+            "Fn::Join": Array [
+              "",
+              Array [
+                "arn:",
+                Object {
+                  "Ref": "AWS::Partition",
+                },
+                ":apigateway:",
+                Object {
+                  "Ref": "AWS::Region",
+                },
+                ":lambda:path/2015-03-31/functions/",
+                Object {
+                  "Fn::GetAtt": Array [
+                    "restapiputnoteA36C2303",
+                    "Arn",
+                  ],
+                },
+                "/invocations",
+              ],
+            ],
+          },
+        },
+        "ResourceId": Object {
+          "Ref": "restapinotes65DC8F7A",
+        },
+        "RestApiId": Object {
+          "Ref": "restapi955FE7EE",
+        },
+      },
+      "Type": "AWS::ApiGateway::Method",
+    },
+    "restapinotestable817BCE94": Object {
       "DeletionPolicy": "Retain",
       "Properties": Object {
         "AttributeDefinitions": Array [
@@ -348,66 +478,37 @@ Object {
           "ReadCapacityUnits": 5,
           "WriteCapacityUnits": 5,
         },
+        "StreamSpecification": Object {
+          "StreamViewType": "NEW_IMAGE",
+        },
       },
       "Type": "AWS::DynamoDB::Table",
       "UpdateReplacePolicy": "Retain",
     },
-    "putnote0FBD4368": Object {
+    "restapiputnoteA36C2303": Object {
       "DependsOn": Array [
-        "putnoteServiceRoleDefaultPolicyA35BFFE0",
-        "putnoteServiceRole386435BA",
+        "restapiputnoteServiceRoleDefaultPolicy78C040A5",
+        "restapiputnoteServiceRole19ED2A10",
       ],
       "Properties": Object {
         "Code": Object {
           "S3Bucket": Object {
-            "Ref": "AssetParametersa0a80f383d9356c32c46fb7fb9d148532e36d99defa0b726207641915a71505fS3Bucket66B20A8A",
+            "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
           },
-          "S3Key": Object {
-            "Fn::Join": Array [
-              "",
-              Array [
-                Object {
-                  "Fn::Select": Array [
-                    0,
-                    Object {
-                      "Fn::Split": Array [
-                        "||",
-                        Object {
-                          "Ref": "AssetParametersa0a80f383d9356c32c46fb7fb9d148532e36d99defa0b726207641915a71505fS3VersionKeyA2C8CB34",
-                        },
-                      ],
-                    },
-                  ],
-                },
-                Object {
-                  "Fn::Select": Array [
-                    1,
-                    Object {
-                      "Fn::Split": Array [
-                        "||",
-                        Object {
-                          "Ref": "AssetParametersa0a80f383d9356c32c46fb7fb9d148532e36d99defa0b726207641915a71505fS3VersionKeyA2C8CB34",
-                        },
-                      ],
-                    },
-                  ],
-                },
-              ],
-            ],
-          },
+          "S3Key": "dd128cd87858b84301ed9d27d097827c45105ad83adabacb316950bf1790cafc.zip",
         },
         "Environment": Object {
           "Variables": Object {
             "AWS_NODEJS_CONNECTION_REUSE_ENABLED": "1",
             "TABLE_NAME": Object {
-              "Ref": "notestable702635DB",
+              "Ref": "restapinotestable817BCE94",
             },
           },
         },
         "Handler": "index.handler",
         "Role": Object {
           "Fn::GetAtt": Array [
-            "putnoteServiceRole386435BA",
+            "restapiputnoteServiceRole19ED2A10",
             "Arn",
           ],
         },
@@ -415,7 +516,7 @@ Object {
       },
       "Type": "AWS::Lambda::Function",
     },
-    "putnoteServiceRole386435BA": Object {
+    "restapiputnoteServiceRole19ED2A10": Object {
       "Properties": Object {
         "AssumeRolePolicyDocument": Object {
           "Statement": Array [
@@ -446,7 +547,7 @@ Object {
       },
       "Type": "AWS::IAM::Role",
     },
-    "putnoteServiceRoleDefaultPolicyA35BFFE0": Object {
+    "restapiputnoteServiceRoleDefaultPolicy78C040A5": Object {
       "Properties": Object {
         "PolicyDocument": Object {
           "Statement": Array [
@@ -456,7 +557,7 @@ Object {
               "Resource": Array [
                 Object {
                   "Fn::GetAtt": Array [
-                    "notestable702635DB",
+                    "restapinotestable817BCE94",
                     "Arn",
                   ],
                 },
@@ -468,14 +569,175 @@ Object {
           ],
           "Version": "2012-10-17",
         },
-        "PolicyName": "putnoteServiceRoleDefaultPolicyA35BFFE0",
+        "PolicyName": "restapiputnoteServiceRoleDefaultPolicy78C040A5",
         "Roles": Array [
           Object {
-            "Ref": "putnoteServiceRole386435BA",
+            "Ref": "restapiputnoteServiceRole19ED2A10",
           },
         ],
       },
       "Type": "AWS::IAM::Policy",
+    },
+    "wordcountstreamB7FDB7D4": Object {
+      "DependsOn": Array [
+        "wordcountstreamServiceRoleDefaultPolicy2AE21C5D",
+        "wordcountstreamServiceRoleA9CDC4E7",
+      ],
+      "Properties": Object {
+        "Code": Object {
+          "S3Bucket": Object {
+            "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
+          },
+          "S3Key": "a6e6ce125bdc8f082ec9adb4c69c0471da962f4bda3092eb01f07d02957fcbb7.zip",
+        },
+        "Environment": Object {
+          "Variables": Object {
+            "AWS_NODEJS_CONNECTION_REUSE_ENABLED": "1",
+            "TABLE_NAME": Object {
+              "Ref": "restapinotestable817BCE94",
+            },
+          },
+        },
+        "Handler": "index.handler",
+        "Role": Object {
+          "Fn::GetAtt": Array [
+            "wordcountstreamServiceRoleA9CDC4E7",
+            "Arn",
+          ],
+        },
+        "Runtime": "nodejs14.x",
+      },
+      "Type": "AWS::Lambda::Function",
+    },
+    "wordcountstreamDynamoDBEventSourcetestrestapinotestableFEE0165C765B6956": Object {
+      "Properties": Object {
+        "BatchSize": 100,
+        "EventSourceArn": Object {
+          "Fn::GetAtt": Array [
+            "restapinotestable817BCE94",
+            "StreamArn",
+          ],
+        },
+        "FunctionName": Object {
+          "Ref": "wordcountstreamB7FDB7D4",
+        },
+        "MaximumRetryAttempts": 0,
+        "StartingPosition": "TRIM_HORIZON",
+      },
+      "Type": "AWS::Lambda::EventSourceMapping",
+    },
+    "wordcountstreamServiceRoleA9CDC4E7": Object {
+      "Properties": Object {
+        "AssumeRolePolicyDocument": Object {
+          "Statement": Array [
+            Object {
+              "Action": "sts:AssumeRole",
+              "Effect": "Allow",
+              "Principal": Object {
+                "Service": "lambda.amazonaws.com",
+              },
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "ManagedPolicyArns": Array [
+          Object {
+            "Fn::Join": Array [
+              "",
+              Array [
+                "arn:",
+                Object {
+                  "Ref": "AWS::Partition",
+                },
+                ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole",
+              ],
+            ],
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Role",
+    },
+    "wordcountstreamServiceRoleDefaultPolicy2AE21C5D": Object {
+      "Properties": Object {
+        "PolicyDocument": Object {
+          "Statement": Array [
+            Object {
+              "Action": "dynamodb:ListStreams",
+              "Effect": "Allow",
+              "Resource": "*",
+            },
+            Object {
+              "Action": Array [
+                "dynamodb:DescribeStream",
+                "dynamodb:GetRecords",
+                "dynamodb:GetShardIterator",
+              ],
+              "Effect": "Allow",
+              "Resource": Object {
+                "Fn::GetAtt": Array [
+                  "restapinotestable817BCE94",
+                  "StreamArn",
+                ],
+              },
+            },
+            Object {
+              "Action": Array [
+                "dynamodb:BatchWriteItem",
+                "dynamodb:PutItem",
+                "dynamodb:UpdateItem",
+                "dynamodb:DeleteItem",
+              ],
+              "Effect": "Allow",
+              "Resource": Array [
+                Object {
+                  "Fn::GetAtt": Array [
+                    "restapinotestable817BCE94",
+                    "Arn",
+                  ],
+                },
+                Object {
+                  "Ref": "AWS::NoValue",
+                },
+              ],
+            },
+          ],
+          "Version": "2012-10-17",
+        },
+        "PolicyName": "wordcountstreamServiceRoleDefaultPolicy2AE21C5D",
+        "Roles": Array [
+          Object {
+            "Ref": "wordcountstreamServiceRoleA9CDC4E7",
+          },
+        ],
+      },
+      "Type": "AWS::IAM::Policy",
+    },
+  },
+  "Rules": Object {
+    "CheckBootstrapVersion": Object {
+      "Assertions": Array [
+        Object {
+          "Assert": Object {
+            "Fn::Not": Array [
+              Object {
+                "Fn::Contains": Array [
+                  Array [
+                    "1",
+                    "2",
+                    "3",
+                    "4",
+                    "5",
+                  ],
+                  Object {
+                    "Ref": "BootstrapVersion",
+                  },
+                ],
+              },
+            ],
+          },
+          "AssertDescription": "CDK bootstrap stack version 6 required. Please run 'cdk bootstrap' with a recent version of the CDK CLI.",
+        },
+      ],
     },
   },
 }
