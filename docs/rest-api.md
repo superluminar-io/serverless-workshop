@@ -38,6 +38,17 @@ Create a fresh AWS CDK app with Projen.
    ```bash
    npm run deploy
    ```
+   ⚠️You might run into the following error:
+
+   ![cdk bootstrap error](./media/rest-api/cdk-bootstrap-error.png)
+
+   If this is the case, you need to bootstrap your environment first by running:
+
+   ```bash
+   cdk bootstrap
+   ```
+
+   Afterwards you can go ahead and deploy your CloudFormation stack.
 
 ## AWS Lambda function
 
