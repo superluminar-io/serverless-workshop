@@ -2,6 +2,7 @@
 !/.gitattributes
 !/.projen/tasks.json
 !/.projen/deps.json
+!/.projen/files.json
 !/package.json
 !/LICENSE
 !/.npmignore
@@ -39,7 +40,8 @@ junit.xml
 /lib
 /dist/
 !/.eslintrc.json
-cdk.out/
+/assets/
+!/cdk.json
+/cdk.out/
 .cdk.staging/
 .parcel-cache/
-!/cdk.json
