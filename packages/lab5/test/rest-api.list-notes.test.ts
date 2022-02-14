@@ -1,5 +1,5 @@
 import AWSMock from 'aws-sdk-mock';
-import { handler } from '../src/main.list-notes';
+import { handler } from '../src/rest-api.list-notes';
 
 it('should return notes', async () => {
   const item = {
@@ -8,7 +8,7 @@ it('should return notes', async () => {
     content: 'Minim nulla dolore nostrud dolor aliquip minim.',
   };
 
-  AWSMock.mock('DynamoDB.DocumentClient', 'scan', (_, callback: Function) => {
+  AWSMock.mock('DynamoDB.DocumentClient', 'scan', (_: any, callback: Function) => {
     callback(null, { Items: [item] });
   });
 
