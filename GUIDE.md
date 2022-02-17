@@ -102,6 +102,42 @@ See you tomorrow,
 
 _tbd_ 
 
+### Questions for Lab 1
+
+#### AWS Lambda function
+
+- What resources did you create and why?
+- How can you execute the AWS Lambda function using the AWS Management Console?
+- Where can you find the log output?
+
+#### Amazon API Gateway
+
+- What is a stack's output and where do you find it?
+- What is the response format for AWS Lambda functions when using them with Amazon API Gateway?
+- What are the limits for an Amazon API Gateway HTTP API?
+
+#### AWS DynamoDB
+
+- Where do you see the environment variables of the AWS Lambda function using the AWS Management Console?
+- When deleting the CloudFormation stack by accident, would the DynamoDB table be removed or not?
+- Why is the AWS Lambda function allowed to send requests to the DynamoDB table?
+- Why is the partition key enough to create a DynamoDB table instead of a schema?
+- What is the maximum size of a note's content?
+
+#### Fetch list of notes
+
+- How many notes are returned in the worst case?
+- What is the difference between a DynamoDB Scan and Query operation?
+
+### Questions for Lab 4
+
+- What stream types can we configure for the DynamoDB stream, and what are the benefits?
+- What is the default batch size, and what do we need to consider for the AWS lambda function configuration?
+- What are secenarios where retry policies for DynamoDB streams might be helpful? 
+- What happens with the event assuming the AWS Lambda function fails?
+
+#### DynamoDB Stream
+
 ## After the workshop
 
 _tbd_
