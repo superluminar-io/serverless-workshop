@@ -251,6 +251,7 @@ The note should be persisted in the DynamoDB table.
    
        this.notesTable = new dynamodb.Table(this, 'notes-table', {
          partitionKey: { name: 'id', type: dynamodb.AttributeType.STRING },
+         stream: dynamodb.StreamViewType.NEW_IMAGE,
        });
    
        const putNote = new lambdaNodeJs.NodejsFunction(this, 'put-note', {
@@ -351,6 +352,7 @@ HTTP/2 200
    
        this.notesTable = new dynamodb.Table(this, 'notes-table', {
          partitionKey: { name: 'id', type: dynamodb.AttributeType.STRING },
+         stream: dynamodb.StreamViewType.NEW_IMAGE,
        });
    
        const putNote = new lambdaNodeJs.NodejsFunction(this, 'put-note', {

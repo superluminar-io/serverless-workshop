@@ -13,6 +13,7 @@ export class RestApi extends Construct {
 
     this.notesTable = new dynamodb.Table(this, 'notes-table', {
       partitionKey: { name: 'id', type: dynamodb.AttributeType.STRING },
+      stream: dynamodb.StreamViewType.NEW_IMAGE,
     });
 
     const putNote = new lambdaNodeJs.NodejsFunction(this, 'put-note', {
