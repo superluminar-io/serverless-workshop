@@ -15,16 +15,65 @@ For this workshop, we rely on a basic development setup, including:
 
 Make sure you have installed and configured all dependencies on your computer. If you need to create a completely new development setup on your machine, then we recommend Cloud9 as a cloud-based development experience. Cloud9 works well with AWS and comes with all dependencies pre-installed.
 
-The AWS CLI needs access to your AWS account. Make sure you have configured your [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-quickstart.html#cli-configure-quickstart-config). You should be able to execute this command:
+If you can work with your already existing development setup, the AWS CLI needs access to your AWS account. To not override your default configuration, make sure you have configured your AWS CLI with a [named profile](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-quickstart.html#cli-configure-quickstart-profiles) for this workshop.
 
+If you are working with an already existing AWS SSO managed account, make sure you have configured your AWS CLI with a [named profile to use SSO](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-sso.html).
+
+### Configuring a named profile for the AWS CLI
+
+1. Start the configuration by running:
 ```bash
-$ > aws sts get-caller-identity
+aws configure --profile serverless-workshop
+```
+1. You will be one by one asked to provide your credentials for:
+```
+AWS Access Key ID [None]
+AWS Secret Access Key [None]
+Default region name [None]
+Default output format [None]
+```
+⚠️ Make sure you use **eu-central-1** as your default region.
+
+1. To easen things in the following labs, set the AWS_PROFILE environment variable to your named profile:
+```bash
+export AWS_PROFILE=serverless-workshop
 ```
 
-Lastly, make sure you have set the AWS region:
-
+You should now be able to execute this command:
 ```bash
-export AWS_REGION=eu-central-1
+aws sts get-caller-identity
+```
+[//]: # (TODO: Check + update)
+### Configuring a named profile to use AWS SSO
+
+1. Start the configuration by running:
+```bash
+aws configure sso
+```
+1. You will be asked to provide your credentials for:
+```
+SSO start URL [None]: [None]: https://your-sso-portal.awsapps.com/start
+SSO region [None]: your-sso-region
+```
+1. The AWS CLI will try to open your browser and then start the login process for your AWS SSO account. 
+
+    ⚠️ If you have several accounts, you will be asked to choose the right account and role before continuing to step 4.
+1. You will be one by one asked to provide your credentials for:
+```
+CLI default client Region [None]
+CLI default output format [None]
+CLI profile name [None]
+```
+⚠️ Make sure you use **eu-central-1** as your default region.
+
+1. To easen things in the following labs, set the AWS_PROFILE environment variable to your named profile:
+```bash
+export AWS_PROFILE=your-profile-name
+```
+
+You should now be able to execute this command:
+```bash
+aws sts get-caller-identity
 ```
 
 ## Setting up Cloud9
