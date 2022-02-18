@@ -132,12 +132,6 @@ Now that we have an AWS CDK app, we want to deploy the first resource. Create a 
 
    ![deployment confirmation](./media/rest-api/deployment-confirmation.png)
 
-### ❓ Questions
-
-- What resources did you create and why?
-- How can you execute the AWS Lambda function using the AWS Management Console?
-- Where can you find the log output?
-
 ## Amazon API Gateway
 
 ### 📝 Task
@@ -201,12 +195,6 @@ HTTP/2 200
    ```bash
    curl -X POST https://XXXXX.execute-api.eu-central-1.amazonaws.com/prod/notes
    ```
-
-### ❓ Questions
-
-- What is a stack's output and where do you find it?
-- What is the response format for AWS Lambda functions when using them with Amazon API Gateway?
-- What are the limits for an Amazon API Gateway HTTP API?
 
 ## AWS DynamoDB
 
@@ -308,14 +296,6 @@ The note should be persisted in the DynamoDB table.
    ```
 1. Ideally, we have stored the first DynamoDB item! 🎉
 
-### ❓ Questions
-
-- Where do you see the environment variables of the AWS Lambda function using the AWS Management Console?
-- When deleting the CloudFormation stack by accident, would the DynamoDB table be removed or not?
-- Why is the AWS Lambda function allowed to send requests to the DynamoDB table?
-- Why is the partition key enough to create a DynamoDB table instead of a schema?
-- What is the maximum size of a note's content?
-
 ## Fetch list of notes
 
 ### 📝 Task
@@ -407,11 +387,6 @@ HTTP/2 200
    ```bash
    curl https://XXXXXX.execute-api.eu-central-1.amazonaws.com/prod/notes
    ```
-
-### ❓ Questions
-
-- How many notes are returned in the worst case?
-- What is the difference between a DynamoDB Scan and Query operation?
 
 ---
 

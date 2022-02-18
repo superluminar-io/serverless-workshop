@@ -124,13 +124,6 @@ Create a DynamoDB stream for the notes table. The AWS Lambda function should tak
    ```
 1. Go to the [DynamoDB console](https://console.aws.amazon.com/dynamodbv2) and check the word count.
 
-### ❓ Questions
-
-- What stream types can we configure for the DynamoDB stream, and what are the benefits?
-- What is the default batch size, and what do we need to consider for the AWS lambda function configuration?
-- What are secenarios where retry policies for DynamoDB streams might be helpful? 
-- What happens with the event assuming the AWS Lambda function fails?
-
 ---
 
 You can find the complete implementation of this lab [here](https://github.com/superluminar-io/serverless-workshop/tree/main/packages/lab4).
