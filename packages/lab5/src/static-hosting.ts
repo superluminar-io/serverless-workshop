@@ -1,13 +1,14 @@
 import { execSync } from 'child_process';
 import * as path from 'path';
-import { 
-  aws_cloudfront as cloudfront, 
-  aws_cloudfront_origins as origins, 
-  aws_s3 as s3, 
-  aws_s3_deployment as s3deploy, 
-  CfnOutput, 
-  DockerImage, 
-  RemovalPolicy } from 'aws-cdk-lib';
+import {
+  aws_cloudfront as cloudfront,
+  aws_cloudfront_origins as origins,
+  aws_s3 as s3,
+  aws_s3_deployment as s3deploy,
+  CfnOutput,
+  DockerImage,
+  RemovalPolicy,
+} from 'aws-cdk-lib';
 import { Construct } from 'constructs';
 import * as fs from 'fs-extra';
 
