@@ -25,5 +25,5 @@ jobs:
       - name: File Changes Detected
         if: steps.changed-files.outputs.any_changed == 'true'
         run: |
-          echo "Please run eslint or double-check the unit tests to update the snapshots."
+          echo "Please run eslint or update the snapshots. Commit the changes and try again. 🤭"
           exit 1
