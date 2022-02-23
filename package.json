@@ -10,6 +10,7 @@
   },
   "scripts": {
     "start": "docsify serve ./docs",
+    "projen:all": "npm run projen --workspaces",
     "synth:all": "npm run synth --workspaces",
     "lint:all": "npm run eslint --workspaces"
   },

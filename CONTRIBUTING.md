@@ -14,6 +14,18 @@ $ > cd serverless-workshop
 # Install dependencies
 $ > npm install
 
+# Synth all labs
+$ > npm run synth:all
+
+# Lint all labs
+$ > npm run lint:all
+
+# Run projen for all labs
+$ > npm run projen:all
+
+# Run projen in only one lab
+$ > npm run projen --w lab1
+
 # Serve docs
 $ > npm start
 ```
