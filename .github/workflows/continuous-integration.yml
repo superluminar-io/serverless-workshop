@@ -6,14 +6,25 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
-        with:
-          node-version: '16'
       - name: Install dependencies
         run: npm ci
       - name: Synth labs
         run: npm run synth:all
+  
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install dependencies
+        run: npm ci
       - name: Unit Tests
         run: npm run test:all
+  
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install dependencies
+        run: npm ci
       - name: Lint labs
         run: npm run lint:all
