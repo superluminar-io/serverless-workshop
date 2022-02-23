@@ -19,3 +19,11 @@ jobs:
         run: npm ci
       - name: Unit Tests
         run: npm run test:all
+      - name: Get changed files
+        id: changed-files
+        uses: tj-actions/changed-files@v16
+      - name: File Changes Detected
+        if: steps.changed-files.outputs.any_changed == 'true'
+        run: |
+          echo "Please run eslint or double-check the unit tests to update the snapshots."
+          exit 1
