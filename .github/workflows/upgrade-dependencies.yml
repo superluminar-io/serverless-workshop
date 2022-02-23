@@ -58,7 +58,7 @@ jobs:
         id: create-pr
         uses: peter-evans/create-pull-request@v3
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.BOT_GITHUB_TOKEN }}
           commit-message: >-
             chore(deps): upgrade dependencies
 
@@ -86,5 +86,5 @@ jobs:
 
 
             *Automatically created via the "upgrade-dependencies" workflow*
-          author: Automation <github-actions@github.com>
-          committer: Automation <github-actions@github.com>
+          author: superluminar-bot <services+github-bot@superluminar.io>
+          committer: superluminar-bot <services+github-bot@superluminar.io>
