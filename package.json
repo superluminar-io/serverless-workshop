@@ -13,7 +13,8 @@
     "test:all": "npm run test --workspaces",
     "projen:all": "npm run projen --workspaces",
     "synth:all": "npm run synth --workspaces",
-    "lint:all": "npm run eslint --workspaces"
+    "lint:all": "npm run eslint --workspaces",
+    "upgrade:all": "npm-check-updates --deep -u && npm install && npm run projen:all"
   },
   "repository": {
     "type": "git",
@@ -27,6 +28,7 @@
   },
   "homepage": "https://github.com/superluminar-io/serverless-workshop#readme",
   "devDependencies": {
-    "docsify-cli": "^4.4.3"
+    "docsify-cli": "^4.4.3",
+    "npm-check-updates": "^12.4.0"
   }
 }
