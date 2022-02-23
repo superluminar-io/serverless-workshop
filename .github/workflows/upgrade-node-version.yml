@@ -1,4 +1,4 @@
-name: Upgrade Dependencies
+name: Upgrade Node Version
 on:
   workflow_dispatch: {}
   schedule:
@@ -11,7 +11,7 @@ jobs:
     permissions:
       contents: read
     outputs:
-      conclusion: ${{ steps.build.outputs.conclusion }}
+      conclusion: ${{ steps.status.outputs.conclusion }}
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -20,16 +20,15 @@ jobs:
           node-version-file: '.nvmrc'
           cache: 'npm'
           cache-dependency-path: '**/package-lock.json'
-      - name: Install dependencies
-        run: npm ci
-      - name: Upgrade dependencies
-        env:
-          CI: false
-        run: npm run upgrade:all
-      - name: Synth
-        id: build
-        run: npm run synth:all && echo "::set-output name=conclusion::success" || echo
-          "::set-output name=conclusion::failure"
+      - name: Install latest Node.js LTS version
+        run: nvm install --lts
+      - name: Use latest Node.js LTS version
+        run: nvm use --lts
+      - name: Write latest version to .nvmrc file
+        run: node -v > .nvmrc
+      - name: Set status
+        id: status
+        run: echo "::set-output name=conclusion::success"
       - name: Create Patch
         run: |-
           git add .
@@ -64,10 +63,10 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           commit-message: >-
-            chore(deps): upgrade dependencies
+            chore(deps): upgrade node version
 
 
-            Upgrades project dependencies. See details in [workflow run].
+            Upgrades node version. See details in [workflow run].
 
 
             [workflow run]: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
@@ -76,11 +75,11 @@ jobs:
             ------
 
 
-            *Automatically created via the "upgrade-dependencies" workflow*
-          branch: github-actions/upgrade
-          title: "chore(deps): upgrade dependencies"
+            *Automatically created via the "upgrade-node-version" workflow*
+          branch: github-actions/upgrade-node-version
+          title: "chore(deps): upgrade node version"
           body: >-
-            Upgrades project dependencies. See details in [workflow run].
+            Upgrades node version. See details in [workflow run].
 
 
             [workflow run]: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
@@ -89,7 +88,7 @@ jobs:
             ------
 
 
-            *Automatically created via the "upgrade-dependencies" workflow*
+            *Automatically created via the "upgrade-node-version" workflow*
           author: Automation <github-actions@github.com>
           committer: Automation <github-actions@github.com>
       - name: Update status check
@@ -100,7 +99,7 @@ jobs:
           '{\"name\":\"build\",\"head_sha\":\"github-actions/upgrade\",\"status\
           \":\"completed\",\"conclusion\":\"${{ needs.upgrade.outputs.conclusion
           }}\",\"output\":{\"title\":\"Created via the upgrade
-          workflow.\",\"summary\":\"Action run URL: https://github.com/${{
+          node version workflow.\",\"summary\":\"Action run URL: https://github.com/${{
           github.repository }}/actions/runs/${{ github.run_id }}\"}}'"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
