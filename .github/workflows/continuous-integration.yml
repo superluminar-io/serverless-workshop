@@ -13,5 +13,7 @@ jobs:
         run: npm ci
       - name: Synth labs
         run: npm run synth:all
-      - name: Eslint
+      - name: Unit Tests
+        run: npm run test:all
+      - name: Lint labs
         run: npm run lint:all

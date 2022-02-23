@@ -104,6 +104,9 @@ Object {
       "Type": "AWS::ApiGateway::Deployment",
     },
     "restapiDeploymentStageprodD0BC9A49": Object {
+      "DependsOn": Array [
+        "restapiAccount60CB3373",
+      ],
       "Properties": Object {
         "DeploymentId": Object {
           "Ref": "restapiDeploymentC2F9DE708b927929c48caf8409ca73e0076086ae",
@@ -125,7 +128,7 @@ Object {
           "S3Bucket": Object {
             "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
           },
-          "S3Key": "3720f171727aff5fce4399b69c0f2525f1009747a5f57ab84c6d3149f67b5d76.zip",
+          "S3Key": "b7e7ca10e4d56c25e92ad00a7fc8ff36fa09a37ddf668bf10f64983412893d58.zip",
         },
         "Environment": Object {
           "Variables": Object {
@@ -478,6 +481,9 @@ Object {
           "ReadCapacityUnits": 5,
           "WriteCapacityUnits": 5,
         },
+        "StreamSpecification": Object {
+          "StreamViewType": "NEW_IMAGE",
+        },
       },
       "Type": "AWS::DynamoDB::Table",
       "UpdateReplacePolicy": "Retain",
@@ -492,7 +498,7 @@ Object {
           "S3Bucket": Object {
             "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
           },
-          "S3Key": "dd128cd87858b84301ed9d27d097827c45105ad83adabacb316950bf1790cafc.zip",
+          "S3Key": "5fffd5c42b4f8361ced0ebc0d7ff7edcd20d7f9d489b4b6ef264aa7f5f46ff87.zip",
         },
         "Environment": Object {
           "Variables": Object {

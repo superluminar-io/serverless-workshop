@@ -104,6 +104,9 @@ Object {
       "Type": "AWS::ApiGateway::Deployment",
     },
     "restapiDeploymentStageprodD0BC9A49": Object {
+      "DependsOn": Array [
+        "restapiAccount60CB3373",
+      ],
       "Properties": Object {
         "DeploymentId": Object {
           "Ref": "restapiDeploymentC2F9DE708b927929c48caf8409ca73e0076086ae",
@@ -125,7 +128,7 @@ Object {
           "S3Bucket": Object {
             "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
           },
-          "S3Key": "3720f171727aff5fce4399b69c0f2525f1009747a5f57ab84c6d3149f67b5d76.zip",
+          "S3Key": "1e173fe6b58ed85f55568e169a6e341fba94f981bda9e18dd14cca01b4b2ef4a.zip",
         },
         "Environment": Object {
           "Variables": Object {
@@ -495,7 +498,7 @@ Object {
           "S3Bucket": Object {
             "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
           },
-          "S3Key": "dd128cd87858b84301ed9d27d097827c45105ad83adabacb316950bf1790cafc.zip",
+          "S3Key": "62e7d25425e900bf71e485f4206815d2865100b01c24aec5177a5de556f78c69.zip",
         },
         "Environment": Object {
           "Variables": Object {
@@ -588,7 +591,7 @@ Object {
           "S3Bucket": Object {
             "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
           },
-          "S3Key": "a6e6ce125bdc8f082ec9adb4c69c0471da962f4bda3092eb01f07d02957fcbb7.zip",
+          "S3Key": "809b757ae0202de0465e534c049286c7e1d242d4b92ddd289e875f1b19583972.zip",
         },
         "Environment": Object {
           "Variables": Object {
