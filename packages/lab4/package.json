@@ -48,7 +48,7 @@
   },
   "dependencies": {
     "aws-cdk-lib": "^2.1.0",
-    "aws-sdk": "^2.1079.0",
+    "aws-sdk": "^2.1080.0",
     "constructs": "^10.0.5"
   },
   "license": "Apache-2.0",
