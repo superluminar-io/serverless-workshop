@@ -52,23 +52,23 @@ aws configure sso
 ```
 1. You will be asked to provide your credentials for:
 ```
-SSO start URL [None]: [None]: https://your-sso-portal.awsapps.com/start
-SSO region [None]: your-sso-region
+SSO start URL [None]
+SSO region [None]
 ```
 1. The AWS CLI will try to open your browser and then start the login process for your AWS SSO account. 
 
-    ⚠️ If you have several accounts, you will be asked to choose the right account and role before continuing to step 4.
-1. You will be one by one asked to provide your credentials for:
+    ⚠️ If you have several accounts and roles, please choose the right account and role in the terminal before continuing to step 4.
+1. You will be one by one asked to provide your input for:
 ```
 CLI default client Region [None]
 CLI default output format [None]
 CLI profile name [None]
 ```
-⚠️ Make sure you use **eu-central-1** as your default region.
+⚠️ Make sure you use **eu-central-1** as your default region as well as a meaningful **CLI profile name**, e.g. serverless-workshop
 
 1. To easen things in the following labs, set the AWS_PROFILE environment variable to your named profile:
 ```bash
-export AWS_PROFILE=your-profile-name
+export AWS_PROFILE=your-chosen-cli-profile-name
 ```
 
 You should now be able to execute this command:
