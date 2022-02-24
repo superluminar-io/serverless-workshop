@@ -9,12 +9,13 @@
     "doc": "docs"
   },
   "scripts": {
+    "install:frontend": "cd packages/lab5/frontend && npm install",
     "start": "docsify serve ./docs",
     "test:all": "npm run test --workspaces",
     "projen:all": "npm run projen --workspaces",
     "synth:all": "npm run synth --workspaces",
     "lint:all": "npm run eslint --workspaces",
-    "upgrade:all": "npm-check-updates --deep -u && npm install && npm run projen:all"
+    "upgrade:all": "npm-check-updates --deep -u && npm install && npm run install:frontend && npm run projen:all"
   },
   "repository": {
     "type": "git",

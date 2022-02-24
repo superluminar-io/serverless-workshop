@@ -24,8 +24,6 @@ jobs:
         env:
           CI: false
         run: npm run upgrade:all
-      - name: Synth
-        run: npm run synth:all
       - name: Create Patch
         run: |-
           git add .
