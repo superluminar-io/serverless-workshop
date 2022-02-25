@@ -131,12 +131,18 @@ _tbd_
 
 ### Questions for Lab 4
 
+#### DynamoDB Stream
+
 - What stream types can we configure for the DynamoDB stream, and what are the benefits?
 - What is the default batch size, and what do we need to consider for the AWS lambda function configuration?
 - What are secenarios where retry policies for DynamoDB streams might be helpful? 
 - What happens with the event assuming the AWS Lambda function fails?
 
-#### DynamoDB Stream
+### Questions for Lab 5
+
+- What is the impact of the S3 bucket configuration?
+- What are the differences between static hosting with CloudFront and an S3 bucket with _static website hosting_ enabled?
+- How do we manage cache invalidation?
 
 ## After the workshop
 

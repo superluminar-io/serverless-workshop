@@ -192,12 +192,6 @@ Create a new CloudFormation stack for the static hosting. The stack should inclu
    ```
 1. Get the frontend URL from the CloudFormation output and visit the site.
 
-### ❓ Questions
-
-- What is the impact of the S3 bucket configuration?
-- What are the differences between static hosting with CloudFront and an S3 bucket with _static website hosting_ enabled?
-- How do we manage cache invalidation?
-
 ---
 
 You can find the complete implementation of this lab [here](https://github.com/superluminar-io/serverless-workshop/tree/main/packages/lab5).
