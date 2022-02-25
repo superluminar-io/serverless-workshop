@@ -19,8 +19,8 @@ Write unit tests for the AWS Lambda functions. Running the command `npm test` sh
 
 1. Extend the list of dev dependencies in the `.projenrc.js` configuration:
   ```js
-  const { AwsCdkTypeScriptApp, NodePackageManager } = require('projen');
-  const project = new AwsCdkTypeScriptApp({
+  const { awscdk, javascript } = require('projen');
+  const project = new awscdk.AwsCdkTypeScriptApp({
     cdkVersion: '2.1.0',
     defaultReleaseBranch: 'main',
     github: false,
