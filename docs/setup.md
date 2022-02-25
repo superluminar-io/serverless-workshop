@@ -17,8 +17,6 @@ Make sure you have installed and configured all dependencies on your computer. I
 
 If you can work with your already existing development setup, the AWS CLI needs access to your AWS account. To not override your default configuration, make sure you have configured your AWS CLI with a [named profile](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-quickstart.html#cli-configure-quickstart-profiles) for this workshop.
 
-If you are working with an already existing AWS SSO managed account, make sure you have configured your AWS CLI with a [named profile to use SSO](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-sso.html).
-
 ### Configuring a named profile for the AWS CLI
 
 1. Start the configuration by running:
@@ -43,38 +41,9 @@ You should now be able to execute this command:
 ```bash
 aws sts get-caller-identity
 ```
-[//]: # (TODO: Check + update)
-### Configuring a named profile to use AWS SSO
 
-1. Start the configuration by running:
-```bash
-aws configure sso
-```
-1. You will be asked to provide your credentials for:
-```
-SSO start URL [None]
-SSO region [None]
-```
-1. The AWS CLI will try to open your browser and then start the login process for your AWS SSO account. 
-
-    ⚠️ If you have several accounts and roles, please choose the right account and role in the terminal before continuing to step 4.
-1. You will be one by one asked to provide your input for:
-```
-CLI default client Region [None]
-CLI default output format [None]
-CLI profile name [None]
-```
-⚠️ Make sure you use **eu-central-1** as your default region as well as a meaningful **CLI profile name**, e.g. serverless-workshop
-
-1. To easen things in the following labs, set the AWS_PROFILE environment variable to your named profile:
-```bash
-export AWS_PROFILE=your-chosen-cli-profile-name
-```
-
-You should now be able to execute this command:
-```bash
-aws sts get-caller-identity
-```
+### AWS SSO 
+If you are using an AWS SSO managed account, please follow the instructions for [short-term credentials for the AWS CLI](https://aws.amazon.com/blogs/security/aws-single-sign-on-now-enables-command-line-interface-access-for-aws-accounts-using-corporate-credentials/).
 
 ## Setting up Cloud9
 
