@@ -1,0 +1,90 @@
+name: Upgrade Node Version
+on:
+  workflow_dispatch: {}
+  schedule:
+    - cron: 0 0 * * *
+
+jobs:
+  upgrade:
+    name: Upgrade
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: 'lts/*'
+      - name: Write latest version to .nvmrc file
+        run: node -v > .nvmrc
+      - name: Create Patch
+        run: |-
+          git add .
+          git diff --patch --staged > .upgrade.tmp.patch
+      - name: Upload patch
+        uses: actions/upload-artifact@v2
+        with:
+          name: .upgrade.tmp.patch
+          path: .upgrade.tmp.patch
+  pr:
+    name: Create Pull Request
+    needs: upgrade
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+      checks: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Download patch
+        uses: actions/download-artifact@v2
+        with:
+          name: .upgrade.tmp.patch
+          path: ${{ runner.temp }}
+      - name: Apply patch
+        run: '[ -s ${{ runner.temp }}/.upgrade.tmp.patch ] && git apply ${{ runner.temp
+          }}/.upgrade.tmp.patch || echo "Empty patch. Skipping."'
+      - name: Create Pull Request
+        id: create-pr
+        uses: peter-evans/create-pull-request@v3
+        with:
+          token: ${{ secrets.BOT_GITHUB_TOKEN }}
+          commit-message: >-
+            chore(deps): upgrade node version
+
+
+            Upgrades node version. See details in [workflow run].
+
+
+            [workflow run]: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+
+            ------
+
+
+            *Automatically created via the "upgrade-node-version" workflow*
+          branch: github-actions/upgrade-node-version
+          title: "chore(deps): upgrade node version"
+          body: >-
+            Upgrades node version. See details in [workflow run].
+
+
+            [workflow run]: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+
+            ------
+
+
+            *Automatically created via the "upgrade-node-version" workflow*
+          author: superluminar-bot <services+github-bot@superluminar.io>
+          committer: superluminar-bot <services+github-bot@superluminar.io>
+
+      - name: Enable Pull Request Automerge
+        if: steps.create-pr.outputs.pull-request-operation == 'created'
+        uses: peter-evans/enable-pull-request-automerge@v1
+        with:
+          token: ${{ secrets.BOT_GITHUB_TOKEN }}
+          pull-request-number: ${{ steps.create-pr.outputs.pull-request-number }}
+          merge-method: squash

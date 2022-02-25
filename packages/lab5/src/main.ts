@@ -4,13 +4,13 @@ import { RestApi } from './rest-api';
 import { StaticHosting } from './static-hosting';
 
 export class MyStack extends Stack {
-   constructor(scope: Construct, id: string, props: StackProps = {}) {
-   super(scope, id, props);
+  constructor(scope: Construct, id: string, props: StackProps = {}) {
+    super(scope, id, props);
 
-   new RestApi(this, 'rest-api');
+    new RestApi(this, 'rest-api');
 
-   new StaticHosting(this, 'static-hosting');
- }
+    new StaticHosting(this, 'static-hosting');
+  }
 }
 
 // for development, use account/region from cdk cli

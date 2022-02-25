@@ -2,15 +2,20 @@
   "name": "serverless-workshop",
   "version": "1.0.0",
   "description": "Hands-on AWS serverless workshop for beginners",
+  "workspaces": [
+    "packages/*"
+  ],
   "directories": {
     "doc": "docs"
   },
   "scripts": {
+    "install:frontend": "cd packages/lab5/frontend && npm install",
     "start": "docsify serve ./docs",
-    "postinstall": "run-in-all --parallel install packages/*",
-    "synth": "npx projen synth",
-    "synth:all": "run-in-all synth packages/*",
-    "lint:all": "run-in-all eslint packages/*"
+    "test:all": "npm run test --workspaces",
+    "projen:all": "npm run projen --workspaces",
+    "synth:all": "npm run synth --workspaces",
+    "lint:all": "npm run eslint --workspaces",
+    "upgrade:all": "npm-check-updates --deep -u && npm install && npm run install:frontend && npm run projen:all"
   },
   "repository": {
     "type": "git",
@@ -25,6 +30,6 @@
   "homepage": "https://github.com/superluminar-io/serverless-workshop#readme",
   "devDependencies": {
     "docsify-cli": "^4.4.3",
-    "run-in-all": "^1.2.0"
+    "npm-check-updates": "^12.4.0"
   }
 }
