@@ -21,15 +21,15 @@ Write unit tests for the AWS Lambda functions. Running the command `npm test` sh
   ```js
   const { awscdk, javascript } = require('projen');
   const project = new awscdk.AwsCdkTypeScriptApp({
-    cdkVersion: '2.1.0',
-    defaultReleaseBranch: 'main',
-    github: false,
-    name: 'notes-api',
-    packageManager: javascript.NodePackageManager.NPM,
-    deps: [
+     cdkVersion: '2.1.0',
+     defaultReleaseBranch: 'main',
+     github: false,
+     name: 'notes-api',
+     packageManager: javascript.NodePackageManager.NPM,
+     deps: [
       'aws-sdk',
     ],
-    devDeps: [
+     devDeps: [
       '@types/aws-lambda',
       'aws-sdk-mock',
     ],
@@ -145,18 +145,18 @@ Integration tests are super helpful to test the whole stack end-to-end. Write so
 
 1. Extend the list of dependencies in the `.projenrc.js` configuration:
    ```js
-  const { AwsCdkTypeScriptApp, NodePackageManager } = require('projen');
-  const project = new AwsCdkTypeScriptApp({
-    cdkVersion: '2.1.0',
-    defaultReleaseBranch: 'main',
-    github: false,
-    name: 'notes-api',
-    packageManager: javascript.NodePackageManager.NPM,
-    deps: [
+  const { awscdk, javascript } = require('projen');
+  const project = new awscdk.AwsCdkTypeScriptApp({
+     cdkVersion: '2.1.0',
+     defaultReleaseBranch: 'main',
+     github: false,
+     name: 'notes-api',
+     packageManager: javascript.NodePackageManager.NPM,
+     deps: [
       'aws-sdk',
       'node-fetch@2',
     ],
-    devDeps: [
+     devDeps: [
       '@types/aws-lambda',
       'aws-sdk-mock',
       '@types/node-fetch@2',
@@ -165,7 +165,7 @@ Integration tests are super helpful to test the whole stack end-to-end. Write so
   
   project.synth();
    ```
-1. In addition, add a new task to the `.projenrc.js` configuration:
+1. In addition, add a new task to the `.projenrc.js` configuration before synthing the project:
   ```js
   project.addTask('test:e2e', {
     exec: 'jest --testMatch "**/*.e2etest.ts"',
