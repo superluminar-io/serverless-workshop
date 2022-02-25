@@ -76,6 +76,8 @@ Create a new CloudFormation stack for the static hosting. The stack should inclu
       '@types/node-fetch@2',
       '@types/fs-extra',
     ],
+   });
+   
     project.addTask('test:e2e', {
       exec: 'jest --testMatch "**/*.e2etest.ts"',
     });
