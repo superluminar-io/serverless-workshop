@@ -29,7 +29,7 @@
   },
   "homepage": "https://github.com/superluminar-io/serverless-workshop#readme",
   "devDependencies": {
-    "docsify-cli": "^4.4.3",
+    "docsify-cli": "^4.4.4",
     "npm-check-updates": "^12.5.3"
   }
 }
