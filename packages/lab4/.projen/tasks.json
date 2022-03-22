@@ -198,6 +198,9 @@
       },
       "steps": [
         {
+          "exec": "npm update npm-check-updates"
+        },
+        {
           "exec": "npm-check-updates --dep dev --upgrade --target=minor --reject='projen'"
         },
         {
@@ -233,6 +236,9 @@
         "CI": "0"
       },
       "steps": [
+        {
+          "exec": "npm update npm-check-updates"
+        },
         {
           "exec": "npm-check-updates --dep dev --upgrade --target=minor --filter='projen'"
         },

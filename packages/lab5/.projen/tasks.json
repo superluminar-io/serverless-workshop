@@ -206,6 +206,9 @@
       },
       "steps": [
         {
+          "exec": "npm update npm-check-updates"
+        },
+        {
           "exec": "npm-check-updates --dep dev --upgrade --target=minor --reject='@types/node-fetch,node-fetch,projen'"
         },
         {
@@ -241,6 +244,9 @@
         "CI": "0"
       },
       "steps": [
+        {
+          "exec": "npm update npm-check-updates"
+        },
         {
           "exec": "npm-check-updates --dep dev --upgrade --target=minor --filter='projen'"
         },
