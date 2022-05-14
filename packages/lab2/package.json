@@ -50,7 +50,7 @@
   },
   "dependencies": {
     "aws-cdk-lib": "^2.1.0",
-    "aws-sdk": "^2.1134.0",
+    "aws-sdk": "^2.1135.0",
     "constructs": "^10.0.5",
     "node-fetch": "2"
   },
