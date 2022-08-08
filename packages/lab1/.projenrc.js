@@ -1,6 +1,6 @@
 const { awscdk, javascript } = require('projen');
 const project = new awscdk.AwsCdkTypeScriptApp({
-  cdkVersion: '2.1.0',
+  cdkVersion: '2.35.0',
   defaultReleaseBranch: 'main',
   name: 'lab1',
   github: false,
@@ -13,4 +13,6 @@ const project = new awscdk.AwsCdkTypeScriptApp({
     '@types/aws-lambda',
   ],
 });
+// Windows users need this
+project.jest.addTestMatch('**/?(*.)+(spec|test).ts?(x)');
 project.synth();
