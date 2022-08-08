@@ -128,7 +128,7 @@ Object {
           "S3Bucket": Object {
             "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
           },
-          "S3Key": "1e173fe6b58ed85f55568e169a6e341fba94f981bda9e18dd14cca01b4b2ef4a.zip",
+          "S3Key": "ee0bfd3e9101fe4df708c263c606dfb635a355c9dd9232e0f5e3ff9c81c0bcb0.zip",
         },
         "Environment": Object {
           "Variables": Object {
@@ -498,7 +498,7 @@ Object {
           "S3Bucket": Object {
             "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
           },
-          "S3Key": "62e7d25425e900bf71e485f4206815d2865100b01c24aec5177a5de556f78c69.zip",
+          "S3Key": "98b5fe1401ea5ca286420c991b4be7e72ff44c09a91138b0de687f99f8a5597a.zip",
         },
         "Environment": Object {
           "Variables": Object {
@@ -591,7 +591,7 @@ Object {
           "S3Bucket": Object {
             "Fn::Sub": "cdk-hnb659fds-assets-\${AWS::AccountId}-\${AWS::Region}",
           },
-          "S3Key": "809b757ae0202de0465e534c049286c7e1d242d4b92ddd289e875f1b19583972.zip",
+          "S3Key": "a97d791a2b91b31d032f797314a1a293796a09bc14df130b755b5a0a6e7ae5d1.zip",
         },
         "Environment": Object {
           "Variables": Object {
@@ -689,6 +689,7 @@ Object {
                 "dynamodb:PutItem",
                 "dynamodb:UpdateItem",
                 "dynamodb:DeleteItem",
+                "dynamodb:DescribeTable",
               ],
               "Effect": "Allow",
               "Resource": Array [

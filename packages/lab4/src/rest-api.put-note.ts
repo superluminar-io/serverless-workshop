@@ -1,7 +1,8 @@
-import * as AWS from 'aws-sdk';
+import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
+import { DynamoDBDocument } from '@aws-sdk/lib-dynamodb';
 
 export const handler = async (event: AWSLambda.APIGatewayProxyEvent) => {
-  const DB = new AWS.DynamoDB.DocumentClient();
+  const DB = DynamoDBDocument.from(new DynamoDBClient({}));
 
   const body = JSON.parse(event.body || '{}');
 
@@ -18,7 +19,7 @@ export const handler = async (event: AWSLambda.APIGatewayProxyEvent) => {
       content: body.content,
     },
     TableName: process.env.TABLE_NAME!,
-  }).promise();
+  });
 
   return {
     statusCode: 201,

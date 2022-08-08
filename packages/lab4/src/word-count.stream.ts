@@ -1,7 +1,9 @@
-import * as AWS from 'aws-sdk';
+import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
+import { DynamoDBDocument } from '@aws-sdk/lib-dynamodb';
+
 
 export const handler = async (event: AWSLambda.DynamoDBStreamEvent) => {
-  const DB = new AWS.DynamoDB.DocumentClient();
+  const DB = DynamoDBDocument.from(new DynamoDBClient({}));
 
   for (const record of event.Records) {
     if (record.eventName !== 'INSERT' || !record.dynamodb || !record.dynamodb.NewImage) {
@@ -23,6 +25,6 @@ export const handler = async (event: AWSLambda.DynamoDBStreamEvent) => {
         },
       },
       TableName: process.env.TABLE_NAME!,
-    }).promise();
+    });
   }
 };
