@@ -260,7 +260,7 @@ The note should be persisted in the DynamoDB table.
      }
    }
    ```
-1. Update the AWS Lambda function (`src/rest-api.put-not.ts`):
+1. Update the AWS Lambda function (`src/rest-api.put-note.ts`):
    ```typescript
    import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
    import { DynamoDBDocument } from '@aws-sdk/lib-dynamodb';
