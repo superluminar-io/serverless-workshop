@@ -28,13 +28,13 @@
   "devDependencies": {
     "@types/aws-lambda": "^8.10.97",
     "@types/fs-extra": "^9.0.13",
-    "@types/jest": "^27.5.1",
+    "@types/jest": "^27.5.2",
     "@types/node": "^14",
     "@types/node-fetch": "2",
     "@typescript-eslint/eslint-plugin": "^5",
     "@typescript-eslint/parser": "^5",
-    "aws-cdk": "^2.1.0",
-    "aws-sdk-mock": "^5.7.0",
+    "aws-cdk": "^2.35.0",
+    "aws-sdk-client-mock": "*",
     "esbuild": "0",
     "eslint": "^8",
     "eslint-import-resolver-node": "^0.3.6",
@@ -44,14 +44,15 @@
     "jest-junit": "^13",
     "json-schema": "^0.4.0",
     "npm-check-updates": "^12",
-    "projen": "^0.56.40",
+    "projen": "^0.56.41",
     "ts-jest": "^27",
     "ts-node": "^10",
     "typescript": "^4.7.2"
   },
   "dependencies": {
-    "aws-cdk-lib": "^2.1.0",
-    "aws-sdk": "^2.1146.0",
+    "@aws-sdk/client-dynamodb": "^3.142.0",
+    "@aws-sdk/lib-dynamodb": "^3.142.0",
+    "aws-cdk-lib": "^2.35.0",
     "constructs": "^10.0.5",
     "fs-extra": "^10.1.0",
     "node-fetch": "2"
@@ -74,10 +75,12 @@
     ],
     "coverageDirectory": "coverage",
     "coveragePathIgnorePatterns": [
-      "/node_modules/"
+      "/node_modules/",
+      ".*/frontend/.*\\.test\\.[tj]sx?"
     ],
     "testPathIgnorePatterns": [
-      "/node_modules/"
+      "/node_modules/",
+      ".*/frontend/.*\\.test\\.[tj]sx?"
     ],
     "watchPathIgnorePatterns": [
       "/node_modules/"
