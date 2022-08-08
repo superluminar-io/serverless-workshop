@@ -6,7 +6,8 @@ const project = new awscdk.AwsCdkTypeScriptApp({
   github: false,
   packageManager: javascript.NodePackageManager.NPM,
   deps: [
-    'aws-sdk',
+    '@aws-sdk/client-dynamodb',
+    '@aws-sdk/lib-dynamodb',
   ],
   devDeps: [
     '@types/aws-lambda',
