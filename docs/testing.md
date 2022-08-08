@@ -13,121 +13,129 @@ Write unit tests for the AWS Lambda functions. Running the command `npm test` sh
 
 ### 🔎 Hints
 
-- [Mock the DynamoDB DocumentClient with AWS SDK Mock](https://github.com/dwyl/aws-sdk-mock#using-typescript)
+- [Mock the DynamoDB DocumentClient with AWS SDK Mock](https://github.com/m-radzikowski/aws-sdk-client-mock)
 
 ### 🗺  Step-by-Step Guide
 
 1. Extend the list of dev dependencies in the `.projenrc.js` configuration:
-  ```js
-  const { awscdk, javascript } = require('projen');
-  const project = new awscdk.AwsCdkTypeScriptApp({
-     cdkVersion: '2.1.0',
-     defaultReleaseBranch: 'main',
-     github: false,
-     name: 'notes-api',
-     packageManager: javascript.NodePackageManager.NPM,
-     deps: [
-      'aws-sdk',
-    ],
-     devDeps: [
-      '@types/aws-lambda',
-      'aws-sdk-mock',
-    ],
-  });
-
-  project.synth();
-  ```
+    ```js
+    const { awscdk, javascript } = require('projen');
+    const project = new awscdk.AwsCdkTypeScriptApp({
+      cdkVersion: '2.35.0',
+      defaultReleaseBranch: 'main',
+      github: false,
+      name: 'notes-api',
+      packageManager: javascript.NodePackageManager.NPM,
+      deps: [
+        '@aws-sdk/client-dynamodb',
+        '@aws-sdk/lib-dynamodb',
+      ],
+      devDeps: [
+        '@types/aws-lambda',
+        'aws-sdk-client-mock',
+      ],
+    });
+  
+    // Windows users might need this
+    project.jest.addTestMatch('**/?(*.)+(spec|test).ts?(x)');
+    project.synth();
+    ```
 1. Run `npm run projen` to install the new dependencies and re-generate the auto-generated files.
 1. Create a new file:
   ```bash
   touch ./test/rest-api.list-notes.test.ts
   ```
 1. Add the following code to the test file:
-  ```typescript
-  import AWSMock from 'aws-sdk-mock';
-  import { handler } from '../src/rest-api.list-notes';
-
-  it('should return notes', async () => {
-    const item = {
-      id: '2021-04-12T18:55:06.295Z',
-      title: 'Hello World',
-      content: 'Minim nulla dolore nostrud dolor aliquip minim.',
-    };
-
-    AWSMock.mock('DynamoDB.DocumentClient', 'scan', (_: any, callback: Function) => {
-      callback(null, { Items: [item] });
+    ```typescript
+    import { DynamoDBDocument, ScanCommand } from '@aws-sdk/lib-dynamodb';
+    import { mockClient } from 'aws-sdk-client-mock';
+    import { handler } from '../src/rest-api.list-notes';
+    
+    it('should return notes', async () => {
+      const item = {
+        id: '2021-04-12T18:55:06.295Z',
+        title: 'Hello World',
+        content: 'Minim nulla dolore nostrud dolor aliquip minim.',
+      };
+    
+      const ddbMock = mockClient(DynamoDBDocument);
+      ddbMock.on(ScanCommand).resolves({
+        Items: [item],
+      });
+    
+      const response = await handler();
+    
+      expect(response).toEqual({
+        statusCode: 200,
+        body: JSON.stringify([item]),
+      });
+    
+      ddbMock.reset();
+      ddbMock.restore();
     });
-
-    const response = await handler();
-
-    expect(response).toEqual({
-      statusCode: 200,
-      body: JSON.stringify([item]),
-    });
-
-    AWSMock.restore('DynamoDB.DocumentClient');
-  });
-  ```
+    ```
 1. Create a new file:
    ```bash
    touch test/rest-api.put-note.test.ts
    ```
 1. Add the following code to the test file:
-  ```typescript
-  import AWSMock from 'aws-sdk-mock';
-  import { handler } from '../src/rest-api.put-note';
+    ```typescript
+    import { DynamoDBDocument, PutCommand } from '@aws-sdk/lib-dynamodb';
+    import { mockClient } from 'aws-sdk-client-mock';
+    import { handler } from '../src/rest-api.put-note';
 
-  describe('valid request', () => {
-    it('should return status code 201', async () => {
-      const tableName = 'foo';
-      const putItemSpy = jest.fn();
-      process.env.TABLE_NAME = tableName;
-      AWSMock.mock('DynamoDB.DocumentClient', 'put', (params: any, callback: Function) => {
-        callback(null, putItemSpy(params));
-      });
+    describe('valid request', () => {
+      it('should return status code 201', async () => {
+        const tableName = 'foo';
+        process.env.TABLE_NAME = tableName;
 
-      const requestBody = {
-        title: 'Hello World',
-        content: 'Minim nulla dolore nostrud dolor aliquip minim.',
-      };
+        const ddbMock = mockClient(DynamoDBDocument);
+        ddbMock.on(PutCommand).resolves({});
 
-      const event = {
-        body: JSON.stringify(requestBody),
-      } as AWSLambda.APIGatewayProxyEvent;
+        const requestBody = {
+          title: 'Hello World',
+          content: 'Minim nulla dolore nostrud dolor aliquip minim.',
+        };
 
-      const response = await handler(event);
+        const event = {
+          body: JSON.stringify(requestBody),
+        } as AWSLambda.APIGatewayProxyEvent;
 
-      expect(putItemSpy).toHaveBeenCalledWith({
-        Item: {
-          id: expect.any(String),
-          title: requestBody.title,
-          content: requestBody.content,
-        },
-        TableName: tableName,
-      });
+        const response = await handler(event);
 
-      expect(response).toEqual({
-        statusCode: 201,
-      });
+        expect(ddbMock.calls()).toHaveLength(1);
+        expect(ddbMock.call(0).firstArg.input).toEqual({
+          Item: {
+            id: expect.any(String),
+            title: requestBody.title,
+            content: requestBody.content,
+          },
+          TableName: tableName,
+        });
 
-      AWSMock.restore('DynamoDB.DocumentClient');
-    });
-  });
+        expect(response).toEqual({
+          statusCode: 201,
+        });
 
-  describe('invalid request body', () => {
-    it('should return status code 400', async () => {
-      const response = await handler({} as AWSLambda.APIGatewayProxyEvent);
-
-      expect(response).toEqual({
-        statusCode: 400,
+        ddbMock.reset();
+        ddbMock.restore();
       });
     });
-  });
-  ```
+
+    describe('invalid request body', () => {
+      it('should return status code 400', async () => {
+        const response = await handler({} as AWSLambda.APIGatewayProxyEvent);
+
+        expect(response).toEqual({
+          statusCode: 400,
+        });
+      });
+    });
+    ```
 1. Run the tests:
-  ```bash
-  npm test
-  ```
+   ```bash
+   npm test
+   ```
 
 ## Integration Testing
 
@@ -145,25 +153,27 @@ Integration tests are super helpful to test the whole stack end-to-end. Write so
 
 1. Extend the list of dependencies in the `.projenrc.js` configuration:
    ```js
-  const { awscdk, javascript } = require('projen');
-  const project = new awscdk.AwsCdkTypeScriptApp({
-     cdkVersion: '2.1.0',
+   const { awscdk, javascript } = require('projen');
+   const project = new awscdk.AwsCdkTypeScriptApp({
+     cdkVersion: '2.35.0',
      defaultReleaseBranch: 'main',
      github: false,
      name: 'notes-api',
      packageManager: javascript.NodePackageManager.NPM,
      deps: [
-      'aws-sdk',
-      'node-fetch@2',
-    ],
+       '@aws-sdk/client-dynamodb',
+       '@aws-sdk/lib-dynamodb',
+     ],
      devDeps: [
-      '@types/aws-lambda',
-      'aws-sdk-mock',
-      '@types/node-fetch@2',
-    ],
-  });
-  
-  project.synth();
+       '@types/aws-lambda',
+       '@types/node-fetch@2',
+       'aws-sdk-client-mock',
+     ],
+   });
+ 
+   // Windows users might need this
+   project.jest.addTestMatch('**/?(*.)+(spec|test).ts?(x)'); 
+   project.synth();
    ```
 1. In addition, add a new task to the `.projenrc.js` configuration before synthing the project:
   ```js
