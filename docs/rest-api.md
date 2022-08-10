@@ -58,9 +58,9 @@ Now that we have an AWS CDK app, we want to deploy the first resource. Create a 
 
 ### 🔎 Hints
 
-- [CDK Construct to create a Node.js Lambda function](https://docs.aws.amazon.com/cdk/api/latest/docs/aws-lambda-nodejs-readme.html#nodejs-function)
+- [CDK Construct to create a Node.js Lambda function](https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_lambda_nodejs-readme.html#nodejs-function)
 - [Simple Lambda function with log output](https://docs.aws.amazon.com/lambda/latest/dg/nodejs-logging.html)
-- [Hint about local bundling (to avoid Docker)](https://docs.aws.amazon.com/cdk/api/latest/docs/aws-lambda-nodejs-readme.html#local-bundling)
+- [Hint about local bundling (to avoid Docker)](https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_lambda_nodejs-readme.html#local-bundling)
 - [Adding CDK dependencies with Projen](https://github.com/projen/projen/blob/main/API.md#class-awscdktypescriptapp--)
 
 ### 🗺  Step-by-Step Guide
@@ -85,12 +85,16 @@ Now that we have an AWS CDK app, we want to deploy the first resource. Create a 
      name: 'notes-api',
      packageManager: javascript.NodePackageManager.NPM,
      deps: [
-       'aws-sdk',
+       '@aws-sdk/client-dynamodb',
+       '@aws-sdk/lib-dynamodb',
      ],
      devDeps: [
        '@types/aws-lambda',
      ],
    });
+
+   // Windows users need this
+   project.jest.addTestMatch('**/?(*.)+(spec|test).ts?(x)');
    project.synth();
    ```
 1. Run `npm run projen` to install the new dependencies and re-generate the auto-generated files.
@@ -149,9 +153,9 @@ HTTP/2 200
 
 ### 🔎 Hints
 
-- [CDK Construct to create an API Gateway with Lambda integration](https://docs.aws.amazon.com/cdk/api/latest/docs/aws-apigatewayv2-readme.html#defining-http-apis)
+- [CDK Construct to create an API Gateway with Lambda integration](https://docs.aws.amazon.com/cdk/api/v2/docs/aws-apigatewayv2-alpha-readme.html#defining-http-apis)
 - [Lambda function response format for API Gateway integrations](https://docs.aws.amazon.com/apigateway/latest/developerguide/http-api-develop-integrations-lambda.html#http-api-develop-integrations-lambda.response)
-- [CloudFormation stack output for the API endpoint](https://docs.aws.amazon.com/cdk/api/latest/docs/core-readme.html#stack-outputs)
+- [CloudFormation stack output for the API endpoint](https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib-readme.html#stack-outputs)
 
 ### 🗺  Step-by-Step Guide
 
@@ -213,12 +217,11 @@ The note should be persisted in the DynamoDB table.
 
 ### 🔎 Hints
 
-- [CDK Construct to create a DynamoDB table](https://docs.aws.amazon.com/cdk/api/latest/docs/aws-dynamodb-readme.html)
-- [Prop to pass the DynamoDB table name to the AWS Lambda function environment](https://docs.aws.amazon.com/cdk/api/latest/docs/@aws-cdk_aws-lambda-nodejs.NodejsFunction.html#environment)
-- [Prop to grant access to the DynamoDB table, so the AWS Lambda function can send requests](https://docs.aws.amazon.com/cdk/api/latest/docs/@aws-cdk_aws-dynamodb.Table.html#grantgrantee-actions)
+- [CDK Construct to create a DynamoDB table](https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_dynamodb-readme.html)
+- [Prop to pass the DynamoDB table name to the AWS Lambda function environment](https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_lambda_nodejs.NodejsFunction.html#environment)
+- [Prop to grant access to the DynamoDB table, so the AWS Lambda function can send requests](https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_dynamodb.Table.html#grantgrantee-actions)
 - [NPM package for AWS Lambda function event types (APIGatewayProxyEvent is your friend)](https://www.npmjs.com/package/@types/aws-lambda)
-- [Documentation for the DynamoDB DocumentClient](https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/DynamoDB/DocumentClient.html#put-property)
-- [Hint about promises for the DocumentClient](https://docs.aws.amazon.com/sdk-for-javascript/v2/developer-guide/using-promises.html)
+- [Documentation for the DynamoDBDocument (DynamoDBDocumentClient with convenience methods](https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/classes/_aws_sdk_lib_dynamodb.dynamodbdocument-1.html#put)
 
 ### 🗺  Step-by-Step Guide
 
@@ -257,21 +260,22 @@ The note should be persisted in the DynamoDB table.
      }
    }
    ```
-1. Update the AWS Lambda function (`src/rest-api.put-not.ts`):
+1. Update the AWS Lambda function (`src/rest-api.put-note.ts`):
    ```typescript
-   import * as AWS from 'aws-sdk';
-
+   import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
+   import { DynamoDBDocument } from '@aws-sdk/lib-dynamodb';
+   
    export const handler = async (event: AWSLambda.APIGatewayProxyEvent) => {
-     const DB = new AWS.DynamoDB.DocumentClient();
-
+     const DB = DynamoDBDocument.from(new DynamoDBClient({}));
+   
      const body = JSON.parse(event.body || '{}');
-
+   
      if (!body.title || !body.content) {
        return {
          statusCode: 400,
        };
      }
-
+   
      await DB.put({
        Item: {
          id: new Date().toISOString(),
@@ -279,8 +283,8 @@ The note should be persisted in the DynamoDB table.
          content: body.content,
        },
        TableName: process.env.TABLE_NAME!,
-     }).promise();
-
+     });
+   
      return {
        statusCode: 201,
      };
@@ -311,7 +315,7 @@ HTTP/2 200
 
 ### 🔎 Hints
 
-- [DocumentClient Scan operation](https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/DynamoDB/DocumentClient.html#scan-property)
+- [DocumentClient Scan operation](https://docs.aws.amazon.com/AWSJavaScriptSDK/v3/latest/classes/_aws_sdk_lib_dynamodb.dynamodbdocument-1.html#scan)
 
 ### 🗺  Step-by-Step Guide
 
@@ -364,15 +368,16 @@ HTTP/2 200
    ```
 1. Add the following code to the file:
    ```typescript
-   import * as AWS from 'aws-sdk';
-
+   import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
+   import { DynamoDBDocument } from '@aws-sdk/lib-dynamodb';
+   
    export const handler = async () => {
-     const DB = new AWS.DynamoDB.DocumentClient();
-
+     const DB = DynamoDBDocument.from(new DynamoDBClient({}));
+   
      const response = await DB.scan({
        TableName: process.env.TABLE_NAME!,
-     }).promise();
-
+     });
+   
      return {
        statusCode: 200,
        body: JSON.stringify(response.Items),

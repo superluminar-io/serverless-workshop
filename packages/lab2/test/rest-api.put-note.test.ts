@@ -1,14 +1,14 @@
-import AWSMock from 'aws-sdk-mock';
+import { DynamoDBDocument, PutCommand } from '@aws-sdk/lib-dynamodb';
+import { mockClient } from 'aws-sdk-client-mock';
 import { handler } from '../src/rest-api.put-note';
 
 describe('valid request', () => {
   it('should return status code 201', async () => {
     const tableName = 'foo';
-    const putItemSpy = jest.fn();
     process.env.TABLE_NAME = tableName;
-    AWSMock.mock('DynamoDB.DocumentClient', 'put', (params: any, callback: Function) => {
-      callback(null, putItemSpy(params));
-    });
+
+    const ddbMock = mockClient(DynamoDBDocument);
+    ddbMock.on(PutCommand).resolves({});
 
     const requestBody = {
       title: 'Hello World',
@@ -21,7 +21,8 @@ describe('valid request', () => {
 
     const response = await handler(event);
 
-    expect(putItemSpy).toHaveBeenCalledWith({
+    expect(ddbMock.calls()).toHaveLength(1);
+    expect(ddbMock.call(0).firstArg.input).toEqual({
       Item: {
         id: expect.any(String),
         title: requestBody.title,
@@ -34,7 +35,8 @@ describe('valid request', () => {
       statusCode: 201,
     });
 
-    AWSMock.restore('DynamoDB.DocumentClient');
+    ddbMock.reset();
+    ddbMock.restore();
   });
 });
 

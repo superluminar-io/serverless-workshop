@@ -50,14 +50,14 @@ Create a new CloudFormation stack for the static hosting. The stack should inclu
 ### 🔎 Hints
 
 - [Documentation AWS CDK Stacks](https://docs.aws.amazon.com/cdk/latest/guide/stacks.html)
-- [AWS Construct to deploy a S3 bucket with CloudFront distribution and cache invalidation](https://docs.aws.amazon.com/cdk/api/latest/docs/aws-s3-deployment-readme.html#cloudfront-invalidation)
+- [AWS Construct to deploy a S3 bucket with CloudFront distribution and cache invalidation](https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_s3_deployment-readme.html#cloudfront-invalidation)
 - [Documentation Invalidating Files in CloudFront (watch out for solutions to invalidate all files)](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/Invalidation.html)
 - [Bundle JS assets locally with AWS CDK S3 Deployment (scroll down to the last section)](https://aws.amazon.com/blogs/devops/building-apps-with-aws-cdk/)
 
 ### 🗺  Step-by-Step Guide
 
 1. Extend the list of CDK dependencies in the `.projenrc.js` configuration:
-  ```js
+   ```js
    const { awscdk, javascript } = require('projen');
    const project = new awscdk.AwsCdkTypeScriptApp({
     cdkVersion: '2.1.0',
@@ -83,7 +83,7 @@ Create a new CloudFormation stack for the static hosting. The stack should inclu
     });
 
     project.synth();
-   ```
+    ```
 1. Run `npm run projen` in the root project to install the new dependencies and re-generate the auto-generated files.
 1. Create a file for the new construct:
    ```bash

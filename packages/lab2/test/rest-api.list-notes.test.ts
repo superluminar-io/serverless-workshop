@@ -1,4 +1,5 @@
-import AWSMock from 'aws-sdk-mock';
+import { DynamoDBDocument, ScanCommand } from '@aws-sdk/lib-dynamodb';
+import { mockClient } from 'aws-sdk-client-mock';
 import { handler } from '../src/rest-api.list-notes';
 
 it('should return notes', async () => {
@@ -8,8 +9,9 @@ it('should return notes', async () => {
     content: 'Minim nulla dolore nostrud dolor aliquip minim.',
   };
 
-  AWSMock.mock('DynamoDB.DocumentClient', 'scan', (_: any, callback: Function) => {
-    callback(null, { Items: [item] });
+  const ddbMock = mockClient(DynamoDBDocument);
+  ddbMock.on(ScanCommand).resolves({
+    Items: [item],
   });
 
   const response = await handler();
@@ -19,5 +21,6 @@ it('should return notes', async () => {
     body: JSON.stringify([item]),
   });
 
-  AWSMock.restore('DynamoDB.DocumentClient');
+  ddbMock.reset();
+  ddbMock.restore();
 });

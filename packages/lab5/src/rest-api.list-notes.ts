@@ -1,11 +1,12 @@
-import * as AWS from 'aws-sdk';
+import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
+import { DynamoDBDocument } from '@aws-sdk/lib-dynamodb';
 
 export const handler = async () => {
-  const DB = new AWS.DynamoDB.DocumentClient();
+  const DB = DynamoDBDocument.from(new DynamoDBClient({}));
 
   const response = await DB.scan({
     TableName: process.env.TABLE_NAME!,
-  }).promise();
+  });
 
   return {
     statusCode: 200,
