@@ -26,8 +26,8 @@
     "projen": "npx projen"
   },
   "devDependencies": {
-    "@types/aws-lambda": "^8.10.97",
-    "@types/jest": "^27.5.1",
+    "@types/aws-lambda": "^8.10.102",
+    "@types/jest": "^28.1.6",
     "@types/node": "^14",
     "@types/node-fetch": "2",
     "@typescript-eslint/eslint-plugin": "^5",
@@ -37,20 +37,20 @@
     "esbuild": "0",
     "eslint": "^8",
     "eslint-import-resolver-node": "^0.3.6",
-    "eslint-import-resolver-typescript": "^2.7.1",
+    "eslint-import-resolver-typescript": "^3.4.0",
     "eslint-plugin-import": "^2.26.0",
-    "jest": "^27",
+    "jest": "^28",
     "jest-junit": "^13",
     "json-schema": "^0.4.0",
-    "npm-check-updates": "^12",
-    "projen": "^0.56.40",
-    "ts-jest": "^27",
+    "npm-check-updates": "^15",
+    "projen": "^0.61.7",
+    "ts-jest": "^28",
     "ts-node": "^10",
-    "typescript": "^4.7.2"
+    "typescript": "^4.7.4"
   },
   "dependencies": {
-    "@aws-sdk/client-dynamodb": "^3.142.0",
-    "@aws-sdk/lib-dynamodb": "^3.142.0",
+    "@aws-sdk/client-dynamodb": "^3.145.0",
+    "@aws-sdk/lib-dynamodb": "^3.145.0",
     "aws-cdk-lib": "^2.35.0",
     "constructs": "^10.0.5",
     "node-fetch": "2"
@@ -60,7 +60,7 @@
   "jest": {
     "testMatch": [
       "<rootDir>/src/**/__tests__/**/*.ts?(x)",
-      "<rootDir>/(test|src)/**/?(*.)+(spec|test).ts?(x)",
+      "<rootDir>/(test|src)/**/*(*.)@(spec|test).ts?(x)",
       "**/?(*.)+(spec|test).ts?(x)"
     ],
     "clearMocks": true,
