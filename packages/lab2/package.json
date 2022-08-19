@@ -43,14 +43,14 @@
     "jest-junit": "^13",
     "json-schema": "^0.4.0",
     "npm-check-updates": "^15",
-    "projen": "^0.61.16",
+    "projen": "^0.61.17",
     "ts-jest": "^28",
     "ts-node": "^10",
     "typescript": "^4.7.4"
   },
   "dependencies": {
-    "@aws-sdk/client-dynamodb": "^3.150.0",
-    "@aws-sdk/lib-dynamodb": "^3.150.0",
+    "@aws-sdk/client-dynamodb": "^3.153.0",
+    "@aws-sdk/lib-dynamodb": "^3.153.0",
     "aws-cdk-lib": "^2.35.0",
     "constructs": "^10.0.5",
     "node-fetch": "2"
