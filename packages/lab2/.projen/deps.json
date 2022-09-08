@@ -112,7 +112,7 @@
     },
     {
       "name": "node-fetch",
-      "version": "2",
+      "version": "2.6.1",
       "type": "runtime"
     }
   ],

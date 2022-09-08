@@ -6,7 +6,7 @@ const project = new awscdk.AwsCdkTypeScriptApp({
   github: false,
   packageManager: javascript.NodePackageManager.NPM,
   deps: [
-    'node-fetch@2',
+    'node-fetch@2.6.1',
     '@aws-sdk/client-dynamodb',
     '@aws-sdk/lib-dynamodb',
   ],

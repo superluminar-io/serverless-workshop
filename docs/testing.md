@@ -161,6 +161,7 @@ Integration tests are super helpful to test the whole stack end-to-end. Write so
      name: 'notes-api',
      packageManager: javascript.NodePackageManager.NPM,
      deps: [
+       'node-fetch@2.6.1',
        '@aws-sdk/client-dynamodb',
        '@aws-sdk/lib-dynamodb',
      ],
