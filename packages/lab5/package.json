@@ -28,7 +28,7 @@
   "devDependencies": {
     "@types/aws-lambda": "^8.10.104",
     "@types/fs-extra": "^9.0.13",
-    "@types/jest": "^29.0.2",
+    "@types/jest": "^29.0.3",
     "@types/node": "^14",
     "@types/node-fetch": "2",
     "@typescript-eslint/eslint-plugin": "^5",
@@ -44,14 +44,14 @@
     "jest-junit": "^13",
     "json-schema": "^0.4.0",
     "npm-check-updates": "^15",
-    "projen": "^0.62.6",
+    "projen": "^0.62.8",
     "ts-jest": "^29",
     "ts-node": "^10",
     "typescript": "^4.8.3"
   },
   "dependencies": {
-    "@aws-sdk/client-dynamodb": "^3.171.0",
-    "@aws-sdk/lib-dynamodb": "^3.171.0",
+    "@aws-sdk/client-dynamodb": "^3.172.0",
+    "@aws-sdk/lib-dynamodb": "^3.172.0",
     "aws-cdk-lib": "^2.35.0",
     "constructs": "^10.0.5",
     "fs-extra": "^10.1.0",
