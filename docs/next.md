@@ -1,6 +1,6 @@
 # What’s next?
 
-In the labs, we created a REST API, persisted our data in a DynamoDB table and even deployed a frontend app. That's cool, but we don't have to stop here. You can extend the example, create a full REST API, do some magic with DynamoDB streams or work on the frontend app to interact with the API. This section is just an inspiration of things you could do.
+In the labs, we created a REST API, persisted our data in a DynamoDB table and even deployed a frontend app. That's cool, but we don't have to stop here. You can extend the example, create a full REST API, or work on the frontend app to interact with the API. This section is just an inspiration of things you could do.
 
 - API Gateway
   - Implement a route to get a note by id
@@ -10,7 +10,6 @@ In the labs, we created a REST API, persisted our data in a DynamoDB table and e
   - Input validation: Right now we support every content for notes. We could limit the notes, check for inappropriate content or whatever you come up with. Bonus: Write unit tests for valid and invalid cases.
 - DynamoDB
   - Implement [TTL](https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/TTL.html) so the notes get deleted at some point (see also [AWS CDK documentation](https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_dynamodb.Table.html#timetoliveattribute))
-  - [DynamoDB streams](https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_lambda_event_sources-readme.html#dynamodb-streams): Implement a AWS Lambda function, that counts the words of a new note and persists the count in the table
   - [EventBridge](https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_events_targets-readme.html#invoke-a-lambda-function): Create a [Cron Job](https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_events-readme.html#scheduling), that invokes an AWS Lambda function to do something (e.g. store a note, manipulate data or whatever you come up with)
 - Frontend
   - Fetch the list of notes
