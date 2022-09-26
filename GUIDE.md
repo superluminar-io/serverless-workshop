@@ -100,7 +100,27 @@ See you tomorrow,
 
 ## During the workshop
 
-_tbd_ 
+### Hello World Example
+
+Before going straight to the labs, we found it very helpful to take the time and explain AWS Lambda and CloudFormation shortly. Feel free to follow the steps described here and create a simple hello world example. You can demonstrate the following steps directly on your computer. 
+
+1. Go to the [AWS Lambda Console](https://console.aws.amazon.com/lambda)
+2. Click on **Create function**
+3. Enter a function name and click on **Create function**
+4. Click on the tab **Test** and on the button **Test**
+5. Explain the execution and everything visible under **Details**.
+
+At this point, we showcased the essentials of AWS Lambda. You can now continue with the example and create a simple trigger. 
+
+1. Click on **Add trigger**
+2. Select **API Gateway**, **Create a new API** and **Open**
+3. Click on **Add**
+4. Copy the API endpoint and open it in the browser
+5. You should see the **Hello from Lambda** message
+
+Take the time and explain the connection between API Gateway and Lambda. 
+
+After that, we take the exact same example and create the resources using AWS CloudFormation. You find two CloudFormation templates in the `./templates` folder. Go to the [CloudFormation console](https://console.aws.amazon.com/cloudformation) and create a new stack. 
 
 ### Questions for Lab 1
 
