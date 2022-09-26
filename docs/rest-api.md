@@ -29,7 +29,11 @@ Create a fresh AWS CDK app with Projen.
    ```bash
    npx projen@latest new awscdk-app-ts --package-manager 'NPM' --github false --no-git
    ```
-1. Go to the file `./src/main.ts`. Scroll down and find this line:
+1. Install Node.js dependencies:
+   ```bash
+   npm i
+   ```
+2. Go to the file `./src/main.ts`. Scroll down and find this line:
   ```ts
   new MyStack(app, 'my-stack-dev', { env: devEnv });
   ```
