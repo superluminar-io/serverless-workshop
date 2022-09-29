@@ -30,6 +30,6 @@
   "homepage": "https://github.com/superluminar-io/serverless-workshop#readme",
   "devDependencies": {
     "docsify-cli": "^4.4.4",
-    "npm-check-updates": "^16.3.2"
+    "npm-check-updates": "^16.3.3"
   }
 }
