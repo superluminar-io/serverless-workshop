@@ -35,7 +35,7 @@ Create a fresh AWS CDK app with Projen.
    ```
 2. Go to the file `./src/main.ts`. Scroll down and find this line:
   ```ts
-  new MyStack(app, 'my-stack-dev', { env: devEnv });
+  new MyStack(app, 'notes-api-dev', { env: devEnv });
   ```
   Rename `my-stack-dev` to something unique (e.g. append your name).
 1. Deploy the CloudFormation stack:
