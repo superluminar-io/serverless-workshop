@@ -52,8 +52,8 @@ If you don't want to invest time setting up a locally running development enviro
 1. Log in to your AWS Console and go to [Cloud9](https://console.aws.amazon.com/cloud9/)
 2. Click on the button **Create environment**
 3. Choose a name (e.g. **Serverless Workshop**)
-4. Click on **Next step**
-5. Select **m5.large** for **Instance type**. Keep the other settings and click on **Next step**
-6. Scroll down and click on **Create environment**
-7. That's it. You should arrive in the Cloud9 editor.
-8. Enable hidden files in the file explorer. See [documentation](https://docs.aws.amazon.com/cloud9/latest/user-guide/tour-ide.html#tour-ide-environment).
+5. Select **m5.large** for **Instance type**. Keep the other settings.
+6. Scroll down and click on **Create**
+7. That's it. Your environment will be created.
+8. Open your Cloud9 IDE and **enable hidden** files in the file explorer. See [documentation](https://docs.aws.amazon.com/cloud9/latest/user-guide/tour-ide.html#tour-ide-environment).
+9. Go to Settings, scroll to the section **Experimental** and turn Auto-Save Files on. 
