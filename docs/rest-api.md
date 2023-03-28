@@ -35,7 +35,7 @@ Create a fresh AWS CDK app with Projen.
    ```
 2. Go to the file `./src/main.ts`. Scroll down and find this line:
   ```ts
-  new MyStack(app, 'my-stack-dev', { env: devEnv });
+  new MyStack(app, 'notes-api-dev', { env: devEnv });
   ```
   Rename `my-stack-dev` to something unique (e.g. append your name).
 1. Deploy the CloudFormation stack:
@@ -120,6 +120,8 @@ Now that we have an AWS CDK app, we want to deploy the first resource. Create a 
    }
    ```
 1. Update the file `./src/main.ts`:
+   
+   ⚠️Important: Only update the imports and the class. Everything below the class should be the same.  
    ```typescript
    import { App, Stack, StackProps } from 'aws-cdk-lib';
    import { Construct } from 'constructs';
@@ -133,7 +135,7 @@ Now that we have an AWS CDK app, we want to deploy the first resource. Create a 
      }
    }
    ```
-   ⚠️Important: Only update the imports and the class. Everything below the class should be the same.
+
 1. Deploy the latest changes: `npm run deploy`
 
    Be aware you will be asked to confirm IAM Statement and IAM Policy Changes:
