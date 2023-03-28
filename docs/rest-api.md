@@ -120,6 +120,7 @@ Now that we have an AWS CDK app, we want to deploy the first resource. Create a 
    }
    ```
 1. Update the file `./src/main.ts`:
+   
    ⚠️Important: Only update the imports and the class. Everything below the class should be the same.  
    ```typescript
    import { App, Stack, StackProps } from 'aws-cdk-lib';
@@ -134,7 +135,7 @@ Now that we have an AWS CDK app, we want to deploy the first resource. Create a 
      }
    }
    ```
-   ⚠️Important: Only update the imports and the class. Everything below the class should be the same.
+
 1. Deploy the latest changes: `npm run deploy`
 
    Be aware you will be asked to confirm IAM Statement and IAM Policy Changes:
