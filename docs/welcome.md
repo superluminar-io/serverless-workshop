@@ -1,8 +1,8 @@
-# Serverless Workshop
+# Frontend to Fullstack: A Serverless Workshop
 
 ## Welcome
 
-This workshop is designed to give you an overview of serverless development with AWS. We will create a REST API with Amazon API Gateway, Lambda and DynamoDB. After creating the API, we will break the system in an interactive GameDay session and try to identify best practices and antipatterns along the way.
+This workshop is designed to help you expand your skillset beyond frontend know-how to fullstack serverless development with AWS. Together we will create the next greatest note-taking app. We will create a REST API with Amazon API Gateway, Lambda and DynamoDB. After creating the API, we will connect our frontend hosted on S3 to our serverless backend. Allong the way we try to identify best practices and antipatterns.
 
 Let's get started! 🤩
 
@@ -20,13 +20,13 @@ The API enables us to create the next awesome notes app. With two routes in plac
 ## Scope
 
 - Infrastructure as Code with AWS CDK
-- Simple Rest API with Amazon API Gateway, Lambda and DynamoDB
-- Unit & Integration Testing
-- Mini GameDay
+- Simple Rest API with Amazon API Gateway
+- Serverless computation with Lambda
+- NoSql Database with DynamoDB
 - Static Hosting with S3 and CloudFront
 
 ## Out of Scope
 
 - Authentication / Authorization
 - Custom Domain with SSL Cert
-- Deep dive Monitoring, Logging and Tracing
+- Deep dive Testing, Monitoring, Logging and Tracing

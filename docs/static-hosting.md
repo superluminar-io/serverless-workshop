@@ -2,8 +2,8 @@
 
 ## In this lab …
 
-- Learn how to deploy static websites (or single page applications) with AWS
-- Learn how to pass environment variables to the frontend application
+- Learn how to deploy your new beautiful static notes app (or single page applications) with AWS
+- Learn how to pass environment variables to your frontend application
 
 ## Frontend Application
 
@@ -19,18 +19,20 @@ Create a frontend app in a new subfolder.
 
 ### 🗺  Step-by-Step Guide
 
-1. Run create-react-app to bootstrap a new CRA project:
+%% TODO: Do we want to pull here the app from verena and anne?
+1. Clone the example app to the directory **frontend** to bootstrap a new CRA project:
   ```bash
-  npx create-react-app frontend --template typescript
+  git clone GITHUBXXXXX/frontend ~/notes-api/frontend
   ```
-1. Create a `.env` file inside the frontend folder:
-  ```bash
-  touch frontend/.env
-  ```
-1. Set the environment variable in the `.env` file to disable Jest version checking:
-  ```
-  SKIP_PREFLIGHT_CHECK=true 
-  ```
+%% TODO: The .env file will be there or??
+%% 1. Create a `.env` file inside the frontend folder:
+%%   ```bash
+%%   touch frontend/.env
+%%   ```
+%% 1. Set the environment variable in the `.env` file to disable Jest version checking:
+%%   ```
+%%   SKIP_PREFLIGHT_CHECK=true 
+%%   ```
 1. Start the frontend server:
    ```bash
    cd frontend
@@ -38,6 +40,7 @@ Create a frontend app in a new subfolder.
    ```
    Go to http://localhost:3000 and enjoy the app!
 
+%% TODO: TO DISCUSS either we cut this or we explain that ec2 need permission and add the secgroup 
 
 ## CloudFormation Stack
 
@@ -56,33 +59,28 @@ Create a new CloudFormation stack for the static hosting. The stack should inclu
 
 ### 🗺  Step-by-Step Guide
 
-1. Extend the list of CDK dependencies in the `.projenrc.js` configuration:
+1. Extend the list of CDK dependencies in the `.projenrc.js` configuration. The final file should look like this:
    ```js
    const { awscdk, javascript } = require('projen');
    const project = new awscdk.AwsCdkTypeScriptApp({
-    cdkVersion: '2.1.0',
-    defaultReleaseBranch: 'main',
-    github: false,
-    name: 'notes-api',
-    packageManager: javascript.NodePackageManager.NPM,
-    deps: [
-      'aws-sdk',
-      'node-fetch@2',
-      'fs-extra',
-    ],
-    devDeps: [
-      '@types/aws-lambda',
-      'aws-sdk-mock',
-      '@types/node-fetch@2',
-      '@types/fs-extra',
-    ],
+     cdkVersion: '2.1.0',
+     defaultReleaseBranch: 'main',
+     github: false,
+     name: 'notes-api',
+     packageManager: javascript.NodePackageManager.NPM,
+     deps: [
+       '@aws-sdk/client-dynamodb',
+       '@aws-sdk/lib-dynamodb',
+       'aws-sdk',
+       'fs-extra',
+     ],
+     devDeps: [
+       '@types/aws-lambda',
+       '@types/fs-extra',
+     ],
    });
-   
-    project.addTask('test:e2e', {
-      exec: 'jest --testMatch "**/*.e2etest.ts"',
-    });
 
-    project.synth();
+   project.synth();
     ```
 1. Run `npm run projen` in the root project to install the new dependencies and re-generate the auto-generated files.
 1. Create a file for the new construct:
@@ -169,17 +167,12 @@ Create a new CloudFormation stack for the static hosting. The stack should inclu
    import { Construct } from 'constructs';
    import { RestApi } from './rest-api';
    import { StaticHosting } from './static-hosting';
-   import { WordCount } from './word-count';
 
    export class MyStack extends Stack {
       constructor(scope: Construct, id: string, props: StackProps = {}) {
       super(scope, id, props);
 
       const restApi = new RestApi(this, 'rest-api');
-
-      new WordCount(this, 'word-count', {
-        notesTable: restApi.notesTable,
-      });
 
       new StaticHosting(this, 'static-hosting');
     }
@@ -194,4 +187,4 @@ Create a new CloudFormation stack for the static hosting. The stack should inclu
 
 ---
 
-You can find the complete implementation of this lab [here](https://github.com/superluminar-io/serverless-workshop/tree/main/packages/lab5).
+You can find the complete implementation of this lab [here](https://github.com/superluminar-io/fullstack-serverless-workshop/tree/main/packages/lab2).

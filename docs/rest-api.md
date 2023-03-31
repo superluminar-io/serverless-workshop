@@ -97,8 +97,6 @@ Now that we have an AWS CDK app, we want to deploy the first resource. Create a 
      ],
    });
 
-   // Windows users need this
-   project.jest.addTestMatch('**/?(*.)+(spec|test).ts?(x)');
    project.synth();
    ```
 1. Run `npm run projen` to install the new dependencies and re-generate the auto-generated files.
@@ -401,4 +399,4 @@ HTTP/2 200
 
 ---
 
-You can find the complete implementation of this lab [here](https://github.com/superluminar-io/serverless-workshop/tree/main/packages/lab1).
+You can find the complete implementation of this lab [here](https://github.com/superluminar-io/fullstack-serverless-workshop/tree/main/packages/lab1).

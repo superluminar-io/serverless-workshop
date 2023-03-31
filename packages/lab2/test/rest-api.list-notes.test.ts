@@ -8,7 +8,6 @@ it('should return notes', async () => {
     title: 'Hello World',
     content: 'Minim nulla dolore nostrud dolor aliquip minim.',
   };
-
   const ddbMock = mockClient(DynamoDBDocument);
   ddbMock.on(ScanCommand).resolves({
     Items: [item],
