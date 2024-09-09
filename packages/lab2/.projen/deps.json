@@ -15,17 +15,17 @@
     },
     {
       "name": "@types/node",
-      "version": "^14",
+      "version": "^18",
       "type": "build"
     },
     {
       "name": "@typescript-eslint/eslint-plugin",
-      "version": "^5",
+      "version": "^7",
       "type": "build"
     },
     {
       "name": "@typescript-eslint/parser",
-      "version": "^5",
+      "version": "^7",
       "type": "build"
     },
     {
@@ -39,10 +39,6 @@
     },
     {
       "name": "esbuild",
-      "type": "build"
-    },
-    {
-      "name": "eslint-import-resolver-node",
       "type": "build"
     },
     {
@@ -64,16 +60,7 @@
     },
     {
       "name": "jest-junit",
-      "version": "^13",
-      "type": "build"
-    },
-    {
-      "name": "json-schema",
-      "type": "build"
-    },
-    {
-      "name": "npm-check-updates",
-      "version": "^16",
+      "version": "^15",
       "type": "build"
     },
     {
