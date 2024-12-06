@@ -65,7 +65,8 @@ Now that we have an AWS CDK app, we want to deploy the first resource. Create a 
 - [CDK Construct to create a Node.js Lambda function](https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_lambda_nodejs-readme.html#nodejs-function)
 - [Simple Lambda function with log output](https://docs.aws.amazon.com/lambda/latest/dg/nodejs-logging.html)
 - [Hint about local bundling (to avoid Docker)](https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_lambda_nodejs-readme.html#local-bundling)
-- [Adding CDK dependencies with Projen](https://github.com/projen/projen/blob/main/API.md#class-awscdktypescriptapp--)
+- [Adding CDK dependencies with Projen](https://github.com/projen/projen/blob/main/docs/api/API.md#class-awscdktypescriptapp--)
+
 
 ### 🗺  Step-by-Step Guide
 
